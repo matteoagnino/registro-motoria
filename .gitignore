@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 dist/
 coverage/
 playwright-report/
@@ -13,3 +13,4 @@ backup/
 dati/
 *.xlsx
 !riferimenti/*.xlsx
+node_modules.nosync/
