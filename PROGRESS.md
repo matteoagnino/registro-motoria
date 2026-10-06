@@ -2,36 +2,34 @@
 
 Ultimo aggiornamento: 2026-10-06
 
-## Milestone
-- [~] M0 Fondamenta e sicurezza — tutto fatto tranne repo GitHub + Pages (bloccato: `gh` non autenticato, vedi DOMANDE D1)
-- [x] M1 Modello dati, persistenza, motore di calcolo (store IndexedDB, archivio JSON + File System Access, backup, migrazioni, azioni pure, selettori)
-- [~] M3 (anticipato) motore di pianificazione puro fatto e testato
-- [ ] M2 Classi, alunni, impostazioni
-- [ ] M4 Registro, riepilogo, verifica voti, export
-- [ ] M5 Modalità campo e scambio file
-- [ ] M6 Giochi della Gioventù
-- [ ] M7 Rubriche, stampa, rifinitura
-- [ ] M8 Collaudo e consegna
+STATO: VERSIONE GREZZA COMPLETATA
 
-## Fatto
-- Kit copiato in `~/Desktop/WORKSPACE/registro-motoria`, modelli Excel in `riferimenti/` (contengono solo alunni "(esempio)").
-- Analisi dei modelli Excel (formule di Registro, Riepilogo, Dati, Giochi, Calendario) → casi di test in `tests/unit/calcolo.test.js`.
-- Vite 8 + vitest 5 + Playwright (chromium) + ESLint 10; `vite-plugin-pwa`; `idb`, `exceljs`.
-- `npm run privacy-check` (`scripts/privacy-check.mjs`) + hook git `pre-commit`; blocca `test.rmvoti.json` (verificato).
-- `src/calcolo/` (voti, riepilogo, regola 9 giorni) · `src/pianificazione/` (date, lezioni, planner).
+## Milestone
+- [~] M0 — tutto fatto tranne repository GitHub + Pages: `gh` non autenticato (DOMANDE D1). Build statica ok.
+- [x] M1 Modello dati, persistenza, motore di calcolo
+- [x] M2 Classi, alunni, impostazioni
+- [x] M3 Orario, calendario, pianificazione automatica
+- [x] M4 Registro, riepilogo, verifica voti, export Excel
+- [x] M5 Modalità campo e scambio file
+- [x] M6 Giochi della Gioventù
+- [x] M7 Rubriche, stampa, rifinitura
+- [x] M8 Collaudo (manca solo il deploy, vedi M0)
 
 ## Test
-- `tests/unit/calcolo.test.js` — caso Rossi/Bianchi dell'Excel, 7,49/7,50, soglie esatte, AS/NV/ES/OP/Ritirato, pesi.
-- `tests/unit/planner.test.js` — 11 classi, chiusure, G03 4BM = 02/11/2026, gita → slittamento solo della classe, 9 giorni.
-- `tests/unit/privacy.test.js` — guardia anti-dati e assenza di API di rete in `src/`.
+- Unitari (106): calcolo (caso Rossi/Bianchi, 7,49/7,50, soglie, stati), planner (11 classi, G03 4BM 02/11/2026,
+  gita, 9 giorni, cuscinetti), dati (azioni, round-trip archivio, migrazioni, IndexedDB), scambio, giochi, privacy.
+- E2E (7): classe di prova con 3 alunni, descrittore, caso Excel → stessi voti/medie/giudizi + Excel esportato,
+  lezione saltata, stampa/accessibilità, flusso iPad offline completo, backup/ripristino. Zero richieste esterne.
 
 ## Decisioni
-- Usare `./node_modules/.bin/…` o `npm run …`: `npx` resta bloccato in questo ambiente.
-- Config vitest separata (`vitest.config.js`) per non caricare il plugin PWA nei test.
-- Pianificatore: le giornate hanno un'"ancora" (lunedì della settimana per plesso, = "non prima di");
-  le giornate di progetto cadono nell'ultima lezione del progetto e non richiedono recupero;
-  dopo ogni prova la lezione successiva è di recupero; cuscinetti = ultime 2 lezioni libere del quadrimestre,
-  usati solo se la sequenza slitta oltre.
+- `node_modules` è un symlink verso `~/Library/Caches/registro-motoria-deps/node_modules`: la Scrivania è su iCloud
+  e la sincronizzazione bloccava la lettura dei file (test e build appesi). Dopo `npm install` rifare il symlink
+  (o lanciare `npm install` nella cartella in Caches).
+- Usare `npm run …` o `./node_modules/.bin/…`, non `npx` (resta appeso in questo ambiente).
+- Pianificatore: ancora = lunedì "non prima di" per plesso; giornate di progetto nell'ultima lezione del progetto,
+  senza recupero; cuscinetti = ultime 2 lezioni libere del quadrimestre.
+- Campo: export "dall'ultimo export" tracciato con un elenco esplicito (non con gli orari dell'iPad).
+- Salvataggio su IndexedDB immediato a ogni modifica; archivio su cartella dopo 4 s.
 
 ## Prossimo passo
-M2: interfaccia gestionale (shell, router, Classi e alunni, Impostazioni) + e2e.
+Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. Prima: risolvere D1 (GitHub) per avere l'app su iPad.
