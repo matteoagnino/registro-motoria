@@ -4,7 +4,7 @@ Ultimo aggiornamento: 2026-10-06
 
 ## Milestone
 - [~] M0 Fondamenta e sicurezza — tutto fatto tranne repo GitHub + Pages (bloccato: `gh` non autenticato, vedi DOMANDE D1)
-- [~] M1 Modello dati, persistenza, motore di calcolo — motore di calcolo fatto e testato; manca store IndexedDB/archivio
+- [x] M1 Modello dati, persistenza, motore di calcolo (store IndexedDB, archivio JSON + File System Access, backup, migrazioni, azioni pure, selettori)
 - [~] M3 (anticipato) motore di pianificazione puro fatto e testato
 - [ ] M2 Classi, alunni, impostazioni
 - [ ] M4 Registro, riepilogo, verifica voti, export
@@ -34,4 +34,4 @@ Ultimo aggiornamento: 2026-10-06
   usati solo se la sequenza slitta oltre.
 
 ## Prossimo passo
-M1: store IndexedDB + archivio JSON (File System Access + fallback) + backup + migrazioni; poi UI M2.
+M2: interfaccia gestionale (shell, router, Classi e alunni, Impostazioni) + e2e.
