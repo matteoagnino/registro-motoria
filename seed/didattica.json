@@ -1,0 +1,1642 @@
+{
+ "_nota": "Seed modificabile da interfaccia. Fonte: programmazione annuale 2026/27 (IN 2012/2018), curricolo d'istituto I.C. Pacinotti, Allegato A OM 3/2025 per i descrittori.",
+ "scala": [
+  {
+   "giudizio": "Ottimo",
+   "valore": 10
+  },
+  {
+   "giudizio": "Distinto",
+   "valore": 9
+  },
+  {
+   "giudizio": "Buono",
+   "valore": 8
+  },
+  {
+   "giudizio": "Discreto",
+   "valore": 7
+  },
+  {
+   "giudizio": "Sufficiente",
+   "valore": 6
+  },
+  {
+   "giudizio": "Non sufficiente",
+   "valore": 5
+  }
+ ],
+ "soglie": [
+  {
+   "min": 0,
+   "giudizio": "Non sufficiente"
+  },
+  {
+   "min": 5.5,
+   "giudizio": "Sufficiente"
+  },
+  {
+   "min": 6.5,
+   "giudizio": "Discreto"
+  },
+  {
+   "min": 7.5,
+   "giudizio": "Buono"
+  },
+  {
+   "min": 8.5,
+   "giudizio": "Distinto"
+  },
+  {
+   "min": 9.5,
+   "giudizio": "Ottimo"
+  }
+ ],
+ "qualificatori_livelli": {
+  "Ottimo": "con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale",
+  "Distinto": "con autonomia e consapevolezza, con continuità, anche in situazioni complesse",
+  "Buono": "con autonomia e con continuità nelle situazioni note",
+  "Discreto": "con parziale autonomia, in situazioni non particolarmente complesse",
+  "Sufficiente": "principalmente con la guida e il supporto del docente, solo in situazioni già affrontate",
+  "Non sufficiente": "solo saltuariamente, anche se guidato dal docente"
+ },
+ "parametri": {
+  "peso_prima_meta": 1,
+  "peso_seconda_meta": 1.5,
+  "quota_prove": 0.8,
+  "quota_processo": 0.2,
+  "min_voti_obiettivo": 2,
+  "giorni_minimi_ripetizione": 9,
+  "arrotondamento_voto_prova": "intero, da ,50 per eccesso"
+ },
+ "obiettivi_scheda": {
+  "4": {
+   "Q1A": "Padroneggiare gli schemi motori di base e orientarsi nello spazio-tempo in sicurezza, con autonomia crescente.",
+   "Q1B": "Partecipare e cooperare nel gruppo, confrontandosi lealmente, rispettando le regole e accettando le diversità.",
+   "Q2A": "Utilizzare il linguaggio del corpo per esprimersi e realizzare semplici sequenze, valorizzando le proprie potenzialità.",
+   "Q2B": "Muoversi in sicurezza nei vari ambienti e riconoscere il legame tra movimento, alimentazione e benessere, con autonomia crescente."
+  },
+  "5": {
+   "Q1A": "Organizzare movimenti finalizzati valutando traiettorie, distanze e ritmi anche in situazioni nuove, con piena autonomia.",
+   "Q1B": "Applicare correttamente le modalità di gioco-sport e svolgere un ruolo attivo nel gruppo, rispettando regole e avversari.",
+   "Q2A": "Elaborare ed eseguire sequenze e coreografie individuali e collettive in modo personale e coordinato.",
+   "Q2B": "Collegare alimentazione, esercizio e benessere verso stili di vita attivi, muovendosi in sicurezza anche in contesti nuovi e all'aperto."
+  }
+ },
+ "sotto_obiettivi": {
+  "4": [
+   {
+    "codice": "1.1",
+    "nucleo": "1",
+    "etichetta": "Schemi motori combinati",
+    "testo": "Coordinare e utilizzare schemi motori combinati, in forma successiva e poi simultanea (correre/saltare, afferrare/lanciare).",
+    "concorre": {
+     "Q1": "A",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Combinazione in successione",
+      "cosa_osservo": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione",
+      "descrittori": {
+       "Ottimo": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collega schemi motori diversi uno dopo l'altro (correre, saltare, rotolare, lanciare) senza interrompere l'azione solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Combinazione simultanea",
+      "cosa_osservo": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare)",
+      "descrittori": {
+       "Ottimo": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Esegue due schemi motori contemporaneamente (correre palleggiando, saltare e afferrare) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Controllo ed equilibrio",
+      "cosa_osservo": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra",
+      "descrittori": {
+       "Ottimo": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Mantiene il controllo del corpo e l'equilibrio durante le combinazioni e negli arrivi a terra solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Precisione esecutiva",
+      "cosa_osservo": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi)",
+      "descrittori": {
+       "Ottimo": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta le richieste tecniche del compito (appoggi, numero di ripetizioni, sopra/sotto, senza toccare gli attrezzi) solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "1.2",
+    "nucleo": "1",
+    "etichetta": "Traiettorie, distanze, ritmi",
+    "testo": "Riconoscere e valutare traiettorie, distanze, ritmi e successioni temporali, organizzando il movimento rispetto a sé, agli oggetti e agli altri.",
+    "concorre": {
+     "Q1": "A",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Traiettorie",
+      "cosa_osservo": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo",
+      "descrittori": {
+       "Ottimo": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Valuta la traiettoria di un oggetto per lanciarlo verso un bersaglio o per afferrarlo solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Distanze",
+      "cosa_osservo": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi",
+      "descrittori": {
+       "Ottimo": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Valuta distanze e spazi, adattando ampiezza, forza e numero dei passi solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Ritmo",
+      "cosa_osservo": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli)",
+      "descrittori": {
+       "Ottimo": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Mantiene un ritmo regolare in sequenze ritmiche e cadenzate (isole, framezzo, saltelli) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Successioni e orientamento",
+      "cosa_osservo": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni",
+      "descrittori": {
+       "Ottimo": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta l'ordine delle azioni e si orienta rispetto a sé, agli oggetti e ai compagni solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "2.1",
+    "nucleo": "2",
+    "etichetta": "Linguaggio motorio creativo",
+    "testo": "Utilizzare il linguaggio motorio-gestuale in modo creativo e originale, anche in contesti non specifici.",
+    "concorre": {
+     "Q1": "—",
+     "Q2": "A"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Espressività del gesto",
+      "cosa_osservo": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi",
+      "descrittori": {
+       "Ottimo": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Usa il corpo e il gesto per comunicare emozioni, stati d'animo e personaggi solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Creatività",
+      "cosa_osservo": "Propone soluzioni motorie personali e originali",
+      "descrittori": {
+       "Ottimo": "Propone soluzioni motorie personali e originali con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Propone soluzioni motorie personali e originali con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Propone soluzioni motorie personali e originali con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Propone soluzioni motorie personali e originali con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Propone soluzioni motorie personali e originali principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Propone soluzioni motorie personali e originali solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Ritmo e musica",
+      "cosa_osservo": "Adatta il movimento al ritmo e alla musica",
+      "descrittori": {
+       "Ottimo": "Adatta il movimento al ritmo e alla musica con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Adatta il movimento al ritmo e alla musica con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Adatta il movimento al ritmo e alla musica con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Adatta il movimento al ritmo e alla musica con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Adatta il movimento al ritmo e alla musica principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Adatta il movimento al ritmo e alla musica solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Composizione con gli altri",
+      "cosa_osservo": "Contribuisce a una semplice composizione a coppie o in gruppo",
+      "descrittori": {
+       "Ottimo": "Contribuisce a una semplice composizione a coppie o in gruppo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Contribuisce a una semplice composizione a coppie o in gruppo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Contribuisce a una semplice composizione a coppie o in gruppo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Contribuisce a una semplice composizione a coppie o in gruppo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Contribuisce a una semplice composizione a coppie o in gruppo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Contribuisce a una semplice composizione a coppie o in gruppo solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "3.1",
+    "nucleo": "3",
+    "etichetta": "Partecipare e collaborare",
+    "testo": "Partecipare attivamente alle varie forme di gioco, anche in forma di gara, collaborando con gli altri.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Partecipazione",
+      "cosa_osservo": "Partecipa attivamente a tutte le forme di gioco proposte",
+      "descrittori": {
+       "Ottimo": "Partecipa attivamente a tutte le forme di gioco proposte con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Partecipa attivamente a tutte le forme di gioco proposte con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Partecipa attivamente a tutte le forme di gioco proposte con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Partecipa attivamente a tutte le forme di gioco proposte con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Partecipa attivamente a tutte le forme di gioco proposte principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Partecipa attivamente a tutte le forme di gioco proposte solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Collaborazione",
+      "cosa_osservo": "Collabora con i compagni per raggiungere l'obiettivo comune",
+      "descrittori": {
+       "Ottimo": "Collabora con i compagni per raggiungere l'obiettivo comune con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collabora con i compagni per raggiungere l'obiettivo comune con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collabora con i compagni per raggiungere l'obiettivo comune con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collabora con i compagni per raggiungere l'obiettivo comune con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collabora con i compagni per raggiungere l'obiettivo comune principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collabora con i compagni per raggiungere l'obiettivo comune solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Ruoli e compiti",
+      "cosa_osservo": "Assume e rispetta il ruolo e il compito assegnato nel gioco",
+      "descrittori": {
+       "Ottimo": "Assume e rispetta il ruolo e il compito assegnato nel gioco con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Assume e rispetta il ruolo e il compito assegnato nel gioco con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Assume e rispetta il ruolo e il compito assegnato nel gioco con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Assume e rispetta il ruolo e il compito assegnato nel gioco con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Assume e rispetta il ruolo e il compito assegnato nel gioco principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Assume e rispetta il ruolo e il compito assegnato nel gioco solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Impegno nella gara",
+      "cosa_osservo": "Si impegna con continuità anche nelle situazioni di gara",
+      "descrittori": {
+       "Ottimo": "Si impegna con continuità anche nelle situazioni di gara con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si impegna con continuità anche nelle situazioni di gara con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si impegna con continuità anche nelle situazioni di gara con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si impegna con continuità anche nelle situazioni di gara con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si impegna con continuità anche nelle situazioni di gara principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si impegna con continuità anche nelle situazioni di gara solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "3.2",
+    "nucleo": "3",
+    "etichetta": "Regole ed esito del gioco",
+    "testo": "Rispettare le regole; accettare la sconfitta con equilibrio e vivere la vittoria nel rispetto degli avversari, accettando le diversità.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Rispetto delle regole",
+      "cosa_osservo": "Conosce e rispetta le regole del gioco",
+      "descrittori": {
+       "Ottimo": "Conosce e rispetta le regole del gioco con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Conosce e rispetta le regole del gioco con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Conosce e rispetta le regole del gioco con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Conosce e rispetta le regole del gioco con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Conosce e rispetta le regole del gioco principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Conosce e rispetta le regole del gioco solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Fair play",
+      "cosa_osservo": "Si comporta con lealtà verso compagni e avversari",
+      "descrittori": {
+       "Ottimo": "Si comporta con lealtà verso compagni e avversari con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si comporta con lealtà verso compagni e avversari con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si comporta con lealtà verso compagni e avversari con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si comporta con lealtà verso compagni e avversari con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si comporta con lealtà verso compagni e avversari principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si comporta con lealtà verso compagni e avversari solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Gestione dell'esito",
+      "cosa_osservo": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto",
+      "descrittori": {
+       "Ottimo": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Accettazione delle diversità",
+      "cosa_osservo": "Gioca con tutti i compagni, valorizzando le differenze",
+      "descrittori": {
+       "Ottimo": "Gioca con tutti i compagni, valorizzando le differenze con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Gioca con tutti i compagni, valorizzando le differenze con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Gioca con tutti i compagni, valorizzando le differenze con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Gioca con tutti i compagni, valorizzando le differenze con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Gioca con tutti i compagni, valorizzando le differenze principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Gioca con tutti i compagni, valorizzando le differenze solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.1",
+    "nucleo": "4",
+    "etichetta": "Muoversi negli ambienti",
+    "testo": "Sapersi muovere in modo adeguato nei vari ambienti.",
+    "concorre": {
+     "Q1": "A",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Uso dello spazio",
+      "cosa_osservo": "Si muove nello spazio disponibile evitando ostacoli e compagni",
+      "descrittori": {
+       "Ottimo": "Si muove nello spazio disponibile evitando ostacoli e compagni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si muove nello spazio disponibile evitando ostacoli e compagni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si muove nello spazio disponibile evitando ostacoli e compagni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si muove nello spazio disponibile evitando ostacoli e compagni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si muove nello spazio disponibile evitando ostacoli e compagni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si muove nello spazio disponibile evitando ostacoli e compagni solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Adattamento all'ambiente",
+      "cosa_osservo": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti)",
+      "descrittori": {
+       "Ottimo": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Adatta il movimento all'ambiente (palestra, cortile, aula, spazi aperti) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Percorsi e consegne",
+      "cosa_osservo": "Rispetta percorsi, zone e consegne di spostamento",
+      "descrittori": {
+       "Ottimo": "Rispetta percorsi, zone e consegne di spostamento con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta percorsi, zone e consegne di spostamento con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta percorsi, zone e consegne di spostamento con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta percorsi, zone e consegne di spostamento con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta percorsi, zone e consegne di spostamento principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta percorsi, zone e consegne di spostamento solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Autonomia negli spostamenti",
+      "cosa_osservo": "Gestisce trasferimenti, cambio e ordine personale",
+      "descrittori": {
+       "Ottimo": "Gestisce trasferimenti, cambio e ordine personale con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Gestisce trasferimenti, cambio e ordine personale con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Gestisce trasferimenti, cambio e ordine personale con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Gestisce trasferimenti, cambio e ordine personale con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Gestisce trasferimenti, cambio e ordine personale principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Gestisce trasferimenti, cambio e ordine personale solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.2",
+    "nucleo": "4",
+    "etichetta": "Alimentazione ed esercizio",
+    "testo": "Iniziare a conoscere il rapporto tra alimentazione ed esercizio fisico.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Cibo ed energia",
+      "cosa_osservo": "Riconosce gli alimenti che danno energia per il movimento",
+      "descrittori": {
+       "Ottimo": "Riconosce gli alimenti che danno energia per il movimento con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Riconosce gli alimenti che danno energia per il movimento con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Riconosce gli alimenti che danno energia per il movimento con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Riconosce gli alimenti che danno energia per il movimento con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Riconosce gli alimenti che danno energia per il movimento principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Riconosce gli alimenti che danno energia per il movimento solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Sforzo e corpo",
+      "cosa_osservo": "Collega lo sforzo a fatica, respiro e battito del cuore",
+      "descrittori": {
+       "Ottimo": "Collega lo sforzo a fatica, respiro e battito del cuore con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collega lo sforzo a fatica, respiro e battito del cuore con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collega lo sforzo a fatica, respiro e battito del cuore con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collega lo sforzo a fatica, respiro e battito del cuore con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collega lo sforzo a fatica, respiro e battito del cuore principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collega lo sforzo a fatica, respiro e battito del cuore solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Idratazione e merenda",
+      "cosa_osservo": "Riconosce l'importanza di bere e di una merenda adeguata",
+      "descrittori": {
+       "Ottimo": "Riconosce l'importanza di bere e di una merenda adeguata con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Riconosce l'importanza di bere e di una merenda adeguata con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Riconosce l'importanza di bere e di una merenda adeguata con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Riconosce l'importanza di bere e di una merenda adeguata con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Riconosce l'importanza di bere e di una merenda adeguata principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Riconosce l'importanza di bere e di una merenda adeguata solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Abitudini sane",
+      "cosa_osservo": "Racconta e sceglie abitudini di movimento e alimentazione sane",
+      "descrittori": {
+       "Ottimo": "Racconta e sceglie abitudini di movimento e alimentazione sane con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Racconta e sceglie abitudini di movimento e alimentazione sane con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Racconta e sceglie abitudini di movimento e alimentazione sane con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Racconta e sceglie abitudini di movimento e alimentazione sane con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Racconta e sceglie abitudini di movimento e alimentazione sane principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Racconta e sceglie abitudini di movimento e alimentazione sane solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.3",
+    "nucleo": "4",
+    "etichetta": "Prevenzione e sicurezza",
+    "testo": "Assumere comportamenti adeguati per la prevenzione degli infortuni, la sicurezza e una corretta alimentazione.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Riscaldamento",
+      "cosa_osservo": "Esegue riscaldamento e defaticamento conoscendone lo scopo",
+      "descrittori": {
+       "Ottimo": "Esegue riscaldamento e defaticamento conoscendone lo scopo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Esegue riscaldamento e defaticamento conoscendone lo scopo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Esegue riscaldamento e defaticamento conoscendone lo scopo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Esegue riscaldamento e defaticamento conoscendone lo scopo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Esegue riscaldamento e defaticamento conoscendone lo scopo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Esegue riscaldamento e defaticamento conoscendone lo scopo solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Attrezzi e spazi sicuri",
+      "cosa_osservo": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri",
+      "descrittori": {
+       "Ottimo": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Usa attrezzi e spazi in modo sicuro per sé e per gli altri solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Distanze di sicurezza",
+      "cosa_osservo": "Rispetta le distanze e i turni di sicurezza",
+      "descrittori": {
+       "Ottimo": "Rispetta le distanze e i turni di sicurezza con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta le distanze e i turni di sicurezza con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta le distanze e i turni di sicurezza con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta le distanze e i turni di sicurezza con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta le distanze e i turni di sicurezza principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta le distanze e i turni di sicurezza solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Cura di sé",
+      "cosa_osservo": "Cura abbigliamento, scarpe e igiene personale per l'attività",
+      "descrittori": {
+       "Ottimo": "Cura abbigliamento, scarpe e igiene personale per l'attività con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Cura abbigliamento, scarpe e igiene personale per l'attività con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Cura abbigliamento, scarpe e igiene personale per l'attività con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Cura abbigliamento, scarpe e igiene personale per l'attività con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Cura abbigliamento, scarpe e igiene personale per l'attività principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Cura abbigliamento, scarpe e igiene personale per l'attività solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "TEC.1",
+    "nucleo": "TEC",
+    "etichetta": "Attrezzi: istruzioni e sicurezza",
+    "testo": "Tecnologia (obiettivo adattato): leggere istruzioni (disegno e misure), allestire una stazione, usare gli attrezzi in modo corretto e sicuro e riordinarli.",
+    "concorre": {
+     "Q1": "TEC",
+     "Q2": "TEC"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Lettura delle istruzioni",
+      "cosa_osservo": "Legge la carta-stazione e ne ricava disposizione e misure",
+      "descrittori": {
+       "Ottimo": "Legge la carta-stazione e ne ricava disposizione e misure con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Legge la carta-stazione e ne ricava disposizione e misure con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Legge la carta-stazione e ne ricava disposizione e misure con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Legge la carta-stazione e ne ricava disposizione e misure con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Legge la carta-stazione e ne ricava disposizione e misure principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Legge la carta-stazione e ne ricava disposizione e misure solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Allestimento",
+      "cosa_osservo": "Allestisce la stazione rispettando disegno e misure",
+      "descrittori": {
+       "Ottimo": "Allestisce la stazione rispettando disegno e misure con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Allestisce la stazione rispettando disegno e misure con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Allestisce la stazione rispettando disegno e misure con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Allestisce la stazione rispettando disegno e misure con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Allestisce la stazione rispettando disegno e misure principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Allestisce la stazione rispettando disegno e misure solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Uso sicuro",
+      "cosa_osservo": "Trasporta, posiziona e usa gli attrezzi in modo sicuro",
+      "descrittori": {
+       "Ottimo": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Trasporta, posiziona e usa gli attrezzi in modo sicuro principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Trasporta, posiziona e usa gli attrezzi in modo sicuro solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Riordino e cura",
+      "cosa_osservo": "Ripristina e riordina gli attrezzi secondo i criteri condivisi",
+      "descrittori": {
+       "Ottimo": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ripristina e riordina gli attrezzi secondo i criteri condivisi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ripristina e riordina gli attrezzi secondo i criteri condivisi solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "TEC.2",
+    "nucleo": "TEC",
+    "etichetta": "Tempi e misure in tabella",
+    "testo": "Tecnologia (obiettivo adattato): rilevare tempi e misure con strumenti (cronometro, metro), registrarli in tabella e confrontarli.",
+    "concorre": {
+     "Q1": "TEC",
+     "Q2": "TEC"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Uso dello strumento",
+      "cosa_osservo": "Usa correttamente cronometro o metro",
+      "descrittori": {
+       "Ottimo": "Usa correttamente cronometro o metro con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Usa correttamente cronometro o metro con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Usa correttamente cronometro o metro con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Usa correttamente cronometro o metro con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Usa correttamente cronometro o metro principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Usa correttamente cronometro o metro solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Registrazione",
+      "cosa_osservo": "Registra i dati in tabella in modo ordinato",
+      "descrittori": {
+       "Ottimo": "Registra i dati in tabella in modo ordinato con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Registra i dati in tabella in modo ordinato con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Registra i dati in tabella in modo ordinato con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Registra i dati in tabella in modo ordinato con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Registra i dati in tabella in modo ordinato principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Registra i dati in tabella in modo ordinato solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Lettura e confronto",
+      "cosa_osservo": "Legge e confronta i dati (prima/dopo, compagni, classe)",
+      "descrittori": {
+       "Ottimo": "Legge e confronta i dati (prima/dopo, compagni, classe) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Legge e confronta i dati (prima/dopo, compagni, classe) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Legge e confronta i dati (prima/dopo, compagni, classe) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Legge e confronta i dati (prima/dopo, compagni, classe) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Legge e confronta i dati (prima/dopo, compagni, classe) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Legge e confronta i dati (prima/dopo, compagni, classe) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Conclusioni",
+      "cosa_osservo": "Ricava semplici conclusioni sui propri progressi",
+      "descrittori": {
+       "Ottimo": "Ricava semplici conclusioni sui propri progressi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ricava semplici conclusioni sui propri progressi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ricava semplici conclusioni sui propri progressi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ricava semplici conclusioni sui propri progressi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ricava semplici conclusioni sui propri progressi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ricava semplici conclusioni sui propri progressi solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "CIV.1",
+    "nucleo": "CIV",
+    "etichetta": "Regole condivise",
+    "testo": "Ed. civica (obiettivo adattato): costruire con la classe regole condivise di gioco e di sicurezza e rispettarle.",
+    "concorre": {
+     "Q1": "CIV",
+     "Q2": "CIV"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Proposta di regole",
+      "cosa_osservo": "Propone e discute regole utili al gioco e alla sicurezza",
+      "descrittori": {
+       "Ottimo": "Propone e discute regole utili al gioco e alla sicurezza con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Propone e discute regole utili al gioco e alla sicurezza con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Propone e discute regole utili al gioco e alla sicurezza con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Propone e discute regole utili al gioco e alla sicurezza con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Propone e discute regole utili al gioco e alla sicurezza principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Propone e discute regole utili al gioco e alla sicurezza solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Rispetto delle regole condivise",
+      "cosa_osservo": "Rispetta le regole decise insieme",
+      "descrittori": {
+       "Ottimo": "Rispetta le regole decise insieme con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta le regole decise insieme con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta le regole decise insieme con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta le regole decise insieme con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta le regole decise insieme principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta le regole decise insieme solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Gestione dei conflitti",
+      "cosa_osservo": "Affronta i conflitti con il dialogo",
+      "descrittori": {
+       "Ottimo": "Affronta i conflitti con il dialogo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Affronta i conflitti con il dialogo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Affronta i conflitti con il dialogo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Affronta i conflitti con il dialogo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Affronta i conflitti con il dialogo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Affronta i conflitti con il dialogo solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Inclusione",
+      "cosa_osservo": "Favorisce la partecipazione di tutti i compagni",
+      "descrittori": {
+       "Ottimo": "Favorisce la partecipazione di tutti i compagni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Favorisce la partecipazione di tutti i compagni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Favorisce la partecipazione di tutti i compagni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Favorisce la partecipazione di tutti i compagni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Favorisce la partecipazione di tutti i compagni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Favorisce la partecipazione di tutti i compagni solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "CIV.2",
+    "nucleo": "CIV",
+    "etichetta": "Salute e benessere",
+    "testo": "Ed. civica (obiettivo adattato): riconoscere comportamenti per la salute, la sicurezza e il benessere propri e altrui (Agenda 2030, Obiettivo 3).",
+    "concorre": {
+     "Q1": "CIV",
+     "Q2": "CIV"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Comportamenti per la salute",
+      "cosa_osservo": "Riconosce e adotta comportamenti per la propria salute",
+      "descrittori": {
+       "Ottimo": "Riconosce e adotta comportamenti per la propria salute con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Riconosce e adotta comportamenti per la propria salute con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Riconosce e adotta comportamenti per la propria salute con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Riconosce e adotta comportamenti per la propria salute con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Riconosce e adotta comportamenti per la propria salute principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Riconosce e adotta comportamenti per la propria salute solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Sicurezza propria e altrui",
+      "cosa_osservo": "Agisce tenendo conto della sicurezza di tutti",
+      "descrittori": {
+       "Ottimo": "Agisce tenendo conto della sicurezza di tutti con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Agisce tenendo conto della sicurezza di tutti con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Agisce tenendo conto della sicurezza di tutti con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Agisce tenendo conto della sicurezza di tutti con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Agisce tenendo conto della sicurezza di tutti principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Agisce tenendo conto della sicurezza di tutti solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Cura dell'ambiente comune",
+      "cosa_osservo": "Ha cura della palestra e degli spazi comuni",
+      "descrittori": {
+       "Ottimo": "Ha cura della palestra e degli spazi comuni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ha cura della palestra e degli spazi comuni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ha cura della palestra e degli spazi comuni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ha cura della palestra e degli spazi comuni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ha cura della palestra e degli spazi comuni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ha cura della palestra e degli spazi comuni solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Benessere e Agenda 2030",
+      "cosa_osservo": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030",
+      "descrittori": {
+       "Ottimo": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   }
+  ],
+  "5": [
+   {
+    "codice": "1.1",
+    "nucleo": "1",
+    "etichetta": "Traiettorie, ritmi, organizzazione",
+    "testo": "Riconoscere e valutare traiettorie, distanze, ritmi esecutivi e successioni temporali, organizzando il proprio movimento in relazione a sé, agli oggetti e agli altri.",
+    "concorre": {
+     "Q1": "A",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Traiettorie",
+      "cosa_osservo": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare",
+      "descrittori": {
+       "Ottimo": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Valuta la traiettoria di oggetti e compagni per lanciare, afferrare, intercettare solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Distanze e velocità",
+      "cosa_osservo": "Valuta distanze e velocità, regolando forza e tempi d'azione",
+      "descrittori": {
+       "Ottimo": "Valuta distanze e velocità, regolando forza e tempi d'azione con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Valuta distanze e velocità, regolando forza e tempi d'azione con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Valuta distanze e velocità, regolando forza e tempi d'azione con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Valuta distanze e velocità, regolando forza e tempi d'azione con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Valuta distanze e velocità, regolando forza e tempi d'azione principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Valuta distanze e velocità, regolando forza e tempi d'azione solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Ritmi esecutivi",
+      "cosa_osservo": "Esegue sequenze con ritmo regolare e rapido",
+      "descrittori": {
+       "Ottimo": "Esegue sequenze con ritmo regolare e rapido con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Esegue sequenze con ritmo regolare e rapido con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Esegue sequenze con ritmo regolare e rapido con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Esegue sequenze con ritmo regolare e rapido con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Esegue sequenze con ritmo regolare e rapido principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Esegue sequenze con ritmo regolare e rapido solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Organizzazione con gli altri",
+      "cosa_osservo": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti)",
+      "descrittori": {
+       "Ottimo": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Organizza il proprio movimento in relazione ai compagni e a situazioni nuove (varianti) solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "2.1",
+    "nucleo": "2",
+    "etichetta": "Sequenze e coreografie",
+    "testo": "Elaborare ed eseguire semplici sequenze di movimento o semplici coreografie individuali e collettive.",
+    "concorre": {
+     "Q1": "—",
+     "Q2": "A"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Memoria della sequenza",
+      "cosa_osservo": "Memorizza ed esegue la sequenza nell'ordine corretto",
+      "descrittori": {
+       "Ottimo": "Memorizza ed esegue la sequenza nell'ordine corretto con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Memorizza ed esegue la sequenza nell'ordine corretto con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Memorizza ed esegue la sequenza nell'ordine corretto con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Memorizza ed esegue la sequenza nell'ordine corretto con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Memorizza ed esegue la sequenza nell'ordine corretto principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Memorizza ed esegue la sequenza nell'ordine corretto solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Ritmo e musica",
+      "cosa_osservo": "Coordina i movimenti con il ritmo e la musica",
+      "descrittori": {
+       "Ottimo": "Coordina i movimenti con il ritmo e la musica con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Coordina i movimenti con il ritmo e la musica con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Coordina i movimenti con il ritmo e la musica con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Coordina i movimenti con il ritmo e la musica con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Coordina i movimenti con il ritmo e la musica principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Coordina i movimenti con il ritmo e la musica solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Elaborazione personale",
+      "cosa_osservo": "Elabora e propone movimenti personali nella sequenza",
+      "descrittori": {
+       "Ottimo": "Elabora e propone movimenti personali nella sequenza con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Elabora e propone movimenti personali nella sequenza con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Elabora e propone movimenti personali nella sequenza con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Elabora e propone movimenti personali nella sequenza con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Elabora e propone movimenti personali nella sequenza principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Elabora e propone movimenti personali nella sequenza solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Sincronia con il gruppo",
+      "cosa_osservo": "Si sincronizza con i compagni nella coreografia collettiva",
+      "descrittori": {
+       "Ottimo": "Si sincronizza con i compagni nella coreografia collettiva con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si sincronizza con i compagni nella coreografia collettiva con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si sincronizza con i compagni nella coreografia collettiva con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si sincronizza con i compagni nella coreografia collettiva con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si sincronizza con i compagni nella coreografia collettiva principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si sincronizza con i compagni nella coreografia collettiva solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "3.1",
+    "nucleo": "3",
+    "etichetta": "Modalità esecutive gioco-sport",
+    "testo": "Conoscere e applicare correttamente le modalità esecutive di diverse proposte di gioco-sport.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Gesti tecnici",
+      "cosa_osservo": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta)",
+      "descrittori": {
+       "Ottimo": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Esegue i gesti tecnici di base del gioco-sport (passaggio, tiro, ricezione, battuta) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Regole specifiche",
+      "cosa_osservo": "Conosce e applica le regole specifiche del gioco-sport",
+      "descrittori": {
+       "Ottimo": "Conosce e applica le regole specifiche del gioco-sport con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Conosce e applica le regole specifiche del gioco-sport con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Conosce e applica le regole specifiche del gioco-sport con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Conosce e applica le regole specifiche del gioco-sport con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Conosce e applica le regole specifiche del gioco-sport principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Conosce e applica le regole specifiche del gioco-sport solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Scelte di gioco",
+      "cosa_osservo": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero)",
+      "descrittori": {
+       "Ottimo": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Compie semplici scelte tattiche (smarcarsi, passare al compagno libero) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Ruolo in campo",
+      "cosa_osservo": "Svolge il proprio ruolo in attacco e in difesa",
+      "descrittori": {
+       "Ottimo": "Svolge il proprio ruolo in attacco e in difesa con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Svolge il proprio ruolo in attacco e in difesa con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Svolge il proprio ruolo in attacco e in difesa con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Svolge il proprio ruolo in attacco e in difesa con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Svolge il proprio ruolo in attacco e in difesa principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Svolge il proprio ruolo in attacco e in difesa solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "3.2",
+    "nucleo": "3",
+    "etichetta": "Partecipare e collaborare",
+    "testo": "Partecipare attivamente alle varie forme di gioco, anche in forma di gara, collaborando con gli altri.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Partecipazione",
+      "cosa_osservo": "Partecipa attivamente a tutte le forme di gioco e di gara",
+      "descrittori": {
+       "Ottimo": "Partecipa attivamente a tutte le forme di gioco e di gara con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Partecipa attivamente a tutte le forme di gioco e di gara con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Partecipa attivamente a tutte le forme di gioco e di gara con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Partecipa attivamente a tutte le forme di gioco e di gara con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Partecipa attivamente a tutte le forme di gioco e di gara principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Partecipa attivamente a tutte le forme di gioco e di gara solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Collaborazione",
+      "cosa_osservo": "Collabora con la squadra per raggiungere l'obiettivo comune",
+      "descrittori": {
+       "Ottimo": "Collabora con la squadra per raggiungere l'obiettivo comune con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collabora con la squadra per raggiungere l'obiettivo comune con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collabora con la squadra per raggiungere l'obiettivo comune con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collabora con la squadra per raggiungere l'obiettivo comune con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collabora con la squadra per raggiungere l'obiettivo comune principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collabora con la squadra per raggiungere l'obiettivo comune solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Contributo al gruppo",
+      "cosa_osservo": "Porta un contributo personale e incoraggia i compagni",
+      "descrittori": {
+       "Ottimo": "Porta un contributo personale e incoraggia i compagni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Porta un contributo personale e incoraggia i compagni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Porta un contributo personale e incoraggia i compagni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Porta un contributo personale e incoraggia i compagni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Porta un contributo personale e incoraggia i compagni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Porta un contributo personale e incoraggia i compagni solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Impegno nella gara",
+      "cosa_osservo": "Si impegna con continuità anche quando la gara è difficile",
+      "descrittori": {
+       "Ottimo": "Si impegna con continuità anche quando la gara è difficile con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si impegna con continuità anche quando la gara è difficile con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si impegna con continuità anche quando la gara è difficile con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si impegna con continuità anche quando la gara è difficile con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si impegna con continuità anche quando la gara è difficile principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si impegna con continuità anche quando la gara è difficile solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "3.3",
+    "nucleo": "3",
+    "etichetta": "Regole, sconfitta e vittoria",
+    "testo": "Rispettare le regole nella competizione; accettare la sconfitta con equilibrio e vivere la vittoria nel rispetto dei perdenti, con senso di responsabilità.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Regole nella competizione",
+      "cosa_osservo": "Rispetta le regole anche nei momenti decisivi della gara",
+      "descrittori": {
+       "Ottimo": "Rispetta le regole anche nei momenti decisivi della gara con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta le regole anche nei momenti decisivi della gara con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta le regole anche nei momenti decisivi della gara con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta le regole anche nei momenti decisivi della gara con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta le regole anche nei momenti decisivi della gara principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta le regole anche nei momenti decisivi della gara solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Fair play",
+      "cosa_osservo": "Si comporta con lealtà e rispetto verso avversari e arbitro",
+      "descrittori": {
+       "Ottimo": "Si comporta con lealtà e rispetto verso avversari e arbitro con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si comporta con lealtà e rispetto verso avversari e arbitro con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si comporta con lealtà e rispetto verso avversari e arbitro con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si comporta con lealtà e rispetto verso avversari e arbitro con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si comporta con lealtà e rispetto verso avversari e arbitro principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si comporta con lealtà e rispetto verso avversari e arbitro solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Gestione dell'esito",
+      "cosa_osservo": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti",
+      "descrittori": {
+       "Ottimo": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Accetta la sconfitta con equilibrio e vive la vittoria con rispetto dei perdenti solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Responsabilità",
+      "cosa_osservo": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà)",
+      "descrittori": {
+       "Ottimo": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si assume responsabilità (autoarbitraggio, ammettere un fallo, aiutare chi è in difficoltà) solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.1",
+    "nucleo": "4",
+    "etichetta": "Muoversi negli ambienti",
+    "testo": "Sapersi muovere in modo adeguato nei vari ambienti.",
+    "concorre": {
+     "Q1": "A",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Uso dello spazio",
+      "cosa_osservo": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità",
+      "descrittori": {
+       "Ottimo": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Si muove nello spazio disponibile evitando ostacoli e compagni, anche ad alta velocità solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Adattamento all'ambiente",
+      "cosa_osservo": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti)",
+      "descrittori": {
+       "Ottimo": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Adatta il movimento ad ambienti diversi (palestra, cortile, spazi aperti) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Percorsi e consegne",
+      "cosa_osservo": "Rispetta percorsi, zone e consegne di spostamento",
+      "descrittori": {
+       "Ottimo": "Rispetta percorsi, zone e consegne di spostamento con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta percorsi, zone e consegne di spostamento con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta percorsi, zone e consegne di spostamento con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta percorsi, zone e consegne di spostamento con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta percorsi, zone e consegne di spostamento principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta percorsi, zone e consegne di spostamento solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Autonomia negli spostamenti",
+      "cosa_osservo": "Gestisce in autonomia trasferimenti, cambio e materiale personale",
+      "descrittori": {
+       "Ottimo": "Gestisce in autonomia trasferimenti, cambio e materiale personale con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Gestisce in autonomia trasferimenti, cambio e materiale personale con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Gestisce in autonomia trasferimenti, cambio e materiale personale con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Gestisce in autonomia trasferimenti, cambio e materiale personale con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Gestisce in autonomia trasferimenti, cambio e materiale personale principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Gestisce in autonomia trasferimenti, cambio e materiale personale solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.2",
+    "nucleo": "4",
+    "etichetta": "Alimentazione ed esercizio",
+    "testo": "Conoscere il rapporto tra alimentazione ed esercizio fisico.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Cibo ed energia",
+      "cosa_osservo": "Collega i principali alimenti all'energia necessaria per il movimento",
+      "descrittori": {
+       "Ottimo": "Collega i principali alimenti all'energia necessaria per il movimento con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collega i principali alimenti all'energia necessaria per il movimento con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collega i principali alimenti all'energia necessaria per il movimento con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collega i principali alimenti all'energia necessaria per il movimento con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collega i principali alimenti all'energia necessaria per il movimento principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collega i principali alimenti all'energia necessaria per il movimento solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Funzioni del corpo",
+      "cosa_osservo": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo",
+      "descrittori": {
+       "Ottimo": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Riconosce i cambiamenti di respiro, battito e muscoli durante lo sforzo solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Idratazione e recupero",
+      "cosa_osservo": "Conosce l'importanza di idratazione e recupero",
+      "descrittori": {
+       "Ottimo": "Conosce l'importanza di idratazione e recupero con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Conosce l'importanza di idratazione e recupero con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Conosce l'importanza di idratazione e recupero con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Conosce l'importanza di idratazione e recupero con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Conosce l'importanza di idratazione e recupero principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Conosce l'importanza di idratazione e recupero solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Scelte sane",
+      "cosa_osservo": "Motiva semplici scelte di movimento e alimentazione sane",
+      "descrittori": {
+       "Ottimo": "Motiva semplici scelte di movimento e alimentazione sane con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Motiva semplici scelte di movimento e alimentazione sane con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Motiva semplici scelte di movimento e alimentazione sane con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Motiva semplici scelte di movimento e alimentazione sane con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Motiva semplici scelte di movimento e alimentazione sane principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Motiva semplici scelte di movimento e alimentazione sane solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "4.3",
+    "nucleo": "4",
+    "etichetta": "Prevenzione e sicurezza",
+    "testo": "Assumere comportamenti adeguati per la prevenzione degli infortuni, la sicurezza e una corretta alimentazione.",
+    "concorre": {
+     "Q1": "B",
+     "Q2": "B"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Riscaldamento",
+      "cosa_osservo": "Esegue e guida semplici esercizi di riscaldamento e defaticamento",
+      "descrittori": {
+       "Ottimo": "Esegue e guida semplici esercizi di riscaldamento e defaticamento con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Esegue e guida semplici esercizi di riscaldamento e defaticamento con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Esegue e guida semplici esercizi di riscaldamento e defaticamento con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Esegue e guida semplici esercizi di riscaldamento e defaticamento con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Esegue e guida semplici esercizi di riscaldamento e defaticamento principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Esegue e guida semplici esercizi di riscaldamento e defaticamento solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Attrezzi e spazi sicuri",
+      "cosa_osservo": "Usa attrezzi e spazi in sicurezza e prevede i rischi",
+      "descrittori": {
+       "Ottimo": "Usa attrezzi e spazi in sicurezza e prevede i rischi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Usa attrezzi e spazi in sicurezza e prevede i rischi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Usa attrezzi e spazi in sicurezza e prevede i rischi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Usa attrezzi e spazi in sicurezza e prevede i rischi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Usa attrezzi e spazi in sicurezza e prevede i rischi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Usa attrezzi e spazi in sicurezza e prevede i rischi solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Distanze di sicurezza",
+      "cosa_osservo": "Rispetta distanze e turni, anche nelle situazioni di gara",
+      "descrittori": {
+       "Ottimo": "Rispetta distanze e turni, anche nelle situazioni di gara con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta distanze e turni, anche nelle situazioni di gara con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta distanze e turni, anche nelle situazioni di gara con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta distanze e turni, anche nelle situazioni di gara con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta distanze e turni, anche nelle situazioni di gara principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta distanze e turni, anche nelle situazioni di gara solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Cura di sé",
+      "cosa_osservo": "Cura abbigliamento, scarpe e igiene personale per l'attività",
+      "descrittori": {
+       "Ottimo": "Cura abbigliamento, scarpe e igiene personale per l'attività con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Cura abbigliamento, scarpe e igiene personale per l'attività con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Cura abbigliamento, scarpe e igiene personale per l'attività con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Cura abbigliamento, scarpe e igiene personale per l'attività con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Cura abbigliamento, scarpe e igiene personale per l'attività principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Cura abbigliamento, scarpe e igiene personale per l'attività solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "TEC.1",
+    "nucleo": "TEC",
+    "etichetta": "Attrezzi: istruzioni e sicurezza",
+    "testo": "Tecnologia (obiettivo adattato): leggere istruzioni (disegno e misure), allestire una stazione, usare gli attrezzi in modo corretto e sicuro e riordinarli.",
+    "concorre": {
+     "Q1": "TEC",
+     "Q2": "TEC"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Lettura delle istruzioni",
+      "cosa_osservo": "Legge la carta-stazione e ne ricava disposizione e misure",
+      "descrittori": {
+       "Ottimo": "Legge la carta-stazione e ne ricava disposizione e misure con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Legge la carta-stazione e ne ricava disposizione e misure con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Legge la carta-stazione e ne ricava disposizione e misure con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Legge la carta-stazione e ne ricava disposizione e misure con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Legge la carta-stazione e ne ricava disposizione e misure principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Legge la carta-stazione e ne ricava disposizione e misure solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Allestimento",
+      "cosa_osservo": "Allestisce la stazione rispettando disegno e misure",
+      "descrittori": {
+       "Ottimo": "Allestisce la stazione rispettando disegno e misure con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Allestisce la stazione rispettando disegno e misure con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Allestisce la stazione rispettando disegno e misure con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Allestisce la stazione rispettando disegno e misure con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Allestisce la stazione rispettando disegno e misure principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Allestisce la stazione rispettando disegno e misure solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Uso sicuro",
+      "cosa_osservo": "Trasporta, posiziona e usa gli attrezzi in modo sicuro",
+      "descrittori": {
+       "Ottimo": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Trasporta, posiziona e usa gli attrezzi in modo sicuro con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Trasporta, posiziona e usa gli attrezzi in modo sicuro principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Trasporta, posiziona e usa gli attrezzi in modo sicuro solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Riordino e cura",
+      "cosa_osservo": "Ripristina e riordina gli attrezzi secondo i criteri condivisi",
+      "descrittori": {
+       "Ottimo": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ripristina e riordina gli attrezzi secondo i criteri condivisi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ripristina e riordina gli attrezzi secondo i criteri condivisi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ripristina e riordina gli attrezzi secondo i criteri condivisi solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "TEC.2",
+    "nucleo": "TEC",
+    "etichetta": "Tempi e misure in tabella",
+    "testo": "Tecnologia (obiettivo adattato): rilevare tempi e misure con strumenti (cronometro, metro), registrarli in tabella e confrontarli.",
+    "concorre": {
+     "Q1": "TEC",
+     "Q2": "TEC"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Uso dello strumento",
+      "cosa_osservo": "Usa correttamente cronometro o metro",
+      "descrittori": {
+       "Ottimo": "Usa correttamente cronometro o metro con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Usa correttamente cronometro o metro con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Usa correttamente cronometro o metro con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Usa correttamente cronometro o metro con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Usa correttamente cronometro o metro principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Usa correttamente cronometro o metro solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Registrazione",
+      "cosa_osservo": "Registra i dati in tabella in modo ordinato",
+      "descrittori": {
+       "Ottimo": "Registra i dati in tabella in modo ordinato con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Registra i dati in tabella in modo ordinato con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Registra i dati in tabella in modo ordinato con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Registra i dati in tabella in modo ordinato con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Registra i dati in tabella in modo ordinato principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Registra i dati in tabella in modo ordinato solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Lettura e confronto",
+      "cosa_osservo": "Legge e confronta i dati (prima/dopo, compagni, classe)",
+      "descrittori": {
+       "Ottimo": "Legge e confronta i dati (prima/dopo, compagni, classe) con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Legge e confronta i dati (prima/dopo, compagni, classe) con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Legge e confronta i dati (prima/dopo, compagni, classe) con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Legge e confronta i dati (prima/dopo, compagni, classe) con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Legge e confronta i dati (prima/dopo, compagni, classe) principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Legge e confronta i dati (prima/dopo, compagni, classe) solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Conclusioni",
+      "cosa_osservo": "Ricava semplici conclusioni sui propri progressi",
+      "descrittori": {
+       "Ottimo": "Ricava semplici conclusioni sui propri progressi con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ricava semplici conclusioni sui propri progressi con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ricava semplici conclusioni sui propri progressi con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ricava semplici conclusioni sui propri progressi con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ricava semplici conclusioni sui propri progressi principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ricava semplici conclusioni sui propri progressi solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "CIV.1",
+    "nucleo": "CIV",
+    "etichetta": "Regole condivise",
+    "testo": "Ed. civica (obiettivo adattato): costruire con la classe regole condivise di gioco e di sicurezza e rispettarle.",
+    "concorre": {
+     "Q1": "CIV",
+     "Q2": "CIV"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Proposta di regole",
+      "cosa_osservo": "Propone e discute regole utili al gioco e alla sicurezza",
+      "descrittori": {
+       "Ottimo": "Propone e discute regole utili al gioco e alla sicurezza con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Propone e discute regole utili al gioco e alla sicurezza con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Propone e discute regole utili al gioco e alla sicurezza con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Propone e discute regole utili al gioco e alla sicurezza con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Propone e discute regole utili al gioco e alla sicurezza principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Propone e discute regole utili al gioco e alla sicurezza solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Rispetto delle regole condivise",
+      "cosa_osservo": "Rispetta le regole decise insieme",
+      "descrittori": {
+       "Ottimo": "Rispetta le regole decise insieme con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Rispetta le regole decise insieme con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Rispetta le regole decise insieme con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Rispetta le regole decise insieme con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Rispetta le regole decise insieme principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Rispetta le regole decise insieme solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Gestione dei conflitti",
+      "cosa_osservo": "Affronta i conflitti con il dialogo",
+      "descrittori": {
+       "Ottimo": "Affronta i conflitti con il dialogo con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Affronta i conflitti con il dialogo con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Affronta i conflitti con il dialogo con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Affronta i conflitti con il dialogo con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Affronta i conflitti con il dialogo principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Affronta i conflitti con il dialogo solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Inclusione",
+      "cosa_osservo": "Favorisce la partecipazione di tutti i compagni",
+      "descrittori": {
+       "Ottimo": "Favorisce la partecipazione di tutti i compagni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Favorisce la partecipazione di tutti i compagni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Favorisce la partecipazione di tutti i compagni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Favorisce la partecipazione di tutti i compagni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Favorisce la partecipazione di tutti i compagni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Favorisce la partecipazione di tutti i compagni solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   },
+   {
+    "codice": "CIV.2",
+    "nucleo": "CIV",
+    "etichetta": "Salute e benessere",
+    "testo": "Ed. civica (obiettivo adattato): riconoscere comportamenti per la salute, la sicurezza e il benessere propri e altrui (Agenda 2030, Obiettivo 3).",
+    "concorre": {
+     "Q1": "CIV",
+     "Q2": "CIV"
+    },
+    "indicatori": [
+     {
+      "n": 1,
+      "nome": "Comportamenti per la salute",
+      "cosa_osservo": "Riconosce e adotta comportamenti per la propria salute",
+      "descrittori": {
+       "Ottimo": "Riconosce e adotta comportamenti per la propria salute con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Riconosce e adotta comportamenti per la propria salute con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Riconosce e adotta comportamenti per la propria salute con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Riconosce e adotta comportamenti per la propria salute con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Riconosce e adotta comportamenti per la propria salute principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Riconosce e adotta comportamenti per la propria salute solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 2,
+      "nome": "Sicurezza propria e altrui",
+      "cosa_osservo": "Agisce tenendo conto della sicurezza di tutti",
+      "descrittori": {
+       "Ottimo": "Agisce tenendo conto della sicurezza di tutti con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Agisce tenendo conto della sicurezza di tutti con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Agisce tenendo conto della sicurezza di tutti con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Agisce tenendo conto della sicurezza di tutti con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Agisce tenendo conto della sicurezza di tutti principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Agisce tenendo conto della sicurezza di tutti solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 3,
+      "nome": "Cura dell'ambiente comune",
+      "cosa_osservo": "Ha cura della palestra e degli spazi comuni",
+      "descrittori": {
+       "Ottimo": "Ha cura della palestra e degli spazi comuni con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Ha cura della palestra e degli spazi comuni con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Ha cura della palestra e degli spazi comuni con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Ha cura della palestra e degli spazi comuni con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Ha cura della palestra e degli spazi comuni principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Ha cura della palestra e degli spazi comuni solo saltuariamente, anche se guidato dal docente."
+      }
+     },
+     {
+      "n": 4,
+      "nome": "Benessere e Agenda 2030",
+      "cosa_osservo": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030",
+      "descrittori": {
+       "Ottimo": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con piena autonomia e consapevolezza, con continuità, anche in situazioni complesse e mai proposte prima, in modo personale.",
+       "Distinto": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con autonomia e consapevolezza, con continuità, anche in situazioni complesse.",
+       "Buono": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con autonomia e con continuità nelle situazioni note.",
+       "Discreto": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 con parziale autonomia, in situazioni non particolarmente complesse.",
+       "Sufficiente": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 principalmente con la guida e il supporto del docente, solo in situazioni già affrontate.",
+       "Non sufficiente": "Collega movimento e benessere all'Obiettivo 3 dell'Agenda 2030 solo saltuariamente, anche se guidato dal docente."
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "rubrica_processo_dimensioni": [
+  "Partecipazione e impegno",
+  "Autonomia e organizzazione",
+  "Collaborazione e fair play",
+  "Uso dell'errore e dei feedback",
+  "Autovalutazione e valutazione tra pari"
+ ],
+ "codici_stato": {
+  "AS": "assente (da recuperare)",
+  "NV": "non valutabile",
+  "ES": "esonerato",
+  "OP": "obiettivi personalizzati (anagrafica)",
+  "Ritirato": "ha lasciato la classe"
+ }
+}

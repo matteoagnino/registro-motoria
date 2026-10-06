@@ -1,0 +1,148 @@
+{
+ "_nota": "Calendario scolastico Regione Piemonte 2026/27 (fonte: delibera regionale / studenti.it). Verificare eventuali ponti d'istituto e patrono.",
+ "anno": "2026/27",
+ "inizio_lezioni": "2026-09-14",
+ "fine_lezioni": "2027-06-10",
+ "quadrimestri": [
+  {
+   "id": "Q1",
+   "fine": "2027-01-31",
+   "meta": "2026-12-01"
+  },
+  {
+   "id": "Q2",
+   "fine": "2027-05-31",
+   "meta": "2027-03-29"
+  }
+ ],
+ "chiusure": [
+  {
+   "dal": "2026-11-01",
+   "al": "2026-11-01",
+   "motivo": "Ognissanti"
+  },
+  {
+   "dal": "2026-12-07",
+   "al": "2026-12-08",
+   "motivo": "Immacolata"
+  },
+  {
+   "dal": "2026-12-23",
+   "al": "2027-01-06",
+   "motivo": "Vacanze di Natale"
+  },
+  {
+   "dal": "2027-02-06",
+   "al": "2027-02-10",
+   "motivo": "Carnevale"
+  },
+  {
+   "dal": "2027-03-25",
+   "al": "2027-03-30",
+   "motivo": "Vacanze di Pasqua"
+  },
+  {
+   "dal": "2027-04-25",
+   "al": "2027-04-25",
+   "motivo": "Liberazione"
+  },
+  {
+   "dal": "2027-05-01",
+   "al": "2027-05-01",
+   "motivo": "Festa del lavoro"
+  },
+  {
+   "dal": "2027-06-02",
+   "al": "2027-06-02",
+   "motivo": "Festa della Repubblica"
+  }
+ ],
+ "vincoli": [
+  {
+   "plesso": "Boncompagni",
+   "dal": "2026-09-14",
+   "al": "2026-10-31",
+   "tipo": "spazio",
+   "nota": "Palestra inagibile: lezioni in aula (25-30 m², volume basso, poco materiale)"
+  },
+  {
+   "plesso": "Manzoni",
+   "dal": "2026-10-05",
+   "al": "2026-10-30",
+   "tipo": "progetto",
+   "nota": "Progetto basket con esperto: 4 lezioni (osservazione valutabile 3.x)"
+  },
+  {
+   "plesso": "Boncompagni",
+   "dal": null,
+   "al": null,
+   "tipo": "progetto",
+   "nota": "Progetto basket 4 lezioni: date da ufficializzare; sospende la sequenza"
+  }
+ ],
+ "regole_sequenza": {
+  "alternanza": "giornata di prova → lezione normale con recupero assenti → giornata di prova …",
+  "cuscinetto_fine_quadrimestre": 2,
+  "lezioni_libere": [
+   "ultima lezione prima delle vacanze di Natale",
+   "ultima lezione dell'anno scolastico"
+  ],
+  "lezione_saltata": "uscita didattica / assenza docente / evento: la lezione slitta alla successiva e tutta la sequenza scala; i cuscinetti assorbono gli slittamenti",
+  "struttura_lezione_120": "15' accoglienza in classe e trasferimento · 90' attività (ultimi 20' gioco a squadre) · 15' cambio scarpe, schede di autovalutazione e rientro",
+  "giochi_finali": "progressione dal semplice al complesso, min 4 settimane per gioco: battaglia navale → dodgeball → hitball (1°Q) → gioco di situazione → Volley S3 / spikeball (2°Q)"
+ },
+ "giornate_note_Q1": [
+  {
+   "giornata": "Q1-G01",
+   "descrizione": "Test d'ingresso – schemi motori di base",
+   "sotto_obiettivi": {
+    "4": [
+     "1.1"
+    ],
+    "5": [
+     "1.1"
+    ]
+   },
+   "settimana_Manzoni": "2026-09-28",
+   "settimana_Boncompagni": "2026-09-28"
+  },
+  {
+   "giornata": "Q1-G02",
+   "descrizione": "Progetto basket – osservazione (lezioni con l'esperto)",
+   "sotto_obiettivi": {
+    "4": [
+     "3.1",
+     "3.2"
+    ],
+    "5": [
+     "3.1",
+     "3.3"
+    ]
+   },
+   "settimana_Manzoni": "2026-10-26",
+   "settimana_Boncompagni": null
+  },
+  {
+   "giornata": "Q1-G03",
+   "descrizione": "P02 · Circuito Super Gym d'istituto",
+   "sotto_obiettivi": {
+    "4": [
+     "1.1",
+     "1.2",
+     "TEC.1"
+    ],
+    "5": [
+     "1.1",
+     "TEC.1"
+    ]
+   },
+   "settimana_Manzoni": "2026-11-02",
+   "settimana_Boncompagni": null
+  }
+ ],
+ "giochi_gioventu": {
+  "selezione_classi_entro": "fine marzo / inizio aprile",
+  "giochi": "fine maggio",
+  "classi_selezionate": "una 4ª e una 5ª dell'istituto"
+ }
+}

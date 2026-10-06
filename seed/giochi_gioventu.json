@@ -1,0 +1,208 @@
+{
+ "_nota": "Schede tecniche ultima edizione (FGI Super Gym School, FIDAL Triathlon, FIPAV Spikeball). Partecipazione per classe, tutti gli alunni concorrono. Le schede possono cambiare: tutto modificabile da interfaccia.",
+ "prove": [
+  {
+   "id": "supergym",
+   "federazione": "FGI",
+   "nome": "Super Gym School",
+   "tipo": "individuale_tempo",
+   "calcolo": "tempo + somma penalità (s); punteggio classe = media dei tempi di tutti gli alunni (minore è meglio)",
+   "stazioni": 13,
+   "durata_max_min": 30,
+   "campo": "16-18 × 6-9 m"
+  },
+  {
+   "id": "ostacoli",
+   "federazione": "FIDAL",
+   "nome": "Superiamo gli ostacoli",
+   "tipo": "individuale_tempo",
+   "calcolo": "tempo al centesimo; media di classe; classifica: 1ª=8 punti, poi 7…, dall'8ª in giù 1 punto",
+   "campo": "18 × 9 m"
+  },
+  {
+   "id": "lancia",
+   "federazione": "FIDAL",
+   "nome": "Lancia, colpisci e corri",
+   "tipo": "squadra_punti",
+   "calcolo": "due metà classe, 3' ciascuna; 1 punto per palla nel cerchio/bordo al volo + 1 punto per consegna; totale = somma dei 2 gruppi (maggiore è meglio)"
+  },
+  {
+   "id": "staffetta",
+   "federazione": "FIDAL",
+   "nome": "Staffetta infinita",
+   "tipo": "squadra_punti",
+   "calcolo": "due metà classe, 3'; 1 punto per giro + 0,25/0,50/0,75 per lato raggiunto; totale = somma dei 2 gruppi"
+  },
+  {
+   "id": "spikeball",
+   "federazione": "FIPAV",
+   "nome": "Spikeball",
+   "tipo": "squadra_punti",
+   "calcolo": "gruppi da 3-5, 20' totali; 1 punto per bersaglio colpito; totale classe"
+  }
+ ],
+ "classifica_generale": "somma dei punteggi ottenuti nelle diverse attività da ogni classe",
+ "correttivi_disabilita": "riduzione del tempo registrato (es. -30%/-50%) o punti compensativi (+0,5/+1) secondo criteri prestabiliti",
+ "spareggio": "a parità di punti: fair play e partecipazione (giudizio del docente)",
+ "statistiche_richieste": [
+  "media ufficiale",
+  "media troncata (senza migliore e peggiore)",
+  "mediana",
+  "deviazione standard",
+  "n alunni",
+  "confronto 1ª/2ª rilevazione",
+  "storico pluriennale"
+ ],
+ "penalita_supergym": [
+  {
+   "stazione": "1 Catena umana",
+   "errore": "Rottura della presa tra i compagni (ogni volta)",
+   "secondi": 5
+  },
+  {
+   "stazione": "2 Saltelli cerchi",
+   "errore": "Appoggio errato",
+   "secondi": 2
+  },
+  {
+   "stazione": "2 Saltelli cerchi",
+   "errore": "Piede sul bordo o fuori dal cerchio",
+   "secondi": 2
+  },
+  {
+   "stazione": "3 Capovolta",
+   "errore": "Esecuzione incompleta / mancato ritorno supino",
+   "secondi": 3
+  },
+  {
+   "stazione": "3 Capovolta",
+   "errore": "Uscita dal tappeto",
+   "secondi": 2
+  },
+  {
+   "stazione": "3 Capovolta",
+   "errore": "Rotolamento longitudinale al posto della capovolta",
+   "secondi": 5
+  },
+  {
+   "stazione": "4 Funicella",
+   "errore": "Conteggio errato (per ogni salto mancante)",
+   "secondi": 2
+  },
+  {
+   "stazione": "4 Funicella",
+   "errore": "Funicella non riposizionata",
+   "secondi": 3
+  },
+  {
+   "stazione": "5 Bacchetta",
+   "errore": "Piedi non uniti",
+   "secondi": 2
+  },
+  {
+   "stazione": "5 Bacchetta",
+   "errore": "Contatto con la bacchetta",
+   "secondi": 2
+  },
+  {
+   "stazione": "5 Bacchetta",
+   "errore": "Meno di 4 saltelli",
+   "secondi": 3
+  },
+  {
+   "stazione": "6 Piedi e palline",
+   "errore": "Uso delle mani",
+   "secondi": 10
+  },
+  {
+   "stazione": "6 Piedi e palline",
+   "errore": "Glutei sollevati durante lo spostamento",
+   "secondi": 5
+  },
+  {
+   "stazione": "6 Piedi e palline",
+   "errore": "Pallina caduta e non riposizionata (per palla)",
+   "secondi": 5
+  },
+  {
+   "stazione": "7 Over/Under",
+   "errore": "Abbattimento ostacolo (ogni volta)",
+   "secondi": 3
+  },
+  {
+   "stazione": "7 Over/Under",
+   "errore": "Tocco o urto ostacolo (ogni volta)",
+   "secondi": 3
+  },
+  {
+   "stazione": "7 Over/Under",
+   "errore": "Errore di sequenza",
+   "secondi": 5
+  },
+  {
+   "stazione": "8 Ostacolo grande",
+   "errore": "Aggiramento invece di scavalcare",
+   "secondi": 10
+  },
+  {
+   "stazione": "9 Slalom",
+   "errore": "Palleggio bloccato o a due mani (ogni volta)",
+   "secondi": 5
+  },
+  {
+   "stazione": "9 Slalom",
+   "errore": "Salto di un conetto",
+   "secondi": 5
+  },
+  {
+   "stazione": "9 Slalom",
+   "errore": "Urto di un conetto (ogni volta)",
+   "secondi": 2
+  },
+  {
+   "stazione": "10 Lancio",
+   "errore": "Piede fuori dal cerchio",
+   "secondi": 3
+  },
+  {
+   "stazione": "10 Lancio",
+   "errore": "Bersaglio mancato",
+   "secondi": 5
+  },
+  {
+   "stazione": "11 Prillo",
+   "errore": "Cerchio a terra prima della presa",
+   "secondi": 5
+  },
+  {
+   "stazione": "11 Prillo",
+   "errore": "Giro incompleto (meno di 360°)",
+   "secondi": 3
+  },
+  {
+   "stazione": "12 Quadrupedia",
+   "errore": "Tocco delle bacchette",
+   "secondi": 2
+  },
+  {
+   "stazione": "12 Quadrupedia",
+   "errore": "Saltello non simultaneo dei piedi",
+   "secondi": 2
+  },
+  {
+   "stazione": "13 Lancio e clap",
+   "errore": "Caduta della palla",
+   "secondi": 5
+  },
+  {
+   "stazione": "13 Lancio e clap",
+   "errore": "Battito mancato o non sotto la gamba",
+   "secondi": 3
+  },
+  {
+   "stazione": "13 Lancio e clap",
+   "errore": "Mancata alternanza delle gambe",
+   "secondi": 3
+  }
+ ]
+}

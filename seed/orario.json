@@ -1,0 +1,172 @@
+{
+ "_nota": "Orario settimanale 2026/27. 5BB ha lezione il venerdì con due fasce alternate a settimane (scenario 'Venerdì 1' / 'Venerdì 2'); la settimana di riferimento si imposta in Impostazioni.",
+ "classi": [
+  {
+   "codice": "5AM",
+   "livello": 5,
+   "sezione": "A",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "lun",
+     "inizio": "08:30",
+     "fine": "10:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "4BM",
+   "livello": 4,
+   "sezione": "B",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "lun",
+     "inizio": "10:30",
+     "fine": "12:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "4CM",
+   "livello": 4,
+   "sezione": "C",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "lun",
+     "inizio": "14:30",
+     "fine": "16:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "4AB",
+   "livello": 4,
+   "sezione": "A",
+   "plesso": "Boncompagni",
+   "lezioni": [
+    {
+     "giorno": "mar",
+     "inizio": "08:30",
+     "fine": "10:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "5CB",
+   "livello": 5,
+   "sezione": "C",
+   "plesso": "Boncompagni",
+   "lezioni": [
+    {
+     "giorno": "mar",
+     "inizio": "10:30",
+     "fine": "12:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "5BM",
+   "livello": 5,
+   "sezione": "B",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "mar",
+     "inizio": "14:30",
+     "fine": "16:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "4AM",
+   "livello": 4,
+   "sezione": "A",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "mer",
+     "inizio": "08:30",
+     "fine": "10:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "5CM",
+   "livello": 5,
+   "sezione": "C",
+   "plesso": "Manzoni",
+   "lezioni": [
+    {
+     "giorno": "mer",
+     "inizio": "10:30",
+     "fine": "12:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "4BB",
+   "livello": 4,
+   "sezione": "B",
+   "plesso": "Boncompagni",
+   "lezioni": [
+    {
+     "giorno": "gio",
+     "inizio": "08:30",
+     "fine": "10:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "5AB",
+   "livello": 5,
+   "sezione": "A",
+   "plesso": "Boncompagni",
+   "lezioni": [
+    {
+     "giorno": "gio",
+     "inizio": "10:30",
+     "fine": "12:30",
+     "scenario": "tutte"
+    }
+   ]
+  },
+  {
+   "codice": "5BB",
+   "livello": 5,
+   "sezione": "B",
+   "plesso": "Boncompagni",
+   "lezioni": [
+    {
+     "giorno": "ven",
+     "inizio": "10:30",
+     "fine": "12:30",
+     "scenario": "Venerdì 1"
+    },
+    {
+     "giorno": "ven",
+     "inizio": "14:30",
+     "fine": "16:30",
+     "scenario": "Venerdì 2"
+    }
+   ]
+  }
+ ],
+ "venerdi_alternati": {
+  "scenari": [
+   "Venerdì 1",
+   "Venerdì 2"
+  ],
+  "settimana_riferimento_venerdi1": "DA IMPOSTARE (chiedere a Matteo nel primo avvio)"
+ }
+}
