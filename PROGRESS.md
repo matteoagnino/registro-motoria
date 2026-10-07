@@ -5,7 +5,7 @@ Ultimo aggiornamento: 2026-10-06
 STATO: VERSIONE GREZZA COMPLETATA
 
 ## Milestone
-- [~] M0 — tutto fatto tranne repository GitHub + Pages: `gh` non autenticato (DOMANDE D1). Build statica ok.
+- [x] M0 — repository pubblico `matteoagnino/registro-motoria` (solo codice) e GitHub Pages: https://matteoagnino.github.io/registro-motoria/
 - [x] M1 Modello dati, persistenza, motore di calcolo
 - [x] M2 Classi, alunni, impostazioni
 - [x] M3 Orario, calendario, pianificazione automatica
@@ -13,7 +13,7 @@ STATO: VERSIONE GREZZA COMPLETATA
 - [x] M5 Modalità campo e scambio file
 - [x] M6 Giochi della Gioventù
 - [x] M7 Rubriche, stampa, rifinitura
-- [x] M8 Collaudo (manca solo il deploy, vedi M0)
+- [x] M8 Collaudo e consegna
 
 ## Test
 - Unitari (106): calcolo (caso Rossi/Bianchi, 7,49/7,50, soglie, stati), planner (11 classi, G03 4BM 02/11/2026,
@@ -32,4 +32,4 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Salvataggio su IndexedDB immediato a ogni modifica; archivio su cartella dopo 4 s.
 
 ## Prossimo passo
-Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. Prima: risolvere D1 (GitHub) per avere l'app su iPad.
+Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

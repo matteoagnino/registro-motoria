@@ -13,3 +13,4 @@
 - M6: Giochi della Gioventù: tempi con penalità e correttivi, statistiche, classifiche 4ª/5ª, storico, proposta.
 - M7: griglia di stampa A4 (nomi on/off), guida integrata, controlli di accessibilità di base, test zero rete.
 - M8: e2e completi (7), backup/ripristino, `MANUALE.md`.
+- Pubblicazione su GitHub Pages (2026-10-07): https://matteoagnino.github.io/registro-motoria/

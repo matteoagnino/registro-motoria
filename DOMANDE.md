@@ -2,7 +2,7 @@
 
 Formato: domanda · ipotesi prudente adottata · dove si cambia. Rispondi pure qui sotto ogni voce.
 
-- **D1 · GitHub non collegato.** `gh auth status` dice che il Mac non è autenticato su GitHub, quindi non
+- ~~**D1 · GitHub non collegato.**~~ **Risolta il 2026-10-07**: login fatto, repository creato, Pages attivo su https://matteoagnino.github.io/registro-motoria/. `gh auth status` dice che il Mac non è autenticato su GitHub, quindi non
   posso creare il repository `matteoagnino/registro-motoria` né pubblicare su GitHub Pages.
   *Ipotesi*: tutto il lavoro resta in git locale; `npm run deploy` è pronto. *Azione per Matteo*:
   `gh auth login`, poi `gh repo create matteoagnino/registro-motoria --public --source . --push` e `npm run deploy`.

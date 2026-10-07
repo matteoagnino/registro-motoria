@@ -10,7 +10,7 @@ Apri **Chrome** su `http://localhost:4173` → **Gestionale**. Chrome: menu ⋮ 
 per averla come app nel Dock. Quando sarà su GitHub Pages basterà aprire l'indirizzo della pagina.
 
 ## 2. Installarla sull'iPad
-Serve un indirizzo https (GitHub Pages): apri l'indirizzo in **Safari** → Condividi → **Aggiungi a Home**.
+Apri https://matteoagnino.github.io/registro-motoria/ in **Safari** → Condividi → **Aggiungi a Home**.
 Apri l'app una volta con la rete: da quel momento funziona **offline** anche in palestra.
 Scegli **Campo**.
 
