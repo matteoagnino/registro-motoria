@@ -1,5 +1,6 @@
 // Shell dell'applicazione: router a hash, layout delle due modalità, ri-render sullo store.
 import { h } from './dom.js';
+import { icona } from './icone.js';
 
 export const VISTE_GESTIONALE = [
   ['oggi', 'Settimana'],
@@ -75,6 +76,22 @@ export function avviaApp(radice, ctx, { viste, vistaCampo, home }) {
   render();
 }
 
+const VISTE_DENSE = ['registro', 'riepilogo', 'verifica'];
+
+/** Barra laterale compressa a icone: scelta salvata nel browser, altrimenti automatica sulle viste dense. */
+function railAttiva(vista) {
+  let scelta = null;
+  try { scelta = localStorage.getItem('rm-rail'); } catch { /* storage non disponibile */ }
+  if (scelta === '1') return true;
+  if (scelta === '0') return false;
+  return VISTE_DENSE.includes(vista);
+}
+
+function impostaRail(valore, ctx) {
+  try { localStorage.setItem('rm-rail', valore ? '1' : '0'); } catch { /* storage non disponibile */ }
+  ctx.ridisegna();
+}
+
 function layoutGestionale(ctx, vista, contenuto) {
   let corpo;
   try {
@@ -84,14 +101,21 @@ function layoutGestionale(ctx, vista, contenuto) {
     corpo = h('div.errore-vista', h('h2', 'Qualcosa non ha funzionato in questa schermata'), h('p', e.message),
       h('p', 'I dati sono al sicuro. Prova a ricaricare la pagina o a tornare alla Settimana.'));
   }
-  return h('div.gestionale',
+  const rail = railAttiva(vista);
+  return h(`div.gestionale${rail ? '.rail' : ''}`,
     h('nav.menu', { 'aria-label': 'Sezioni del gestionale' },
-      h('div.marchio', h('strong', 'Registro Motoria'), h('small', ctx.store.get().anno.id)),
-      h('ul', VISTE_GESTIONALE.map(([id, nome]) => h('li', h('a', {
-        href: `#/gestionale/${id}`, class: id === vista ? 'attivo' : '', 'aria-current': id === vista ? 'page' : null
-      }, nome)))),
+      h('div.marchio', h('span.logo', { 'aria-hidden': 'true' }),
+        h('div.marchio-testo', h('strong', 'Registro Motoria'), h('small', `${ctx.store.get().anno.id} · Pacinotti`))),
+      h('ul', VISTE_GESTIONALE.map(([id, nome], i) => h('li', h('a', {
+        href: `#/gestionale/${id}`, class: id === vista ? 'attivo' : '', 'aria-current': id === vista ? 'page' : null,
+        title: nome, 'aria-label': nome
+      }, h('i.indice', String(i + 1).padStart(2, '0')), icona(id), h('span.voce', nome))))),
       h('div.piede-menu',
-        h('a', { href: '#/campo/home' }, 'Modalità campo (iPad)'),
-        h('small.salvataggio', ctx.descriviSalvataggio?.() ?? ''))),
+        h('a.voce-campo', { href: '#/campo/home', title: 'Modalità campo (iPad)', 'aria-label': 'Modalità campo (iPad)' }, icona('campo'), h('span.voce', 'Modalità campo')),
+        h('button.rail-toggle', {
+          onclick: () => impostaRail(!rail, ctx), title: rail ? 'Espandi il menu' : 'Comprimi il menu',
+          'aria-label': rail ? 'Espandi il menu' : 'Comprimi il menu'
+        }, icona(rail ? 'espandi' : 'comprimi'), h('span.voce', 'Comprimi')),
+        h('div.salvataggio', { role: 'status', title: ctx.descriviSalvataggio?.() ?? '' }, h('span.punto'), h('span.voce.salvataggio-testo', ctx.descriviSalvataggio?.() ?? '')))),
     h('main.contenuto', { id: 'contenuto' }, corpo));
 }

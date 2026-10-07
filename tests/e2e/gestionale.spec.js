@@ -67,24 +67,26 @@ test('M4: i dati del modello Excel classe 4 danno gli stessi voti, medie e giudi
   const riga1 = page.locator('tbody tr').nth(0);
   const riga2 = page.locator('tbody tr').nth(1);
   const riga3 = page.locator('tbody tr').nth(2);
-  await expect(riga1.locator('td.calc')).toHaveText(['7,67', 'Buono', '8', 'Buono', '9', 'Distinto', '', '']);
-  await expect(riga1.locator('td.riporta')).toHaveText(['Buono', 'Buono', 'Distinto', '']);
-  await expect(riga2.locator('td.calc').first()).toHaveText('7');
-  await expect(riga2.locator('td.riporta')).toHaveText(['Discreto', 'Distinto', '', '']);
-  await expect(riga2.locator('td.avviso-cella')).toHaveText('Pochi voti: valutazione alternativa (scritta/orale). Da recuperare: 1. Riferito agli obiettivi personalizzati.');
-  await expect(riga3.locator('td.riporta')).toHaveText(['ES', 'ES', 'ES', 'ES']);
-  await expect(riga3.locator('td.avviso-cella')).toHaveText('Esonerato: concordare con referente e dirigente');
+  await expect(riga1.locator('td.valore b')).toHaveText(['7,67', '8', '9', '—']);
+  await expect(riga1.locator('td.finale .pill')).toHaveText(['Buono', 'Buono', 'Distinto', '—']);
+  await expect(riga2.locator('td.valore b').first()).toHaveText('7');
+  await expect(riga2.locator('td.finale .pill')).toHaveText(['Discreto', 'Distinto', '—', '—']);
+  await expect(riga2.locator('td.avvisi')).toHaveAttribute('title', 'Pochi voti: valutazione alternativa (scritta/orale). Da recuperare: 1. Riferito agli obiettivi personalizzati.');
+  await expect(riga3.locator('td.msg-riga')).toHaveText('Esonerato: concordare con referente e dirigente · da riportare: ES');
 
   // rubrica di processo 8 → A = 7,74
   await page.getByLabel('Rubrica di processo alunno 1').selectOption('8');
-  await expect(riga1.locator('td.calc').first()).toHaveText('7,74');
-  await riga1.locator('td.calc').first().getByRole('button').click();
+  await expect(riga1.locator('td.valore b').first()).toHaveText('7,74');
+  await page.getByRole('button', { name: 'Calcolo A alunno 1' }).click();
   await expect(page.getByRole('dialog')).toContainText('0,8×7,67 + 0,2×8');
   await page.keyboard.press('Escape');
 
-  // giudizio definitivo prevale
-  await page.getByLabel('Giudizio definitivo A alunno 1').selectOption('Distinto');
-  await expect(riga1.locator('td.riporta').first()).toHaveText('Distinto');
+  // giudizio definitivo prevale (contrassegnato come tuo)
+  await page.getByRole('button', { name: 'Giudizio A alunno 1' }).click();
+  await page.getByRole('dialog').getByLabel('Giudizio definitivo').selectOption('Distinto');
+  await page.getByRole('button', { name: 'Salva', exact: true }).click();
+  await expect(riga1.locator('td.finale .pill').first()).toHaveText('Distinto✎');
+  await expect(riga1.locator('td.finale').first()).toContainText('calc. Buono');
 
   await apri(page, '#/gestionale/verifica?classe=4BM');
   await expect(page.locator('tbody tr').first()).toContainText('1.1: 8 · 1.2: 7 · TEC.1: 9');

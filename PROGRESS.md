@@ -31,5 +31,8 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Campo: export "dall'ultimo export" tracciato con un elenco esplicito (non con gli orari dell'iPad).
 - Salvataggio su IndexedDB immediato a ogni modifica; archivio su cartella dopo 4 s.
 
+## Rifinitura grafica (2026-10-07)
+- Stile approvato (direzione A+C, vedi bozze): applicato a tutte le schermate. Test aggiornati al nuovo Riepilogo.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

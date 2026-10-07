@@ -19,12 +19,16 @@ export function vistaOggi(ctx, { params }) {
   const giorni = [0, 1, 2, 3, 4].map((i) => aggiungiGiorni(lun, i));
 
   return h('div',
-    intestazione(`Settimana dal ${formatta(lun)}`,
+    intestazione({
+      titolo: `Settimana dal ${formatta(lun).slice(0, 5)}`,
+      occhiello: stato.anno.id,
+      briciole: ['Settimana', 'Tutte le classi'],
+      meta: ['Lezione 120\': 15\' accoglienza · 90\' attività (ultimi 20\' gioco a squadre) · 15\' cambio e rientro']
+    },
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, -7) }), 'aria-label': 'Settimana precedente' }, '‹ Precedente'),
       h('button', { onclick: () => conParametri({ settimana: settimanaIniziale(stato) }) }, 'Questa settimana'),
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, 7) }), 'aria-label': 'Settimana successiva' }, 'Successiva ›'),
       h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) })),
-    h('p.tenue', 'Struttura di ogni lezione (120\'): 15\' accoglienza e trasferimento · 90\' attività (ultimi 20\' gioco a squadre) · 15\' cambio, autovalutazione, rientro.'),
     h('div.settimana', giorni.map((d) => {
       const lezioni = stato.classi
         .map((c) => ({ c, l: p[c.codice]?.lezioni.find((x) => x.data === d) }))
@@ -32,7 +36,7 @@ export function vistaOggi(ctx, { params }) {
         .sort((a, b) => a.l.inizio.localeCompare(b.l.inizio));
       const chiusura = stato.anno.chiusure.find((c) => d >= c.dal && d <= c.al);
       return h(`section.giorno${d === oggi ? '.oggi' : ''}`,
-        h('h3', `${GIORNI_LUNGHI[toDate(d).getUTCDay()]} ${formatta(d).slice(0, 5)}`),
+        h('h3', GIORNI_LUNGHI[toDate(d).getUTCDay()].slice(0, 3), h('small', formatta(d).slice(0, 5))),
         chiusura ? h('p.tenue', `Chiuso: ${chiusura.motivo}`) : null,
         lezioni.length === 0 && !chiusura ? h('p.tenue', 'Nessuna lezione') : null,
         lezioni.map(({ c, l }) => schedaLezione(stato, c, l)));

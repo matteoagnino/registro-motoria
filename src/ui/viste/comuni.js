@@ -54,8 +54,26 @@ export function apriRubrica(stato, livello, codice, indice = null, evidenzia = n
         h('th', `${LIVELLI[k]} ${g}`), h('td', ind.descrittori[g] ?? '')))))))), { largo: true });
 }
 
-export function intestazione(titolo, ...controlli) {
-  return h('div.intestazione', h('h1', titolo), h('div.controlli.barra', controlli));
+/**
+ * Testata delle viste. Primo argomento: titolo (stringa) oppure { titolo, occhiello, briciole[], meta[] }.
+ */
+export function intestazione(def, ...controlli) {
+  const d = typeof def === 'string' ? { titolo: def } : def;
+  return h('header.testata',
+    h('div',
+      d.briciole?.length ? h('div.briciole', d.briciole.flatMap((b, i) => (i ? [h('i', '/'), b] : [b]))) : null,
+      h('div.titolo-riga', d.occhiello ? h('span.occhiello', d.occhiello) : null, h('h1', d.titolo)),
+      d.meta?.length ? h('div.meta', d.meta.filter(Boolean).map((m) => h('span', m))) : null),
+    controlli.length ? h('div.controlli', controlli) : null);
+}
+
+export function contatore(valore, etichetta, tipo = '') {
+  return h(`div.contatore-chip${tipo ? `.${tipo}` : ''}`, h('b', valore), h('small', etichetta));
+}
+
+export function legendaLivelli() {
+  return h('div.legenda', { 'aria-label': 'Legenda dei livelli' },
+    LIVELLI.map((l, i) => h('span', h('b', { 'data-l': l }, l), GIUDIZI[i])));
 }
 
 export const dataBreve = (iso) => formatta(iso);

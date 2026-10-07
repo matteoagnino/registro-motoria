@@ -6,6 +6,7 @@ import { importaPacchetto, campoLivello, campoStato, esportaVoti, daEsportare, t
 import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
+import { icona } from '../icone.js';
 
 const LIVELLI = [10, 9, 8, 7, 6, 5];
 const GIUDIZI = ['Ottimo', 'Distinto', 'Buono', 'Discreto', 'Sufficiente', 'Non sufficiente'];
@@ -39,33 +40,34 @@ async function importa(ctx) {
   }
 }
 
-function testa(titolo, ...azioni) {
-  return h('header.campo-testa', h('h1', titolo), h('div.spazio'), azioni);
+function testa(titolo, sottotitolo, ...azioni) {
+  return h('header.campo-testa', h('div', h('h1', titolo), sottotitolo ? h('span.sottotitolo', sottotitolo) : null), h('div.spazio'), azioni);
 }
+
+const indietro = (href, testo) => h('a.bottone.grande', { href, 'aria-label': testo }, icona('indietro'), testo);
 
 function home(ctx) {
   const c = ctx.campoStore.get();
   if (!c.pacchetto) {
     return h('div',
-      testa('Registro Motoria · Campo', h('a.bottone', { href: '#/gestionale/oggi' }, 'Gestionale')),
-      h('div.scheda',
+      testa('Registro Motoria · Campo', 'Registrazione voti in palestra · funziona offline', h('a.bottone.grande', { href: '#/gestionale/oggi' }, 'Gestionale')),
+      h('div.campo-corpo', h('div.scheda',
         h('h2', 'Nessun pacchetto classe'),
         h('p', 'Sul Mac: Import/Export → «Crea pacchetto classe», poi invialo a questo iPad con AirDrop (salvalo in File).'),
-        h('button.primario.grande', { onclick: () => importa(ctx) }, 'Importa pacchetto classe')));
+        h('button.primario.grande', { onclick: () => importa(ctx) }, 'Importa pacchetto classe'))));
   }
   const oggi = oggiISO();
   const gs = giornoSettimana(oggi);
   const nDaEsportare = daEsportare(c).length;
   return h('div',
-    testa('Scegli la classe',
+    testa('Scegli la classe', `Pacchetto del ${new Date(c.pacchetto.creatoIl).toLocaleString('it-IT')} · ${c.pacchetto.anno}`,
       h('button.grande', { onclick: () => importa(ctx) }, 'Nuovo pacchetto'),
-      h('a.bottone.grande.primario', { href: '#/campo/esporta' }, `Esporta voti${nDaEsportare ? ` (${nDaEsportare})` : ''}`)),
-    h('p.tenue', `Pacchetto del ${new Date(c.pacchetto.creatoIl).toLocaleString('it-IT')} · ${c.pacchetto.anno}`),
-    h('div.tessere', c.pacchetto.classi.map((cl) => {
+      h('a.bottone.grande.primario', { href: '#/campo/esporta' }, icona('esporta'), `Esporta voti${nDaEsportare ? ` (${nDaEsportare})` : ''}`)),
+    h('div.campo-corpo', h('div.tessere', c.pacchetto.classi.map((cl) => {
       const diOggi = cl.lezioni.some((l) => l.giorno === gs);
       return h(`a.tessera${diOggi ? '.evidenza' : ''}`, { href: `#/campo/classe/${cl.codice}` },
         h('strong', cl.codice), h('span', `${cl.livello}ª · ${cl.plesso}`), diOggi ? h('span.ok-testo', '● lezione oggi') : null);
-    })));
+    }))));
 }
 
 /** Giornata preselezionata: quella di oggi, altrimenti la più vicina nel tempo. */
@@ -81,10 +83,10 @@ function sceltaGiornata(ctx, codice) {
   if (!cl) return home(ctx);
   const pre = giornataPreselezionata(cl.giornate, oggiISO());
   return h('div',
-    testa(`${cl.codice} · scegli la giornata`, h('a.bottone.grande', { href: '#/campo/home' }, '‹ Classi')),
-    h('div.tessere', cl.giornate.map((g) => h(`a.tessera${g.id === pre ? '.evidenza' : ''}`, { href: `#/campo/registra/${cl.codice}/${g.id}` },
+    testa(`${cl.codice} · scegli la giornata`, 'La giornata più vicina a oggi è evidenziata', indietro('#/campo/home', 'Classi')),
+    h('div.campo-corpo', h('div.tessere', cl.giornate.map((g) => h(`a.tessera${g.id === pre ? '.evidenza' : ''}`, { href: `#/campo/registra/${cl.codice}/${g.id}` },
       h('strong', g.id), h('span', g.descrizione), h('span.tenue', g.data ? formatta(g.data, true) : 'data da fissare'),
-      h('span', g.sottoObiettivi.join(' · '))))));
+      h('span', g.sottoObiettivi.join(' · ')))))));
 }
 
 function statoScheda(c, alunno, g) {
@@ -107,12 +109,12 @@ function registra(ctx, codice, giornataId) {
   const stati = alunni.map((a) => [a, statoScheda(c, a, g)]);
   const fatti = stati.filter(([, s]) => s === 'completo' || s === 'assente' || s === 'es').length;
   return h('div',
-    testa(`${cl.codice} · ${g.id}`,
-      h('span.contatore', { 'aria-live': 'polite' }, `Registrati ${fatti}/${alunni.length} · mancano ${alunni.length - fatti}`),
-      h('a.bottone.grande', { href: `#/campo/classe/${cl.codice}` }, '‹ Giornate'),
+    testa(`${cl.codice} · ${g.id}`, `${g.descrizione}${g.data ? ` · ${formatta(g.data, true)}` : ''}`,
+      indietro(`#/campo/classe/${cl.codice}`, 'Giornate'),
+      h('div.progresso', h('div.traccia', h('span', { style: { width: `${alunni.length ? Math.round((fatti / alunni.length) * 100) : 0}%` } })),
+        h('span.contatore', { 'aria-live': 'polite' }, `Registrati ${fatti}/${alunni.length} · mancano ${alunni.length - fatti}`)),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, 'Esporta')),
-    h('p', h('strong', g.descrizione), ` · ${g.data ? formatta(g.data, true) : ''}`),
-    stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st)),
+    h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st))),
     h('nav.nav-alunni', { 'aria-label': 'Vai all\'alunno' }, stati.map(([a, st]) => h(`a.${st}`, {
       href: `#alunno-${a.numero}`, title: a.cognomeNome,
       onclick: (e) => { e.preventDefault(); document.getElementById(`alunno-${a.numero}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
@@ -125,11 +127,11 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
   const regs = sos.map((so) => trovaCampo(c, a.id, g.id, so.codice));
   const statoGiorno = regs.find((r) => r?.stato)?.stato ?? null;
   if (a.stato === 'ES') {
-    return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', a.numero), a.cognomeNome, h('small', ' · esonerato')));
+    return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', String(a.numero).padStart(2, '0')), a.cognomeNome, h('small.tenue', ' · esonerato')));
   }
   const setStato = (v) => ctx.campoStore.aggiorna((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }));
   return h(`section.scheda-alunno.${st}`, { id: `alunno-${a.numero}` },
-    h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
+    h('h2', h('span.numero', String(a.numero).padStart(2, '0')), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
       h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
         onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? v
       }, v)))),
@@ -138,21 +140,22 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
       const voto = votoRegistrazione(r);
       const parziale = r?.livelli?.some((l) => l != null);
       return h(`div.so-campo.n-${so.nucleo}`,
-        h('div.titolo-so', h('span', `${so.codice} ${so.etichetta}`),
-          h('span.voto-badge', { 'aria-label': `Voto ${so.codice}` }, voto == null ? '—' : `${voto} ${giudizioVoto(voto, c.pacchetto.scala)}`)),
+        h('div.titolo-so', h('span.codice', so.codice), h('span', so.etichetta),
+          h('span.voto-badge', { 'aria-label': `Voto ${so.codice}`, 'data-l': voto ?? null },
+            voto == null ? h('b', '—') : [h('b', voto), ' ', giudizioVoto(voto, c.pacchetto.scala)])),
         so.indicatori.map((ind, i) => {
           const val = r?.livelli?.[i] ?? null;
           const chiaveDesc = `${a.id}|${so.codice}|${i}`;
           const mostra = ctx.descrittoreCampo?.chiave === chiaveDesc;
           return h('div', h(`div.indicatore-riga${parziale && val == null ? '.mancante' : ''}`,
-            h('span.nome-ind', `I${i + 1} ${ind.nome}`),
+            h('span.nome-ind', h('i', `I${i + 1}`), ind.nome),
             h('div.livelli', LIVELLI.map((l) => bottoneLivello(ctx, l, val === l, () => {
               ctx.campoStore.aggiorna((s) => campoLivello(s, { ...base, sottoObiettivo: so.codice, indice: i, valore: val === l ? null : l }));
             }, () => {
               ctx.descrittoreCampo = mostra && ctx.descrittoreCampo.livello === l ? null : { chiave: chiaveDesc, livello: l };
               ctx.ridisegna();
             }, `${a.numero} ${so.codice} I${i + 1} livello ${l}`)))),
-          mostra ? h('div.descrittore', { role: 'status' }, `${ctx.descrittoreCampo.livello} ${GIUDIZI[LIVELLI.indexOf(ctx.descrittoreCampo.livello)]}: `,
+          mostra ? h('div.descrittore', { role: 'status' }, h('b', `${ctx.descrittoreCampo.livello} ${GIUDIZI[LIVELLI.indexOf(ctx.descrittoreCampo.livello)]}: `),
             ind.descrittori[GIUDIZI[LIVELLI.indexOf(ctx.descrittoreCampo.livello)]]) : null);
         }));
     }));
@@ -186,12 +189,12 @@ function esporta(ctx) {
     avviso(`File voti esportato (${file.registrazioni.length} registrazioni)`);
   };
   return h('div',
-    testa('Esporta file voti', h('a.bottone.grande', { href: '#/campo/home' }, '‹ Classi')),
-    h('div.scheda',
+    testa('Esporta file voti', 'Condividi → AirDrop al Mac', indietro('#/campo/home', 'Classi')),
+    h('div.campo-corpo', h('div.scheda',
       h('p', h('strong', `${nuove.length} registrazioni`), ' nuove o modificate dall\'ultimo export',
         c.ultimoExport ? ` (${new Date(c.ultimoExport).toLocaleString('it-IT')})` : '', '.'),
       h('button.primario.grande', { onclick: () => fai(false), disabled: !nuove.length }, 'Esporta e condividi (AirDrop)'),
       h('p.tenue', { style: { marginTop: '1rem' } }, `Hai perso un file? Puoi riesportare tutte le ${tutte.length} registrazioni fatte su questo iPad: sul Mac i doppioni vengono ignorati.`),
       h('button.grande', { onclick: () => fai(true), disabled: !tutte.length }, 'Riesporta tutto')),
-    h('p.tenue', 'Nessun dato lascia l\'iPad senza questa tua azione.'));
+    h('p.tenue', 'Nessun dato lascia l\'iPad senza questa tua azione.')));
 }

@@ -1,4 +1,8 @@
 // Avvio: carica lo stato da IndexedDB (o dai seed al primo avvio) e monta l'interfaccia.
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource/ibm-plex-mono/latin-600.css';
 import './ui/stile.css';
 import { apriPersistenza } from './dati/persistenza.js';
 import { creaStore } from './dati/store.js';
@@ -76,7 +80,11 @@ async function avvia() {
   ctx.sbloccaSalvataggio = () => { erroreAvvio = null; };
   const aggiornaIndicatore = () => {
     const el = document.querySelector('.salvataggio');
-    if (el) el.textContent = ctx.descriviSalvataggio();
+    if (!el) return;
+    el.dataset.stato = ctx.statoSalvataggio;
+    el.title = ctx.descriviSalvataggio();
+    const testo = el.querySelector('.salvataggio-testo');
+    if (testo) testo.textContent = ctx.descriviSalvataggio();
   };
   ctx.store.ascolta(() => { if (ctx.statoSalvataggio !== 'errore') ctx.statoSalvataggio = 'in corso'; });
   ctx.descriviSalvataggio = () => {
