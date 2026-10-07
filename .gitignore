@@ -1,0 +1,16 @@
+node_modules
+dist/
+coverage/
+playwright-report/
+test-results/
+loop.log
+.DS_Store
+# Dati personali: MAI in git
+*.rmpack.json
+*.rmvoti.json
+*archivio*.json
+backup/
+dati/
+*.xlsx
+!riferimenti/*.xlsx
+node_modules.nosync/
