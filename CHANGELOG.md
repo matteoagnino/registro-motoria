@@ -8,6 +8,7 @@
   avvisi a icone, spiegazione del calcolo al clic sul valore.
 - Modalità campo chiara ad alto contrasto: bottoni livello colorati, barra di avanzamento, navigazione alunni a colori.
 - Stampa sempre chiara.
+- Aggiornamenti: avviso «Nuova versione disponibile · Aggiorna ora» invece di restare bloccati sulla versione in cache.
 
 ## 0.1.0 — versione grezza (2026-10-06)
 - M0: Vite + vitest + Playwright + ESLint; `.gitignore` anti-dati; `npm run privacy-check` + hook pre-commit.

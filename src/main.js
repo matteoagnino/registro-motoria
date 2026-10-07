@@ -40,6 +40,36 @@ async function backupGiornaliero(persistenza, stato) {
   await persistenza.scrivi('ultimoBackupGiornaliero', oggi);
 }
 
+const ORA_MS = 60 * 60 * 1000;
+
+/** Avviso di nuova versione: l'aggiornamento parte solo quando Matteo tocca «Aggiorna ora». */
+async function controllaAggiornamenti() {
+  if (!('serviceWorker' in navigator)) return;
+  const reg = await navigator.serviceWorker.ready.catch(() => null);
+  if (!reg) return;
+  const mostra = (sw) => {
+    if (document.querySelector('.banner-aggiorna')) return;
+    const banner = h('div.banner-aggiorna', { role: 'status' },
+      h('span', h('b', 'Nuova versione disponibile.'), ' I dati sono già salvati.'),
+      h('button.primario', {
+        onclick: () => {
+          navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), { once: true });
+          sw.postMessage({ type: 'SKIP_WAITING' });
+        }
+      }, 'Aggiorna ora'),
+      h('button', { onclick: () => banner.remove(), 'aria-label': 'Più tardi' }, 'Più tardi'));
+    document.body.append(banner);
+  };
+  if (reg.waiting && navigator.serviceWorker.controller) mostra(reg.waiting);
+  reg.addEventListener('updatefound', () => {
+    const nuovo = reg.installing;
+    nuovo?.addEventListener('statechange', () => {
+      if (nuovo.state === 'installed' && navigator.serviceWorker.controller) mostra(nuovo);
+    });
+  });
+  setInterval(() => reg.update().catch(() => {}), ORA_MS);
+}
+
 async function avvia() {
   const radice = document.getElementById('app');
   const persistenza = apriPersistenza();
@@ -109,6 +139,7 @@ async function avvia() {
   });
   avviaApp(radice, ctx, { viste, vistaCampo, home });
   ctx.campoStore.ascolta(() => ctx.ridisegna());
+  controllaAggiornamenti().catch((e) => console.warn('Controllo aggiornamenti non riuscito', e));
   if (erroreAvvio) {
     document.body.prepend(h('div.banner-errore', `Impossibile leggere il registro salvato: ${erroreAvvio.message}. Vai in Import/Export per ripristinare un backup.`));
   }

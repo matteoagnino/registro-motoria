@@ -5,7 +5,7 @@ export default defineConfig({
   base: './',
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       injectRegister: 'script',
       includeAssets: ['icon.svg'],
       manifest: {

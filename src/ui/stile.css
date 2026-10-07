@@ -455,3 +455,11 @@ body[data-modo="campo"] .tenue { color: var(--mu); }
 
 .campo-testa .contatore { font: 600 13px var(--mono); white-space: nowrap; }
 .campo-testa .spazio { flex: 1; }
+
+/* Avviso di nuova versione */
+.banner-aggiorna {
+  position: fixed; right: 18px; bottom: 18px; z-index: 70; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  max-width: min(520px, calc(100vw - 36px)); padding: 12px 14px; border-radius: 12px; background: var(--p2); color: var(--tx);
+  border: 1px solid var(--acc-ln); box-shadow: 0 18px 50px rgba(0, 0, 0, .5); font-size: 12.5px; animation: sali .2s ease-out;
+}
+body[data-modo="campo"] .banner-aggiorna { background: #0b1626; color: #fff; bottom: 82px; }
