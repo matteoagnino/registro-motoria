@@ -77,18 +77,26 @@ export function avviaApp(radice, ctx, { viste, vistaCampo, home }) {
 }
 
 const VISTE_DENSE = ['registro', 'riepilogo', 'verifica'];
+const GRUPPI = [
+  ['Didattica', ['oggi', 'calendario', 'classi']],
+  ['Valutazione', ['registro', 'riepilogo', 'verifica', 'rubriche']],
+  ['Altro', ['giochi']],
+  ['', ['scambio', 'impostazioni', 'guida']]
+];
+const NOMI_VISTE = Object.fromEntries(VISTE_GESTIONALE);
+const LARGHEZZA_AMPIA = 1560;
 
-/** Barra laterale compressa a icone: scelta salvata nel browser, altrimenti automatica sulle viste dense. */
-function railAttiva(vista) {
+/** Barra laterale nascosta: scelta salvata nel browser, altrimenti automatica sulle viste dense in finestre non ampie. */
+function sidebarNascosta(vista) {
   let scelta = null;
-  try { scelta = localStorage.getItem('rm-rail'); } catch { /* storage non disponibile */ }
+  try { scelta = localStorage.getItem('rm-sidebar-nascosta'); } catch { /* storage non disponibile */ }
   if (scelta === '1') return true;
   if (scelta === '0') return false;
-  return VISTE_DENSE.includes(vista);
+  return VISTE_DENSE.includes(vista) && window.innerWidth < LARGHEZZA_AMPIA;
 }
 
-function impostaRail(valore, ctx) {
-  try { localStorage.setItem('rm-rail', valore ? '1' : '0'); } catch { /* storage non disponibile */ }
+function impostaSidebar(nascosta, ctx) {
+  try { localStorage.setItem('rm-sidebar-nascosta', nascosta ? '1' : '0'); } catch { /* storage non disponibile */ }
   ctx.ridisegna();
 }
 
@@ -101,21 +109,25 @@ function layoutGestionale(ctx, vista, contenuto) {
     corpo = h('div.errore-vista', h('h2', 'Qualcosa non ha funzionato in questa schermata'), h('p', e.message),
       h('p', 'I dati sono al sicuro. Prova a ricaricare la pagina o a tornare alla Settimana.'));
   }
-  const rail = railAttiva(vista);
-  return h(`div.gestionale${rail ? '.rail' : ''}`,
-    h('nav.menu', { 'aria-label': 'Sezioni del gestionale' },
-      h('div.marchio', h('span.logo', { 'aria-hidden': 'true' }),
-        h('div.marchio-testo', h('strong', 'Registro Motoria'), h('small', `${ctx.store.get().anno.id} · Pacinotti`))),
-      h('ul', VISTE_GESTIONALE.map(([id, nome], i) => h('li', h('a', {
-        href: `#/gestionale/${id}`, class: id === vista ? 'attivo' : '', 'aria-current': id === vista ? 'page' : null,
-        title: nome, 'aria-label': nome
-      }, h('i.indice', String(i + 1).padStart(2, '0')), icona(id), h('span.voce', nome))))),
-      h('div.piede-menu',
-        h('a.voce-campo', { href: '#/campo/home', title: 'Modalità campo (iPad)', 'aria-label': 'Modalità campo (iPad)' }, icona('campo'), h('span.voce', 'Modalità campo')),
-        h('button.rail-toggle', {
-          onclick: () => impostaRail(!rail, ctx), title: rail ? 'Espandi il menu' : 'Comprimi il menu',
-          'aria-label': rail ? 'Espandi il menu' : 'Comprimi il menu'
-        }, icona(rail ? 'espandi' : 'comprimi'), h('span.voce', 'Comprimi')),
-        h('div.salvataggio', { role: 'status', title: ctx.descriviSalvataggio?.() ?? '' }, h('span.punto'), h('span.voce.salvataggio-testo', ctx.descriviSalvataggio?.() ?? '')))),
-    h('main.contenuto', { id: 'contenuto' }, corpo));
+  const nascosta = sidebarNascosta(vista);
+  const stato = ctx.store.get();
+  return h(`div.gestionale${nascosta ? '.senza-sidebar' : ''}`,
+    h('nav.menu', { 'aria-label': 'Sezioni del gestionale', 'aria-hidden': nascosta ? 'true' : null, inert: nascosta || null },
+      h('div.marchio', h('strong', 'Registro Motoria'), h('small', `${stato.anno.id} · I.C. Pacinotti`)),
+      GRUPPI.map(([titolo, voci]) => h('div.gruppo-menu',
+        titolo ? h('h6', titolo) : h('div.separatore-menu'),
+        h('ul', voci.map((id) => h('li', h('a', {
+          href: `#/gestionale/${id}`, class: id === vista ? 'attivo' : '', 'aria-current': id === vista ? 'page' : null
+        }, icona(id), h('span', NOMI_VISTE[id]), id === 'classi' ? h('span.conta', stato.classi.length) : null)))))),
+      h('div.gruppo-menu', h('h6', 'iPad'), h('ul', h('li', h('a', { href: '#/campo/home' }, icona('campo'), h('span', 'Modalità campo')))))),
+    h('div.area',
+      h('header.toolbar',
+        h('button.icona-sola', {
+          onclick: () => impostaSidebar(!nascosta, ctx), title: nascosta ? 'Mostra la barra laterale' : 'Nascondi la barra laterale',
+          'aria-label': nascosta ? 'Mostra la barra laterale' : 'Nascondi la barra laterale', 'aria-expanded': String(!nascosta)
+        }, icona('sidebar')),
+        h('div.toolbar-titolo', NOMI_VISTE[vista]),
+        h('div.spazio'),
+        h('div.salvataggio', { role: 'status', title: ctx.descriviSalvataggio?.() ?? '' }, h('span.punto'), h('span.salvataggio-testo', ctx.descriviSalvataggio?.() ?? ''))),
+      h('main.contenuto', { id: 'contenuto' }, corpo)));
 }

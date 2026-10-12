@@ -34,5 +34,8 @@ STATO: VERSIONE GREZZA COMPLETATA
 ## Rifinitura grafica (2026-10-07)
 - Stile approvato (direzione A+C, vedi bozze): applicato a tutte le schermate. Test aggiornati al nuovo Riepilogo.
 
+## Stile Apple (2026-10-12)
+- Approvato da Matteo e applicato a tutta l'app (vedi CHANGELOG 0.3.0). Sostituisce lo stile «pista tecnica».
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

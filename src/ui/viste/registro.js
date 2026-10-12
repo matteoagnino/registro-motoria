@@ -63,7 +63,7 @@ export function vistaRegistro(ctx, { params }) {
           h('tr', h('th.num', { rowspan: 2 }, 'N°'), h('th.nome', { rowspan: 2 }, 'Alunno'), h('th', { rowspan: 2 }, 'Stato'), h('th', { rowspan: 2 }, 'Recup.'),
             sos.map((so) => h(`th.fascia.${classeNucleo(so)}.fine-so`, { colspan: 6 },
               h('span.codice', so.codice), so.etichetta,
-              h('small', `→ Ob. ${so.concorre[g.quadrimestre]} · peso ${pesoTesto(peso)}`)))),
+              h('small', `Ob. ${so.concorre[g.quadrimestre]} · peso ${pesoTesto(peso)}`)))),
           h('tr', sos.map((so) => [
             ...so.indicatori.map((ind, i) => h(`th.ind.sotto-fascia.${classeNucleo(so)}`, h('span.cliccabile', {
               role: 'button', tabindex: 0, title: `${ind.nome} — ${ind.cosaOsservo}`,
@@ -83,7 +83,7 @@ function rigaAlunno(ctx, cl, g, sos, a) {
   const agg = (fn) => prova(() => ctx.store.aggiorna(fn));
   const escluso = a.stato === 'Ritirato' || a.stato === 'ES';
   return h(`tr${a.stato === 'Ritirato' ? '.ritirato' : a.stato === 'ES' ? '.es' : ''}`,
-    h('td.num', String(a.numero).padStart(2, '0')),
+    h('td.num', a.numero),
     h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null),
     h('td', select([['', '—'], ['AS', 'AS'], ['NV', 'NV'], ['ES', 'ES']], statoGiorno, {
       class: 'sel-stato', 'data-v': statoGiorno, 'aria-label': `Stato ${a.numero}`, 'data-focus': `st-${a.id}`, disabled: escluso,

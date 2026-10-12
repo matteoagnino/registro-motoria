@@ -61,7 +61,7 @@ function fmtData(iso) {
 function riga(ctx, q, sos, a, r) {
   const classi = a.stato === 'Ritirato' ? '.ritirato' : a.stato === 'ES' ? '.es' : '';
   const testa = [
-    h('td.num', String(a.numero).padStart(2, '0')),
+    h('td.num', a.numero),
     h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null),
     sos.map((s, i) => {
       const v = a.stato === 'Attivo' ? r.perSotto[s.codice] : null;

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.3.0 — stile Apple (2026-10-12)
+- Rivisto con la skill `apple-design` (emilkowalski/skills) e le Human Interface Guidelines di Apple.
+- Font di sistema San Francisco (niente più font incorporati: app più leggera), titoli grandi con tracking negativo.
+- Aspetto chiaro/scuro automatico dal sistema, su Mac e iPad.
+- Barra laterale traslucida a gruppi (Didattica, Valutazione, Altro), nascondibile; barra strumenti traslucida.
+- Livelli come capsule tinte con testo accessibile: tutte le combinazioni ≥ 4,5:1 (prima 2,4:1 sul livello 8).
+- Risposta immediata alla pressione, finestre che si «materializzano», rispetto di riduci movimento / riduci trasparenza / aumenta contrasto.
+
 ## 0.2.0 — nuovo stile grafico (2026-10-07)
 - Tema "pista tecnica" approvato da Matteo: gestionale scuro con griglia e accento arancio, font Archivo + IBM Plex Mono
   incorporati (offline), icone SVG, barra laterale comprimibile a icone (automatica su Registro/Riepilogo/Verifica).

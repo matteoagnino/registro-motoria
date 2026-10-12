@@ -1,8 +1,4 @@
 // Avvio: carica lo stato da IndexedDB (o dai seed al primo avvio) e monta l'interfaccia.
-import '@fontsource-variable/archivo/wdth.css';
-import '@fontsource/ibm-plex-mono/latin-400.css';
-import '@fontsource/ibm-plex-mono/latin-500.css';
-import '@fontsource/ibm-plex-mono/latin-600.css';
 import './ui/stile.css';
 import { apriPersistenza } from './dati/persistenza.js';
 import { creaStore } from './dati/store.js';
@@ -119,9 +115,9 @@ async function avvia() {
   ctx.store.ascolta(() => { if (ctx.statoSalvataggio !== 'errore') ctx.statoSalvataggio = 'in corso'; });
   ctx.descriviSalvataggio = () => {
     if (erroreAvvio) return '⚠ registro salvato illeggibile: ripristina da Import/Export';
-    if (ctx.statoSalvataggio === 'errore') return '⚠ salvataggio non riuscito';
-    if (ctx.statoSalvataggio === 'in corso') return '… salvataggio in corso';
-    return `✓ salvato sul dispositivo${ctx.ultimoArchivio ? ` · archivio ${ctx.ultimoArchivio.toLocaleTimeString('it-IT')}` : ''}`;
+    if (ctx.statoSalvataggio === 'errore') return 'Salvataggio non riuscito';
+    if (ctx.statoSalvataggio === 'in corso') return 'Salvataggio in corso…';
+    return `Salvato sul dispositivo${ctx.ultimoArchivio ? ` · archivio ${ctx.ultimoArchivio.toLocaleTimeString('it-IT')}` : ''}`;
   };
   if (!erroreAvvio) {
     await persistenza.scrivi('stato', stato);

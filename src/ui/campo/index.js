@@ -41,10 +41,12 @@ async function importa(ctx) {
 }
 
 function testa(titolo, sottotitolo, ...azioni) {
-  return h('header.campo-testa', h('div', h('h1', titolo), sottotitolo ? h('span.sottotitolo', sottotitolo) : null), h('div.spazio'), azioni);
+  const prima = azioni.filter((a) => a?.classList?.contains('indietro'));
+  const dopo = azioni.filter((a) => !a?.classList?.contains('indietro'));
+  return h('header.campo-testa', prima, h('div', h('h1', titolo), sottotitolo ? h('span.sottotitolo', sottotitolo) : null), h('div.spazio'), dopo);
 }
 
-const indietro = (href, testo) => h('a.bottone.grande', { href, 'aria-label': testo }, icona('indietro'), testo);
+const indietro = (href, testo) => h('a.bottone.grande.indietro', { href, 'aria-label': testo }, icona('indietro'), testo);
 
 function home(ctx) {
   const c = ctx.campoStore.get();
@@ -127,11 +129,11 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
   const regs = sos.map((so) => trovaCampo(c, a.id, g.id, so.codice));
   const statoGiorno = regs.find((r) => r?.stato)?.stato ?? null;
   if (a.stato === 'ES') {
-    return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', String(a.numero).padStart(2, '0')), a.cognomeNome, h('small.tenue', ' · esonerato')));
+    return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', a.numero), a.cognomeNome, h('small.tenue', ' · esonerato')));
   }
   const setStato = (v) => ctx.campoStore.aggiorna((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }));
   return h(`section.scheda-alunno.${st}`, { id: `alunno-${a.numero}` },
-    h('h2', h('span.numero', String(a.numero).padStart(2, '0')), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
+    h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
       h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
         onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? v
       }, v)))),

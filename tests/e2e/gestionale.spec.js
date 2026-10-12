@@ -20,7 +20,7 @@ test('M2: creo una classe di prova con 3 alunni finti', async ({ page }) => {
   await page.getByLabel('Stato alunno 2').selectOption('Ritirato');
   await expect(righe).toHaveCount(3);
   await expect(page.getByLabel('Stato alunno 2')).toHaveValue('Ritirato');
-  await expect(page.locator('.salvataggio')).toContainText('✓ salvato');
+  await expect(page.locator('.salvataggio')).toContainText('Salvato sul dispositivo');
   await page.reload();
   await expect(page.getByLabel('Stato alunno 2')).toHaveValue('Ritirato');
   expect(esterne).toEqual([]);
