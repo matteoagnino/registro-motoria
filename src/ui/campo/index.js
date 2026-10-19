@@ -11,6 +11,7 @@ import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archiv
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
 import { vistaCronometro } from './cronometro.js';
+import { evidenzia, vaiAllaScheda, seguiScorrimento, avanzaDopo, appenaCompletata, schedaFatta, pausaTraccia } from './alunnoAttivo.js';
 
 const LIVELLI = [10, 9, 8, 7, 6, 5];
 const GIUDIZI = ['Ottimo', 'Distinto', 'Buono', 'Discreto', 'Sufficiente', 'Non sufficiente'];
@@ -160,22 +161,38 @@ function registra(ctx, codice, giornataId) {
   if (!cl || !g) return home(ctx);
   const alunni = c.pacchetto.alunni.filter((a) => a.classe === codice && a.stato !== 'Ritirato').sort((a, b) => a.numero - b.numero);
   const sos = g.sottoObiettivi.map((cod) => c.pacchetto.sottoObiettivi[String(cl.livello)].find((s) => s.codice === cod)).filter(Boolean);
-  const stati = alunni.map((a) => [a, statoScheda(c, a, g)]);
-  const fatti = stati.filter(([, s]) => s === 'completo' || s === 'assente' || s === 'es').length;
+  const leggiStati = () => alunni.map((a) => [a, statoScheda(ctx.campoStore.get(), a, g)]);
+  const stati = leggiStati();
+  const fatti = stati.filter(([, s]) => schedaFatta(s)).length;
+  const chiave = `${cl.codice}/${g.id}`;
+  if (ctx.alunnoAttivo?.chiave !== chiave) ctx.alunnoAttivo = { chiave, numero: alunni[0]?.numero ?? null };
+  seguiScorrimento(ctx);
+  const attivo = { chiave, leggiStati };
   return h('div',
     testa(`${cl.codice} · ${g.id}`, `${g.descrizione}${g.data ? ` · ${formatta(g.data, true)}` : ''}`,
       indietro(`#/campo/classe/${cl.codice}`, 'Giornate'),
       h('div.progresso', h('div.traccia', h('span', { style: { width: `${alunni.length ? Math.round((fatti / alunni.length) * 100) : 0}%` } })),
         h('span.contatore', { 'aria-live': 'polite' }, `Registrati ${fatti}/${alunni.length} · mancano ${alunni.length - fatti}`)),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, 'Esporta')),
-    h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st))),
-    h('nav.nav-alunni', { 'aria-label': 'Vai all\'alunno' }, stati.map(([a, st]) => h(`a.${st}`, {
-      href: `#alunno-${a.numero}`, title: a.cognomeNome,
-      onclick: (e) => { e.preventDefault(); document.getElementById(`alunno-${a.numero}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    }, a.numero))));
+    h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st, attivo))),
+    barraAlunni(ctx, stati));
 }
 
-function schedaAlunno(ctx, cl, g, sos, a, st) {
+function barraAlunni(ctx, stati) {
+  const nav = h('nav.nav-alunni.segui', { 'aria-label': 'Vai all\'alunno', 'data-scroll': 'nav-alunni' }, stati.map(([a, st]) => h(`a.${st}`, {
+    href: `#alunno-${a.numero}`, title: a.cognomeNome, dataset: { numero: a.numero, nome: a.cognomeNome },
+    onclick: (e) => {
+      e.preventDefault();
+      ctx.alunnoAttivo = { ...ctx.alunnoAttivo, numero: a.numero };
+      evidenzia(nav, a.numero);
+      vaiAllaScheda(a.numero);
+    }
+  }, a.numero)));
+  evidenzia(nav, ctx.alunnoAttivo.numero);
+  return nav;
+}
+
+function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
   const c = ctx.campoStore.get();
   const base = { classe: cl.codice, alunnoId: a.id, giornataId: g.id };
   const regs = sos.map((so) => trovaCampo(c, a.id, g.id, so.codice));
@@ -185,7 +202,10 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
   }
   const conAnnulla = (fn, msg) => {
     const prima = ctx.campoStore.get();
+    ctx.alunnoAttivo = { chiave: attivo.chiave, numero: a.numero };
+    pausaTraccia();
     ctx.campoStore.aggiorna(fn);
+    if (appenaCompletata(st, statoScheda(ctx.campoStore.get(), a, g))) avanzaDopo(ctx, attivo.chiave, a.numero, attivo.leggiStati);
     avviso(msg, 'ok', { testo: 'Annulla', fn: () => ctx.campoStore.sostituisci(prima) });
   };
   const setStato = (v) => conAnnulla((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }),

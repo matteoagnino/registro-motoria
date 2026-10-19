@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.7.2 — alunno attivo in palestra (2026-10-19)
+- iPad, registrazione voti: nella barra in fondo il cerchio dell'alunno a cui stai mettendo il voto è più grande,
+  con un anello blu e il nome sotto; la barra scorre da sola per tenerlo in vista.
+- L'alunno attivo segue lo scorrimento della pagina e passa all'alunno che tocchi.
+- Finito un alunno (tutti i voti, oppure AS/NV/ES), la pagina passa da sola al prossimo ancora da registrare.
+
 ## 0.7.1 — nuova icona (2026-10-19)
 - Icona «Slancio»: tre tratti in successione (arancio, verde, blu) su fondo chiaro, l'idea del movimento senza
   un singolo sport. SVG, PNG 192/512 (anche «maskable» per Android/Chrome) e icona 180 px per la schermata Home dell'iPad.

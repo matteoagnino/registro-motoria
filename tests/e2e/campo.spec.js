@@ -42,12 +42,18 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await page.getByRole('link', { name: /4BM/ }).click();
   await page.getByRole('link', { name: /Q1-G03/ }).click();
   await expect(page.locator('.contatore')).toHaveText('Registrati 0/3 · mancano 3');
+  const corrente = page.locator('.nav-alunni [aria-current="true"]');
+  await expect(corrente).toHaveText('1');
 
   for (const [i, l] of [[1, 8], [2, 7], [3, 8], [4, 7]]) await tocca(page, 1, '1.1', i, l);
   for (const [i, l] of [[1, 7], [2, 7], [3, 8], [4, 7]]) await tocca(page, 1, '1.2', i, l);
   for (const [i, l] of [[1, 9], [2, 9], [3, 8], [4, 9]]) await tocca(page, 1, 'TEC.1', i, l);
   await expect(page.getByLabel('Voto 1.1').first()).toHaveText('8 Buono');
   await expect(page.getByLabel('Voto 1.2').first()).toHaveText('7 Discreto');
+  // completato il n. 1 si passa da soli al n. 2: cerchio più grande con il nome sotto
+  await expect(corrente).toHaveText('2');
+  await expect(corrente).toHaveAttribute('data-nome', /Alunno Prova/);
+  expect((await corrente.boundingBox()).width).toBeGreaterThan((await page.locator('.nav-alunni a').first().boundingBox()).width);
   // descrittore con tocco lungo
   const b = page.getByLabel('1 1.1 I1 livello 8', { exact: true });
   await b.hover();
@@ -57,6 +63,10 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.locator('.descrittore')).toContainText('8 Buono:');
   await expect(b).toHaveAttribute('aria-pressed', 'true');
 
+  // il tocco su un alunno lo rende attivo
+  await tocca(page, 3, '1.1', 1, 9);
+  await expect(corrente).toHaveText('3');
+  await tocca(page, 3, '1.1', 1, 9);
   for (const so of ['1.1', '1.2', 'TEC.1']) await tocca(page, 2, so, 1, 10);
   await page.locator('#alunno-3').getByRole('button', { name: 'AS' }).click();
   await expect(page.locator('.contatore')).toHaveText('Registrati 3/3 · mancano 0');

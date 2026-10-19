@@ -344,7 +344,7 @@ td.msg-riga.as { color: var(--rosso); }
    Modalità campo (iPad) — stessa lingua visiva, misure da tocco
    ================================================================= */
 body[data-modo="campo"] { font-size: 17px; }
-.campo-app { max-width: 1180px; margin: 0 auto; padding: 0 0 110px; }
+.campo-app { max-width: 1180px; margin: 0 auto; padding: 0 0 130px; }
 .campo-testa {
   position: sticky; top: 0; z-index: 5; padding: 12px 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   background: var(--bar); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); box-shadow: 0 1px 0 var(--sep2);
@@ -402,6 +402,17 @@ body[data-modo="campo"] .descrittore { margin: 0 14px 10px; display: block; back
 .nav-alunni a.incompleto { background: color-mix(in srgb, var(--l7) var(--tinta), transparent); color: var(--t7); }
 .nav-alunni a.assente { background: color-mix(in srgb, var(--l5) var(--tinta), transparent); color: var(--t5); }
 .nav-alunni a.es { opacity: .45; }
+/* Registrazione: alunno a cui si sta mettendo il voto (più grande, anello, nome sotto) */
+.nav-alunni.segui { align-items: center; padding-bottom: 30px; }
+.nav-alunni.segui a { position: relative; transition: min-width .15s, height .15s, box-shadow .15s; }
+.nav-alunni.segui a.corrente { min-width: 58px; height: 58px; font-size: 20px; color: var(--label); box-shadow: 0 0 0 3px var(--accent); }
+.nav-alunni.segui a.corrente.es { opacity: 1; }
+.nav-alunni.segui a.corrente::after {
+  content: attr(data-nome); position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%);
+  max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 12px var(--font); color: var(--label);
+}
+@media (prefers-reduced-motion: reduce) { .nav-alunni.segui a { transition: none; } }
+body[data-modo="campo"]:has(.nav-alunni) .toast { bottom: 112px; }
 
 /* Avviso di nuova versione */
 .banner-aggiorna {
@@ -409,7 +420,7 @@ body[data-modo="campo"] .descrittore { margin: 0 14px 10px; display: block; back
   max-width: min(520px, calc(100vw - 36px)); padding: 12px 14px; border-radius: 14px; background: var(--elev); color: var(--label);
   box-shadow: var(--shadow-alta); font-size: 13px; animation: materializza 260ms cubic-bezier(.2, .9, .25, 1);
 }
-body[data-modo="campo"] .banner-aggiorna { bottom: 84px; }
+body[data-modo="campo"] .banner-aggiorna { bottom: 108px; }
 
 /* ---------- Accessibilità: movimento, trasparenza, contrasto ---------- */
 @media (prefers-reduced-motion: reduce) {

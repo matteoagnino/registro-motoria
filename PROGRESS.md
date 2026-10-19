@@ -53,5 +53,10 @@ STATO: VERSIONE GREZZA COMPLETATA
 - D6 risolta (scala 8…1, spareggio regole/comportamento/fair play); giudizi per Argo, iscrizione Giochi, avviso pochi voti,
   memoria protetta. Test: 136 unitari, 8 E2E.
 
+## 0.7.2 (2026-10-19)
+- iPad, registrazione: alunno attivo evidenziato nella barra in fondo (cerchio più grande, anello, nome sotto); segue
+  lo scorrimento e l'ultimo tocco; completato un alunno si passa da soli al prossimo da registrare (0,6 s, «Annulla» lo
+  blocca). Logica in `src/ui/campo/alunnoAttivo.js`. Test: 142 unitari, 8 E2E.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.
