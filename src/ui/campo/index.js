@@ -267,5 +267,9 @@ function esporta(ctx) {
       h('p', h('b', 'Per farli arrivare da soli sul Mac: '), 'nel menu Condividi scegli «Salva su File» e la cartella «voti-ipad» dentro la cartella archivio (iCloud Drive o Drive). L\'iPad ricorda l\'ultima cartella usata; il gestionale sul Mac li importa da solo.'),
       h('p.tenue', { style: { marginTop: '1rem' } }, `Hai perso un file? Puoi riesportare tutte le ${tutte} registrazioni fatte su questo iPad: sul Mac i doppioni vengono ignorati.`),
       h('button.grande', { onclick: () => fai(true), disabled: !tutte }, 'Riesporta tutto')),
+    h('div.scheda', h('h2', 'Sicurezza dei dati sull\'iPad'),
+      ctx.memoriaProtetta
+        ? h('p.ok-testo', '✓ Memoria protetta: l\'iPad non cancella da solo i dati di Registro Motoria.')
+        : h('p', h('b', 'Memoria non protetta. '), 'Safari potrebbe cancellare i dati se l\'app non si usa per qualche settimana. Usa l\'app aggiunta alla schermata Home (Condividi → Aggiungi a Home) ed esporta i voti dopo ogni lezione: una volta sul Mac sono al sicuro.')),
     h('p.tenue', 'Nessun dato lascia l\'iPad senza questa tua azione.')));
 }

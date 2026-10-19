@@ -1,7 +1,7 @@
 // Settimana condivisa: tutte le classi, giorno per giorno, con cosa si valuta e chi deve recuperare.
 import { h } from '../dom.js';
 import { conParametri } from '../app.js';
-import { piano, daRecuperareClasse, giornata, avanzamentoGiornata } from '../../dati/selettori.js';
+import { piano, daRecuperareClasse, giornata, avanzamentoGiornata, allertaPochiVoti } from '../../dati/selettori.js';
 import { alunniDi } from '../../dati/azioni.js';
 import { lunediDi, aggiungiGiorni, oggiISO, formatta, GIORNI_LUNGHI, toDate } from '../../pianificazione/date.js';
 import { intestazione, etichettaTipo, chipSotto } from './comuni.js';
@@ -29,6 +29,7 @@ export function vistaOggi(ctx, { params }) {
       h('button', { onclick: () => conParametri({ settimana: settimanaIniziale(stato) }) }, 'Questa settimana'),
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, 7) }), 'aria-label': 'Settimana successiva' }, 'Successiva ›'),
       h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) })),
+    pannelloPochiVoti(stato, oggi),
     pannelloRecuperi(stato),
     h('div.settimana', giorni.map((d) => {
       const lezioni = stato.classi
@@ -79,4 +80,19 @@ function pannelloRecuperi(stato) {
     h('summary', h('strong', 'Recuperi in sospeso '), h('span.badge-rec', voci.length)),
     h('ul', voci.map(({ c, a, gId }) => h('li',
       h('a', { href: `#/gestionale/registro?classe=${c.codice}&g=${gId}` }, `${c.codice} · n. ${a.numero} ${a.cognomeNome} · ${gId}`)))));
+}
+
+/** Avviso di fine quadrimestre: chi ha ancora pochi voti e quante lezioni restano per rimediare. */
+function pannelloPochiVoti(stato, oggi) {
+  const a = allertaPochiVoti(stato, oggi);
+  if (!a?.classi.length) return null;
+  const n = a.classi.reduce((t, c) => t + c.alunni.length, 0);
+  return h('details.scheda.attenzione', { open: true },
+    h('summary', h('strong', `Fine del ${a.quadrimestre === 'Q1' ? '1°' : '2°'} quadrimestre tra ${a.giorni} giorni (${formatta(a.fine)}): `),
+      `${n} alunni con meno di ${a.min} voti in A o B`),
+    h('ul', a.classi.map((c) => h('li',
+      h('a', { href: `#/gestionale/riepilogo?classe=${c.classe}&q=${a.quadrimestre}` }, h('b', c.classe)),
+      ` (${c.lezioniRimaste} lezioni rimaste): `,
+      c.alunni.map((x) => `n. ${x.numero} ${x.cognomeNome} (A ${x.nA}, B ${x.nB})`).join(' · ')))),
+    h('p.tenue', 'Usa le lezioni rimaste per i recuperi, oppure prevedi una valutazione alternativa (scritta/orale).'));
 }

@@ -64,21 +64,17 @@ export function punteggioProva(stat, prova) {
   return stat[prova.id] ?? null;
 }
 
-/**
- * Punti di classifica per posizione. Pari merito = stessi punti.
- * 'max8' (scheda FIDAL 2025/26): 1ª = 8, poi 7…, dall'8ª in giù 1 punto.
- * 'partecipanti' (scheda punteggi 2024/25): 1ª = N classi partecipanti, poi N−1…
- */
-export const SCALE_PUNTI = { max8: '8, 7, … 1 (scheda FIDAL 2025/26)', partecipanti: 'N, N−1, … 1 (N = classi in gara)' };
-export const puntiPosizione = (pos, n = 8, scala = 'max8') => (scala === 'partecipanti' ? Math.max(1, n + 1 - pos) : Math.max(1, 9 - pos));
+/** Punti per posizione (scheda FIDAL 2025/26): 1ª = 8, poi 7…; dall'8ª in giù 1 punto. Pari merito = stessi punti. */
+export const puntiPosizione = (pos) => Math.max(1, 9 - pos);
 
 /**
  * Classifica tra classi. In ogni prova: punti 8…1 per posizione + eventuale «correttivo di classifica»
- * (+0,5/+1 pt) assegnato alla classe per alunni con disabilità. Classifica generale = somma dei punti.
+ * (+0,5/+1 pt) assegnato alla classe per alunni con disabilità. Classifica generale = somma dei punti;
+ * a parità, spareggio sul giudizio del docente su rispetto delle regole, comportamento e fair play (campo fairPlay).
  * @param voci [{classe, stat, fairPlay, bonus}] — classi dello stesso livello
  * @param prove definizioni delle prove
  */
-export function classifica(voci, prove, scala = 'max8') {
+export function classifica(voci, prove) {
   const perProva = {};
   const totali = new Map(voci.map((v) => [v.classe, 0]));
   for (const p of prove) {
@@ -89,7 +85,7 @@ export function classifica(voci, prove, scala = 'max8') {
     valori.forEach((x, i) => {
       const pos = i > 0 && x.valore === valori[i - 1].valore ? righe[i - 1].posizione : i + 1;
       const bonus = numero(voci.find((v) => v.classe === x.classe)?.bonus?.[p.id]) ?? 0;
-      righe.push({ ...x, posizione: pos, bonus, punti: puntiPosizione(pos, valori.length, scala) + bonus });
+      righe.push({ ...x, posizione: pos, bonus, punti: puntiPosizione(pos) + bonus });
     });
     for (const r of righe) totali.set(r.classe, totali.get(r.classe) + r.punti);
     perProva[p.id] = righe;
@@ -115,7 +111,7 @@ export function classificheAnno(stato, anno, rilevazione) {
       const ris = stato.giochi.risultati.find((r) => r.anno === anno && r.classe === c.codice && r.rilevazione === rilevazione);
       return { classe: c.codice, stat: statisticheClasse(ris), fairPlay: ris?.fairPlay, bonus: ris?.bonus };
     }).filter((v) => Object.values(v.stat).some((x) => (typeof x === 'object' ? x?.n : x != null)));
-    const cl = classifica(voci, stato.giochi.prove, stato.giochi.regole?.scalaPunti);
+    const cl = classifica(voci, stato.giochi.prove);
     out[livello] = { ...cl, proposta: cl.generale[0]?.classe ?? null };
   }
   return out;
@@ -165,11 +161,6 @@ export function impostaBonus(risultato, prova, valore) {
   const v = numero(valore);
   if (v != null && (v < 0 || v > 3)) throw new Error('Correttivo di classifica tra 0 e 3 punti.');
   return { ...risultato, bonus: { ...(risultato.bonus ?? {}), [prova]: v } };
-}
-
-export function aggiornaRegoleGiochi(stato, patch) {
-  if (patch.scalaPunti && !SCALE_PUNTI[patch.scalaPunti]) throw new Error('Scala dei punti non valida.');
-  return { ...stato, giochi: { ...stato.giochi, regole: { ...stato.giochi.regole, ...patch } } };
 }
 
 export function impostaGruppo(risultato, prova, indice, valore) {

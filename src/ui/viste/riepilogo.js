@@ -1,7 +1,7 @@
 // Riepilogo per classe e quadrimestre: medie, valore finale, giudizio da riportare (definitivo prevale), processo, avvisi.
 import { h, select, modale, campo, prova, avviso } from '../dom.js';
 import * as A from '../../dati/azioni.js';
-import { riepilogoClasse, sottoObiettiviDi } from '../../dati/selettori.js';
+import { riepilogoClasse, sottoObiettiviDi, giudiziPerArgo, testoPerArgo } from '../../dati/selettori.js';
 import { MSG_POCHI, MSG_OP, MSG_ES } from '../../calcolo/riepilogo.js';
 import {
   intestazione, selettoreClasse, selettoreQuadrimestre, classeScelta, classeNucleo, GIUDIZI, LIVELLI, contatore
@@ -34,7 +34,8 @@ export function vistaRiepilogo(ctx, { params }) {
       meta: [`${attivi.length} valutati su ${righe.length}`, `Metà Q: ${fmtData(stato.anno.quadrimestri.find((x) => x.id === q)?.meta)}`,
         `${Math.round(stato.impostazioni.parametri.quota_prove * 100)}% prove + ${Math.round(stato.impostazioni.parametri.quota_processo * 100)}% processo`]
     }, contatore(conAvvisi, 'avvisi', conAvvisi ? 'male' : ''), contatore(senzaProcesso, 'senza processo', 'acc'),
-    selettoreClasse(stato, cl.codice), selettoreQuadrimestre(q)),
+    selettoreClasse(stato, cl.codice), selettoreQuadrimestre(q),
+    h('button', { onclick: () => finestraArgo(stato, cl.codice, q) }, 'Giudizi per Argo')),
     h('div.riga-info',
       h('p.descrittore', h('span.etichetta-desc', 'Obiettivi'), h('span', h('b', 'A · '), os[`${q}A`], h('br'), h('b', 'B · '), os[`${q}B`])),
       h('div.legenda', h('span', h('span.icone-avvisi', h('span.av-pochi', '▲')), 'pochi voti'), h('span', h('span.icone-avvisi', h('span.av-rec', '⟲')), 'da recuperare'),
@@ -155,5 +156,30 @@ function editorGiudizio(ctx, q, a, k, o) {
         return Boolean(ok);
       }
     }]
+  });
+}
+
+function finestraArgo(stato, classe, q) {
+  const righe = giudiziPerArgo(stato, classe, q);
+  const daControllare = righe.filter((x) => x.controlla.length).length;
+  const copia = async () => {
+    try {
+      await navigator.clipboard.writeText(testoPerArgo(righe));
+      avviso('Giudizi copiati: incollali in Argo o in un foglio');
+    } catch {
+      avviso('Copia non riuscita: seleziona la tabella e usa Cmd+C', 'errore');
+    }
+  };
+  modale(`Giudizi per Argo · ${classe} · ${q === 'Q1' ? '1°' : '2°'} quadrimestre`, h('div',
+    h('p.tenue', 'Giudizio da riportare per ogni obiettivo (il tuo definitivo se c\'è, altrimenti il calcolato), nell\'ordine del registro.'),
+    daControllare ? h('p.violazione', `${daControllare} alunni da controllare prima di copiare (vedi ultima colonna).`) : null,
+    h('div.tabella-scorri', h('table',
+      h('thead', h('tr', ['N°', 'Alunno', 'Ob. A', 'Ob. B', 'Tecnologia', 'Ed. civica', 'Da controllare'].map((t) => h('th', t)))),
+      h('tbody', righe.map((x) => h('tr',
+        h('td.num', x.numero), h('td', x.cognomeNome, x.op ? h('span.op', 'OP') : null),
+        ['A', 'B', 'TEC', 'CIV'].map((k) => h('td', { 'data-l': livelloDi(x[k]) }, x[k] || '—')),
+        h('td.tenue', x.controlla.join(' · ')))))))), {
+    largo: true,
+    azioni: [{ testo: 'Copia tabella', primario: true, azione: async () => { await copia(); return false; } }]
   });
 }

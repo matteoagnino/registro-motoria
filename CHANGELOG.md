@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.7.0 — regole Giochi decise, giudizi per Argo, iscrizione, avviso fine quadrimestre (2026-10-19)
+- Giochi: punti 8…1 come nelle schede tecniche (scelta della scala tolta); spareggio su rispetto delle regole,
+  comportamento e fair play.
+- Riepilogo → «Giudizi per Argo»: giudizi da riportare in ordine di registro, con cosa controllare, e «Copia tabella».
+- Giochi → Classifiche: Excel per l'iscrizione della classe proposta (colonne da completare con Argo).
+- Settimana: nelle ultime due settimane del quadrimestre, alunni con pochi voti in A o B e lezioni rimaste.
+- iPad: memoria protetta richiesta al browser e mostrata in «Esporta voti».
+
 ## 0.6.0 — cronometro dei Giochi sull'iPad (2026-10-19)
 - Campo → classe → «Giochi: cronometro»: Super Gym School e Superiamo gli ostacoli, 1ª e 2ª rilevazione.
 - VIA/STOP grandi, schermo sempre acceso durante la prova, conta-penalità con la tabella FGI 2025/26,

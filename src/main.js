@@ -138,6 +138,8 @@ async function avvia() {
   ctx.campoStore.ascolta(() => ctx.ridisegna());
   controllaAggiornamenti().catch((e) => console.warn('Controllo aggiornamenti non riuscito', e));
   if (!erroreAvvio) avviaRicezioneVoti(ctx);
+  // Chiede al browser di non cancellare mai da solo i dati (Safari lo fa con i siti poco usati).
+  ctx.memoriaProtetta = await navigator.storage?.persist?.().catch(() => false) ?? false;
   if (erroreAvvio) {
     document.body.prepend(h('div.banner-errore', `Impossibile leggere il registro salvato: ${erroreAvvio.message}. Vai in Import/Export per ripristinare un backup.`));
   }

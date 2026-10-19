@@ -142,3 +142,28 @@ export async function excelRiepiloghi(stato, q) {
   if (!wb.worksheets.length) wb.addWorksheet('Vuoto').getCell(1, 1).value = 'Nessun alunno inserito.';
   return wb.xlsx.writeBuffer();
 }
+
+/**
+ * Elenco della classe per l'iscrizione alla piattaforma dei Giochi: nomi dal registro, colonne vuote da completare
+ * con Argo (il registro non conserva date di nascita né dati sanitari).
+ */
+export async function excelIscrizioneGiochi(stato, codiceClasse) {
+  const cl = trovaClasse(stato, codiceClasse);
+  const wb = await nuovoLibro();
+  const ws = wb.addWorksheet(`Iscrizione ${codiceClasse}`);
+  const colonne = ['N°', 'Cognome e nome', 'Classe', 'Plesso', 'Sesso (M/F)', 'Data di nascita', 'Disabilità motoria da segnalare (sì/no)', 'Note'];
+  titolo(ws, `Nuovi Giochi della Gioventù ${stato.anno.id} · iscrizione classe ${codiceClasse} (${cl.livello}ª, ${cl.plesso})`, colonne.length);
+  ws.getCell(2, 1).value = 'Completa le colonne vuote con i dati di Argo. File con dati personali: salvalo solo nelle tue cartelle.';
+  ws.getCell(2, 1).font = { italic: true, color: { argb: 'FF7F7F7F' } };
+  intestazioni(ws, 3, colonne);
+  alunniDi(stato, codiceClasse).filter((a) => a.stato !== 'Ritirato').forEach((a, i) => {
+    const r = ws.getRow(4 + i);
+    [a.numero, a.cognomeNome, codiceClasse, cl.plesso, '', '', '', a.stato === 'ES' ? 'esonerato' : ''].forEach((v, k) => {
+      const c = r.getCell(k + 1);
+      c.value = v;
+      c.border = bordo;
+    });
+  });
+  [5, 32, 8, 14, 10, 14, 22, 24].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  return wb.xlsx.writeBuffer();
+}

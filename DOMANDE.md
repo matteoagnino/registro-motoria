@@ -21,13 +21,9 @@ Formato: domanda · ipotesi prudente adottata · dove si cambia. Rispondi pure q
 - ~~**D5 · Prova recuperata.**~~ **Risolta il 2026-10-19**: il voto si registra il giorno in cui l'alunno
   sostiene davvero la prova. Un alunno AS non può avere livelli finché non c'è la data del recupero
   (Mac: colonna «Recup.»; iPad: bottone «Recupera oggi»); peso e data della prova seguono il giorno del recupero.
-- **D6 · Classifica Giochi** — schede tecniche 2025/26 e progetto tecnico 2026/27 ricevuti il 19/10/2026.
-  Applicato: punteggio di classe = media dei tempi (Super Gym, ostacoli) o somma dei gruppi (lancia, staffetta,
-  spikeball); in ogni prova punti per posizione; classifica generale = somma dei punti; 4ª e 5ª separate.
-  La media si fa **sui presenti**: dividere per tutti gli iscritti abbasserebbe il tempo medio e premierebbe le
-  assenze. Ancora da decidere:
-  1. Scala dei punti: 8→1 (scheda FIDAL 2025/26, predefinita) oppure N→1 — si sceglie in Giochi → Classifiche.
-  2. Spareggio a parità di punti: oggi fair play (le schede non lo regolano; il fair play è anche un premio a parte).
+- ~~**D6 · Classifica Giochi.**~~ **Risolta il 2026-10-19**: punti per posizione come nelle schede tecniche
+  (8, 7, … 1; dall'8ª in giù 1 punto); a parità di punti spareggio sul rispetto delle regole, il comportamento e il
+  fair play della classe (tuo giudizio 1–10). Media dei tempi sui presenti; 4ª e 5ª separate.
 - ~~**D7 · Correttivo disabilità Giochi.**~~ **Risolta il 2026-10-19** con le schede 2025/26: per ogni alunno
   e prova a tempo si può indicare una riduzione del tempo (FIDAL, es. −30%/−50%), escludere il risultato dalla media
   (casi più complessi) o segnare il circuito adattato (FGI); per ogni prova la classe può ricevere un correttivo di

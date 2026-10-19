@@ -3,6 +3,8 @@ import { h, select, modale, prova, avviso, campo as campoForm } from '../dom.js'
 import { conParametri } from '../app.js';
 import { alunniDi } from '../../dati/azioni.js';
 import * as G from '../../giochi/giochi.js';
+import { excelIscrizioneGiochi } from '../../export/excel.js';
+import { scaricaBlob, marcaTemporale } from '../../dati/archivio.js';
 import { intestazione, selettoreClasse, classeScelta } from './comuni.js';
 
 const NUM = (v) => (v === '' || v == null ? null : Number(String(v).replace(',', '.')));
@@ -66,8 +68,8 @@ function inserimento(ctx, cl, anno, ril) {
         h('p.tenue', 'Punti aggiunti alla classe nella classifica della singola prova (schede FIDAL: es. +0,5 o +1).'),
         h('div.riga', stato.giochi.prove.map((p) => h('label.campo', h('span.etichetta', p.nome),
           inp(ris.bonus?.[p.id], (e) => agg((r) => G.impostaBonus(r, p.id, NUM(e.target.value))), `Correttivo classifica ${p.nome}`, '0.5')))),
-        h('label.campo', h('span.etichetta', 'Fair play e partecipazione della classe (per lo spareggio, 1–10)'),
-          inp(ris.fairPlay, (e) => agg((r) => ({ ...r, fairPlay: NUM(e.target.value) })), 'Fair play', '0.5')))));
+        h('label.campo', h('span.etichetta', 'Spareggio: rispetto delle regole, comportamento e fair play della classe (1–10)'),
+          inp(ris.fairPlay, (e) => agg((r) => ({ ...r, fairPlay: NUM(e.target.value) })), 'Regole, comportamento e fair play', '0.5')))));
 }
 
 function tempoMostrato(i, prova) {
@@ -141,9 +143,6 @@ function classifiche(ctx, anno, ril) {
   const prove = stato.giochi.prove;
   return h('div',
     h('div.barra',
-      h('label', 'Punti per posizione in ogni prova: ', select(Object.entries(G.SCALE_PUNTI), stato.giochi.regole?.scalaPunti ?? 'max8', {
-        'aria-label': 'Scala dei punti', onchange: (e) => prova(() => ctx.store.aggiorna((s) => G.aggiornaRegoleGiochi(s, { scalaPunti: e.target.value })), 'Scala dei punti aggiornata')
-      })),
       h('button', {
       onclick: () => {
         ctx.store.aggiorna((s) => G.archiviaStorico(s, anno, ril));
@@ -152,12 +151,13 @@ function classifiche(ctx, anno, ril) {
     }, `Archivia ${anno} · ${ril}ª rilevazione nello storico`)),
     [4, 5].map((liv) => h('div.scheda',
       h('h2', `Classi ${liv}ª`, cl[liv].proposta ? h('span.chip.n-1', { style: { marginLeft: '.6rem' } }, `Proposta da iscrivere: ${cl[liv].proposta}`) : null),
+      cl[liv].proposta ? h('button', { onclick: () => scaricaIscrizione(stato, cl[liv].proposta) }, `Elenco per l'iscrizione della ${cl[liv].proposta} (Excel)`) : null,
       cl[liv].generale.length === 0 ? h('p.tenue', 'Nessun risultato inserito.') : h('div.griglia-2',
         h('div', h('h3', 'Classifica generale'), h('table',
-          h('thead', h('tr', ['Pos.', 'Classe', 'Punti', 'Fair play'].map((t) => h('th', t)))),
+          h('thead', h('tr', ['Pos.', 'Classe', 'Punti', 'Regole e fair play'].map((t) => h('th', t)))),
           h('tbody', cl[liv].generale.map((g) => h('tr', h('td.num', g.posizione), h('td', g.classe), h('td.num', fmt(g.punti)),
             h('td.num', fmt(g.fairPlay), g.spareggioFairPlay ? h('small', ' (spareggio)') : null)))))),
-        h('div', h('h3', 'Per prova'), prove.map((p) => h('div',
+        h('div', h('h3', 'Per prova (punti 8…1, scheda FIDAL)'), prove.map((p) => h('div',
           h('strong', p.nome),
           h('table', h('tbody', (cl[liv].perProva[p.id] || []).map((r) => h('tr',
             h('td.num', r.posizione), h('td', r.classe), h('td.num', fmt(r.valore)), h('td.num', `${fmt(r.punti)} pt`, r.bonus ? h('small', ` (+${fmt(r.bonus)})`) : null))))))))))));
@@ -171,4 +171,13 @@ function storico(ctx) {
     h('tbody', righe.map((r) => h('tr', h('td', r.anno), h('td.num', r.rilevazione), h('td', r.classe), h('td', r.plesso), h('td.num', r.n),
       h('td.num', fmt(r.supergymMedia)), h('td.num', fmt(r.supergymTroncata)), h('td.num', fmt(r.ostacoliMedia)), h('td.num', fmt(r.ostacoliTroncata)),
       h('td.num', fmt(r.lancia)), h('td.num', fmt(r.staffetta)), h('td.num', fmt(r.spikeball)))))));
+}
+
+async function scaricaIscrizione(stato, classe) {
+  try {
+    const buf = await excelIscrizioneGiochi(stato, classe);
+    scaricaBlob(`iscrizione-giochi_${classe}_${marcaTemporale()}.xlsx`, new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  } catch (e) {
+    avviso(`Export non riuscito: ${e.message}`, 'errore');
+  }
 }

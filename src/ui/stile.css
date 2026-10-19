@@ -153,6 +153,7 @@ details[open] > summary::before { transform: rotate(90deg); }
 /* ---------- Pannelli ---------- */
 .barra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 14px; }
 .scheda { background: var(--content); border-radius: var(--raggio); box-shadow: var(--shadow); padding: 16px 18px; margin: 0 0 16px; }
+.scheda.attenzione { border-left: 5px solid var(--l5); }
 .griglia-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
 .griglia-2 > .scheda { margin: 0; }
 .errore-vista, .banner-errore { background: color-mix(in srgb, var(--l5) var(--tinta), var(--content)); color: var(--label); padding: 14px 16px; border-radius: var(--raggio); margin: 1rem; }

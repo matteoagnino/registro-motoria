@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import * as A from '../../src/dati/azioni.js';
-import { riepilogoClasse, verificaVoti, dataGiornata, daRecuperareClasse } from '../../src/dati/selettori.js';
+import { riepilogoClasse, verificaVoti, dataGiornata, daRecuperareClasse, giudiziPerArgo, testoPerArgo, allertaPochiVoti } from '../../src/dati/selettori.js';
 import { serializzaArchivio, deserializzaArchivio } from '../../src/dati/archivio.js';
 import { migra, SCHEMA_VERSION, leggiArchivio, validaStato } from '../../src/dati/schema.js';
 import { apriPersistenza, MAX_BACKUP } from '../../src/dati/persistenza.js';
@@ -183,5 +183,37 @@ describe('persistenza IndexedDB e store', () => {
     await store.salvaOra();
     expect(salvati.at(-1)).toEqual({ v: 2 });
     expect(notifiche).toBe(1);
+  });
+});
+
+describe('giudizi per Argo', () => {
+  test('ordine del registro, ritirati esclusi, definitivo prevale, segnala cosa controllare', () => {
+    let s = { ...creaStatoIniziale(), alunni: [] };
+    s = A.importaElencoAlunni(s, '4BM', ['Alunno Prova 01', 'Alunno Prova 02', 'Alunno Prova 03']);
+    const [a1, a2, a3] = A.alunniDi(s, '4BM');
+    s = A.modificaAlunno(s, a3.id, { stato: 'Ritirato' });
+    for (const ob of ['A', 'B', 'TEC', 'CIV']) s = A.impostaGiudizioDefinitivo(s, { alunnoId: a1.id, quadrimestre: 'Q1', obiettivo: ob, giudizio: 'Buono' });
+    const righe = giudiziPerArgo(s, '4BM', 'Q1');
+    expect(righe.map((x) => x.numero)).toEqual([1, 2]);
+    expect(righe[0]).toMatchObject({ A: 'Buono', B: 'Buono', TEC: 'Buono', CIV: 'Buono' });
+    expect(righe[1].controlla).toContain('giudizio mancante');
+    expect(righe[1].A).toBe('');
+    const testo = testoPerArgo(righe).split('\n');
+    expect(testo[0]).toBe('N°\tAlunno\tOb. A\tOb. B\tTecnologia\tEd. civica');
+    expect(testo[1]).toBe('1\tAlunno Prova 01\tBuono\tBuono\tBuono\tBuono');
+    expect(a2.numero).toBe(2);
+  });
+});
+
+describe('avviso pochi voti a fine quadrimestre', () => {
+  test('solo nelle ultime due settimane, con le lezioni rimaste', () => {
+    let s = { ...creaStatoIniziale(), alunni: [] };
+    s = A.importaElencoAlunni(s, '4BM', ['Alunno Prova 01']);
+    expect(allertaPochiVoti(s, '2026-11-02')).toBeNull();
+    const a = allertaPochiVoti(s, '2027-01-18');
+    expect(a).toMatchObject({ quadrimestre: 'Q1', giorni: 13 });
+    expect(a.classi).toHaveLength(1);
+    expect(a.classi[0]).toMatchObject({ classe: '4BM', lezioniRimaste: 2 });
+    expect(a.classi[0].alunni[0]).toMatchObject({ numero: 1, nA: 0, nB: 0 });
   });
 });

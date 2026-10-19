@@ -49,5 +49,9 @@ STATO: VERSIONE GREZZA COMPLETATA
 ## Cronometro Giochi (0.6.0, 2026-10-19)
 - Tempi registrati sull'iPad → file voti (versione 2, campo `tempi`) → risultati Giochi sul Mac.
 
+## 0.7.0 (2026-10-19)
+- D6 risolta (scala 8…1, spareggio regole/comportamento/fair play); giudizi per Argo, iscrizione Giochi, avviso pochi voti,
+  memoria protetta. Test: 136 unitari, 8 E2E.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

@@ -2,6 +2,8 @@ import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import * as A from '../../src/dati/azioni.js';
 import * as G from '../../src/giochi/giochi.js';
+import ExcelJS from 'exceljs';
+import { excelIscrizioneGiochi } from '../../src/export/excel.js';
 
 describe('calcoli da scheda tecnica', () => {
   test('tempo gara Super Gym = (tempo + penalità) × (1 − correttivo), al centesimo', () => {
@@ -40,8 +42,6 @@ describe('calcoli da scheda tecnica', () => {
   });
   test('punti 8, 7, … e 1 dall\'8ª in giù', () => {
     expect([1, 2, 3, 7, 8, 9, 12].map((p) => G.puntiPosizione(p))).toEqual([8, 7, 6, 2, 1, 1, 1]);
-    // scala N…1 con 11 classi in gara
-    expect([1, 2, 11].map((p) => G.puntiPosizione(p, 11, 'partecipanti'))).toEqual([11, 10, 1]);
   });
 });
 
@@ -84,7 +84,7 @@ describe('classifica con 5 quarte e 6 quinte finte', () => {
     expect(cl[4].proposta).toBe('4BM');
     expect(cl[5].proposta).toBe('5BM');
   });
-  test('spareggio con il fair play', () => {
+  test('spareggio su rispetto delle regole, comportamento e fair play', () => {
     const voci = [
       { classe: 'X', stat: { lancia: 10 }, fairPlay: 6 },
       { classe: 'Y', stat: { lancia: 10 }, fairPlay: 9 }
@@ -98,5 +98,20 @@ describe('classifica con 5 quarte e 6 quinte finte', () => {
     expect(s.giochi.storico).toHaveLength(11);
     expect(s.giochi.storico.find((r) => r.classe === '4BM')).toMatchObject({ supergymMedia: 55, supergymTroncata: 51, livello: 4 });
     expect(G.archiviaStorico(s, '2026/27', 1).giochi.storico).toHaveLength(11);
+  });
+});
+
+describe('elenco per l\'iscrizione ai Giochi', () => {
+  test('nomi dal registro, ritirati esclusi, colonne da completare vuote', async () => {
+    let s = { ...creaStatoIniziale(), alunni: [] };
+    s = A.importaElencoAlunni(s, '4BM', ['Alunno Prova 01', 'Alunno Prova 02', 'Alunno Prova 03']);
+    s = A.modificaAlunno(s, A.alunniDi(s, '4BM')[1].id, { stato: 'Ritirato' });
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(await excelIscrizioneGiochi(s, '4BM'));
+    const ws = wb.worksheets[0];
+    expect(ws.getRow(3).getCell(6).value).toBe('Data di nascita');
+    expect([ws.getCell(4, 2).value, ws.getCell(5, 2).value]).toEqual(['Alunno Prova 01', 'Alunno Prova 03']);
+    expect(ws.getCell(6, 2).value).toBeNull();
+    expect(ws.getCell(4, 6).value).toBe('');
   });
 });

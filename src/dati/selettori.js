@@ -4,6 +4,7 @@ import { vociVoto, riepilogoAlunno } from '../calcolo/riepilogo.js';
 import { votoRegistrazione, daRecuperare, giudizioVoto } from '../calcolo/voti.js';
 import { violazioniRegola } from '../calcolo/regole.js';
 import { alunniDi } from './azioni.js';
+import { giorniTra } from '../pianificazione/date.js';
 
 const memo = (fn) => {
   let ultimoArg;
@@ -75,6 +76,27 @@ export function riepilogoClasse(stato, codiceClasse, quadrimestre) {
   return alunniDi(stato, codiceClasse).map((a) => ({ alunno: a, r: riepilogoDi(stato, a, quadrimestre) }));
 }
 
+/**
+ * Giudizi da riportare in Argo per una classe e un quadrimestre, nell'ordine del registro.
+ * Esclude i ritirati; segnala cosa controllare prima di copiarli (pochi voti, recuperi, giudizio mancante).
+ */
+export function giudiziPerArgo(stato, codiceClasse, quadrimestre) {
+  return riepilogoClasse(stato, codiceClasse, quadrimestre)
+    .filter(({ alunno }) => alunno.stato !== 'Ritirato')
+    .map(({ alunno, r }) => {
+      const giudizi = Object.fromEntries(['A', 'B', 'TEC', 'CIV'].map((ob) => [ob, r.riporta[ob] || '']));
+      const controlla = [...r.avvisi.filter((a) => !a.startsWith('Riferito')),
+        ...(alunno.stato === 'Attivo' && Object.values(giudizi).some((g) => !g) ? ['giudizio mancante'] : [])];
+      return { numero: alunno.numero, cognomeNome: alunno.cognomeNome, op: alunno.op, ...giudizi, controlla };
+    });
+}
+
+/** Testo da incollare (colonne separate da tabulazione: va bene in Excel, Numbers e nelle griglie di Argo). */
+export function testoPerArgo(righe) {
+  const intestazione = ['N°', 'Alunno', 'Ob. A', 'Ob. B', 'Tecnologia', 'Ed. civica'];
+  return [intestazione, ...righe.map((x) => [x.numero, x.cognomeNome, x.A, x.B, x.TEC, x.CIV])].map((c) => c.join('\t')).join('\n');
+}
+
 /** Giornate della classe in ordine con data pianificata e sotto-obiettivi del livello. */
 export function giornateClasse(stato, codiceClasse) {
   const cl = classe(stato, codiceClasse);
@@ -138,3 +160,25 @@ export function daRecuperareClasse(stato, codiceClasse) {
 
 export const giudizioDiVoto = (stato, voto) => giudizioVoto(voto, stato.impostazioni.scala);
 export const quadrimestri = (stato) => quadrimestriConInizio(stato.anno);
+
+export const GIORNI_PREAVVISO_FINE_Q = 14;
+
+/**
+ * Nelle due settimane prima della fine del quadrimestre: alunni con meno voti del minimo in A o B, per classe,
+ * con le lezioni ancora disponibili per recuperare. null fuori dal periodo.
+ */
+export function allertaPochiVoti(stato, oggi) {
+  const q = quadrimestri(stato).find((x) => oggi >= x.inizio && oggi <= x.fine);
+  if (!q) return null;
+  const giorni = giorniTra(oggi, q.fine);
+  if (giorni > GIORNI_PREAVVISO_FINE_Q) return null;
+  const min = stato.impostazioni.parametri.min_voti_obiettivo;
+  const classi = stato.classi.map((c) => {
+    const alunni = riepilogoClasse(stato, c.codice, q.id)
+      .filter(({ alunno, r }) => alunno.stato === 'Attivo' && (r.obiettivi.A.n < min || r.obiettivi.B.n < min))
+      .map(({ alunno, r }) => ({ numero: alunno.numero, cognomeNome: alunno.cognomeNome, nA: r.obiettivi.A.n, nB: r.obiettivi.B.n }));
+    const lezioniRimaste = (piano(stato)[c.codice]?.lezioni ?? []).filter((l) => l.data >= oggi && l.data <= q.fine && l.tipo !== 'saltata').length;
+    return { classe: c.codice, alunni, lezioniRimaste };
+  }).filter((x) => x.alunni.length);
+  return { quadrimestre: q.id, fine: q.fine, giorni, min, classi };
+}
