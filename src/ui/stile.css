@@ -308,6 +308,23 @@ td.msg-riga.as { color: var(--rosso); }
 .anello::before { content: ""; grid-area: 1 / 1; width: 26px; height: 26px; border-radius: 50%; background: var(--content); }
 .anello span { grid-area: 1 / 1; position: relative; }
 .sparkline { vertical-align: middle; margin-left: 6px; color: var(--sec); }
+#crono-display { font: 700 clamp(64px, 14vw, 120px)/1 var(--mono); text-align: center; letter-spacing: -0.02em; padding: 18px 0 8px; font-variant-numeric: tabular-nums; }
+.crono-via { display: block; width: calc(100% - 36px); margin: 8px 18px 16px; min-height: 120px; border: 0; border-radius: 24px; background: var(--l9); color: #fff; font: 800 44px var(--font); letter-spacing: .05em; cursor: pointer; touch-action: manipulation; }
+.crono-via.stop { background: var(--rosso); }
+.penalita { padding: 0 18px 12px; }
+.penalita h3 { margin: 8px 0; }
+.griglia-pen { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+.pen { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 12px; background: var(--fill); }
+.pen-nome { flex: 1; font-size: 14px; }
+.pen-azioni { display: flex; align-items: center; gap: 6px; }
+.pen-azioni button { min-width: 52px; min-height: 48px; border-radius: 12px; font: 700 16px var(--font); touch-action: manipulation; }
+.pen-n { min-width: 26px; text-align: center; font: 700 18px var(--mono); }
+.crono-esito { padding: 0 0 8px; }
+.crono-esito .crono-totale { text-align: center; font: 600 24px var(--font); padding: 4px 18px 0; }
+.crono-esito .riga { display: flex; justify-content: center; gap: 12px; padding: 0 18px 8px; }
+.crono-via.salva { background: var(--accent); }
+.cronometro { margin-bottom: 96px; }
+.nav-alunni a.attivo { outline: 3px solid var(--accent); outline-offset: 1px; }
 @keyframes compari { from { opacity: 0; } }
 @keyframes materializza { from { opacity: 0; transform: scale(.96); filter: blur(4px); } }
 

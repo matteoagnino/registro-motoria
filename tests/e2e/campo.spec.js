@@ -113,5 +113,26 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await tocca(page, 3, '1.1', 2, 5);
   await page.locator('#toast').getByRole('button', { name: 'Annulla' }).click();
   await expect(page.getByLabel('3 1.1 I2 livello 5', { exact: true })).toHaveAttribute('aria-pressed', 'false');
+
+  // Cronometro Giochi: VIA/STOP, una penalità, salvataggio, export e arrivo sul Mac
+  await apri(page, '#/campo/giochi/4BM/supergym/1');
+  await expect(page.locator('#crono-display')).toHaveText('00:00,00');
+  await page.getByRole('button', { name: 'Via' }).click();
+  await page.waitForTimeout(400);
+  await page.getByRole('button', { name: 'Stop' }).click();
+  await expect(page.locator('#crono-display')).not.toHaveText('00:00,00');
+  await page.getByRole('button', { name: 'Aggiungi 1 Catena umana Rottura della presa tra i compagni (ogni volta)' }).click();
+  await expect(page.locator('.penalita h3')).toContainText('+5 s');
+  await page.getByRole('button', { name: 'SALVA E AVANTI' }).click();
+  await expect(page.getByRole('link', { name: 'Alunno 1' })).toHaveClass(/completo/);
+  await apri(page, '#/campo/esporta');
+  const voti3 = await scarica(page, () => page.getByRole('button', { name: 'Esporta e condividi (AirDrop)' }).click(), 'v3.rmvoti.json');
+  await apri(page, '#/gestionale/scambio');
+  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti a mano…' }).click(), voti3);
+  await expect(page.getByRole('dialog')).toContainText('Giochi: 1 tempi nuovi');
+  await page.getByRole('button', { name: 'Importa', exact: true }).click();
+  await apri(page, '#/gestionale/giochi?classe=4BM');
+  await expect(page.getByLabel('Penalità 1')).toHaveValue('5');
+  expect(Number(await page.getByLabel('Super Gym 1').inputValue())).toBeGreaterThan(0.3);
   expect(esterne).toEqual([]);
 });

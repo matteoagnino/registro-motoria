@@ -2,7 +2,8 @@ import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import * as A from '../../src/dati/azioni.js';
 import { creaPacchetto, leggiPacchetto, leggiFileVoti, analizzaImport, applicaImport, importaAutomatico, creaFileVoti } from '../../src/dati/scambio.js';
-import { campoVuoto, importaPacchetto, campoLivello, campoStato, esportaVoti, daEsportare } from '../../src/dati/campo.js';
+import { campoVuoto, importaPacchetto, campoLivello, campoStato, esportaVoti, daEsportare, campoTempo, trovaTempo } from '../../src/dati/campo.js';
+import * as G from '../../src/giochi/giochi.js';
 import { riepilogoClasse } from '../../src/dati/selettori.js';
 
 const mac = () => A.importaElencoAlunni(creaStatoIniziale(), '4BM', ['Alunno Prova 01', 'Alunno Prova 02', 'Alunno Prova 03']);
@@ -99,5 +100,49 @@ describe('ricezione automatica dei voti dall\'iPad', () => {
     expect(A.trovaRegistrazione(esito.stato, a2.id, 'Q1-G01', '1.1').livelli[0]).toBe(8);
     expect(A.trovaRegistrazione(esito.stato, a1.id, 'Q1-G01', '1.1').livelli[0]).toBe(7); // non sovrascritto
     expect(importaAutomatico(esito.stato, file)).toMatchObject({ nuove: 0, modifiche: 1 }); // nessun doppione
+  });
+});
+
+describe('cronometro dei Giochi: dall\'iPad al Mac', () => {
+  function base() {
+    let s = { ...creaStatoIniziale(), alunni: [] };
+    s = A.importaElencoAlunni(s, '4BM', ['Alunno Prova 01', 'Alunno Prova 02']);
+    return { s, al: A.alunniDi(s, '4BM') };
+  }
+  test('tempo salvato sull\'iPad → file voti → Mac, senza toccare gli adattamenti', () => {
+    let { s, al } = base();
+    s = G.aggiornaRisultato(s, { anno: '2026/27', classe: '4BM', rilevazione: 1 }, (r) => G.impostaIndividuale(r, al[0].id, { ostacoli: { riduzione: 0.3 } }));
+    let c = importaPacchetto(campoVuoto('ipad-g'), creaPacchetto(s, ['4BM']));
+    expect(c.pacchetto.giochi.penalita.length).toBeGreaterThan(20);
+    c = campoTempo(c, { anno: '2026/27', classe: '4BM', rilevazione: 1, alunnoId: al[0].id, prova: 'supergym', tempo: 52.43, penalita: 7 });
+    c = campoTempo(c, { anno: '2026/27', classe: '4BM', rilevazione: 1, alunnoId: al[0].id, prova: 'ostacoli', tempo: 10 });
+    const { file } = esportaVoti(c);
+    expect(file.tempi).toHaveLength(2);
+    const esito = importaAutomatico(s, leggiFileVoti(JSON.stringify(file)));
+    expect(esito).toMatchObject({ nuove: 2, modifiche: 0 });
+    const ind = G.trovaRisultato(esito.stato, '2026/27', '4BM', 1).individuali.find((i) => i.alunnoId === al[0].id);
+    expect(ind.supergym).toMatchObject({ tempo: 52.43, penalita: 7 });
+    expect(ind.ostacoli).toMatchObject({ tempo: 10, riduzione: 0.3 });
+    expect(G.statisticheClasse(G.trovaRisultato(esito.stato, '2026/27', '4BM', 1)).ostacoli.media).toBe(7);
+  });
+  test('tempo diverso da quello sul Mac → da confermare; il pacchetto riporta i tempi del Mac', () => {
+    let { s, al } = base();
+    s = G.aggiornaRisultato(s, { anno: '2026/27', classe: '4BM', rilevazione: 1 }, (r) => G.impostaIndividuale(r, al[1].id, { supergym: { tempo: 60, penalita: 0 } }));
+    let c = importaPacchetto(campoVuoto('ipad-g'), creaPacchetto(s, ['4BM']));
+    const chiave = { anno: '2026/27', rilevazione: 1, alunnoId: al[1].id, prova: 'supergym' };
+    expect(trovaTempo(c, chiave)).toMatchObject({ tempo: 60 });
+    c = campoTempo(c, { ...chiave, classe: '4BM', tempo: 58.1, penalita: 2 });
+    const file = leggiFileVoti(JSON.stringify(esportaVoti(c).file));
+    const an = analizzaImport(s, file);
+    expect(an.tempi.modifiche).toHaveLength(1);
+    expect(importaAutomatico(s, file)).toMatchObject({ nuove: 0, modifiche: 1 });
+    const accettato = applicaImport(s, an, [an.tempi.modifiche[0].dopo.id]);
+    expect(G.trovaRisultato(accettato, '2026/27', '4BM', 1).individuali.find((i) => i.alunnoId === al[1].id).supergym).toMatchObject({ tempo: 58.1, penalita: 2 });
+  });
+  test('valori non validi rifiutati', () => {
+    const c = campoVuoto('x');
+    expect(() => campoTempo(c, { anno: 'a', classe: 'c', rilevazione: 1, alunnoId: 'z', prova: 'lancia', tempo: 5 })).toThrow(/Prova/);
+    expect(() => campoTempo(c, { anno: 'a', classe: 'c', rilevazione: 1, alunnoId: 'z', prova: 'ostacoli', tempo: -1 })).toThrow(/Tempo/);
+    expect(() => leggiFileVoti(JSON.stringify({ formato: 'registro-motoria-voti', registrazioni: [], tempi: [{ alunnoId: 'a', anno: 'x', classe: 'c', prova: 'ostacoli', rilevazione: 1, tempo: 'x' }] }))).toThrow(/tempo/);
   });
 });

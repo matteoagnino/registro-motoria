@@ -127,14 +127,23 @@ export function rivediFileVoti(ctx, nome, testo, dopo) {
     const a = stato.alunni.find((x) => x.id === id);
     return a ? `${a.classe} n. ${a.numero} ${a.cognomeNome}` : id;
   };
-  const accettate = new Set(an.modifiche.map((m) => m.dopo.id));
+  const accettate = new Set([...an.modifiche, ...an.tempi.modifiche].map((m) => m.dopo.id));
+  const NOMI_PROVA = { supergym: 'Super Gym', ostacoli: 'Ostacoli' };
+  const descTempo = (t) => `${String(t.tempo).replace('.', ',')} s${t.penalita ? ` + ${t.penalita} pen.` : ''}`;
   const desc = (r) => `${r.stato ? `${r.stato} ` : ''}[${r.livelli.map((l) => l ?? '–').join(' ')}]${r.recuperataIl ? ` rec. ${r.recuperataIl}` : ''}`;
   modale(`Importa «${nome}»`, h('div',
     h('ul',
       h('li', `${an.nuove.length} registrazioni nuove`),
       h('li', `${an.uguali.length} già presenti e identiche (ignorate)`),
       h('li', `${an.modifiche.length} modifiche da confermare`),
-      an.sconosciute.length ? h('li.violazione', `${an.sconosciute.length} di alunni non presenti nel registro (non importate)`) : null),
+      an.sconosciute.length ? h('li.violazione', `${an.sconosciute.length} di alunni non presenti nel registro (non importate)`) : null,
+      file.tempi.length ? h('li', `Giochi: ${an.tempi.nuovi.length} tempi nuovi, ${an.tempi.uguali.length} già presenti, ${an.tempi.modifiche.length} diversi da confermare`) : null),
+    an.tempi.modifiche.length ? h('table',
+      h('thead', h('tr', ['Accetta', 'Alunno', 'Prova', 'Ril.', 'Sul Mac', 'Cronometro iPad'].map((t) => h('th', t)))),
+      h('tbody', an.tempi.modifiche.map((m) => h('tr',
+        h('td', h('input', { type: 'checkbox', checked: true, 'aria-label': 'Accetta tempo', onchange: (e) => (e.target.checked ? accettate.add(m.dopo.id) : accettate.delete(m.dopo.id)) })),
+        h('td', nomeAlunno(m.dopo.alunnoId)), h('td', NOMI_PROVA[m.dopo.prova]), h('td', `${m.dopo.rilevazione}ª`),
+        h('td', descTempo(m.prima)), h('td', descTempo(m.dopo)))))) : null,
     an.modifiche.length ? h('table',
       h('thead', h('tr', ['Accetta', 'Alunno', 'Giornata', 'Sotto-ob.', 'Prima', 'Dopo (iPad)'].map((t) => h('th', t)))),
       h('tbody', an.modifiche.map((m) => h('tr',
@@ -147,7 +156,7 @@ export function rivediFileVoti(ctx, nome, testo, dopo) {
       azione: async () => {
         await ctx.persistenza.aggiungiBackup(ctx.store.get(), `prima di importare ${nome}`);
         ctx.store.aggiorna((s) => applicaImport(s, an, [...accettate]));
-        avviso(`Import completato: ${an.nuove.length} nuove, ${accettate.size} modifiche accettate`);
+        avviso(`Import completato: ${an.nuove.length + an.tempi.nuovi.length} nuovi, ${accettate.size} modifiche accettate`);
         await dopo?.();
       }
     }]

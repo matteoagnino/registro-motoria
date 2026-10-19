@@ -3,7 +3,15 @@ import * as A from './azioni.js';
 import { creaFileVoti } from './scambio.js';
 
 export function campoVuoto(deviceId) {
-  return { pacchetto: null, registrazioni: [], modificate: [], nonEsportate: [], ultimoExport: null, importatoIl: null, deviceId };
+  return { pacchetto: null, registrazioni: [], tempi: [], modificate: [], nonEsportate: [], ultimoExport: null, importatoIl: null, deviceId };
+}
+
+/** Elementi locali da tenere al cambio di pacchetto: modificati qui e più recenti della copia nel pacchetto. */
+function unisci(dalPacchetto, locali, modificate) {
+  const nelPacchetto = new Map(dalPacchetto.map((r) => [r.id, r]));
+  const tenuti = locali.filter((r) => modificate.has(r.id) && !(nelPacchetto.get(r.id)?.updatedAt >= r.updatedAt));
+  const idTenuti = new Set(tenuti.map((r) => r.id));
+  return { lista: [...dalPacchetto.filter((r) => !idTenuti.has(r.id)), ...tenuti], idTenuti };
 }
 
 /**
@@ -11,16 +19,16 @@ export function campoVuoto(deviceId) {
  * esportate restano, a meno che il pacchetto ne contenga una versione più recente.
  */
 export function importaPacchetto(campo, pacchetto, ora = new Date()) {
-  const nelPacchetto = new Map(pacchetto.registrazioni.map((r) => [r.id, r]));
   const mod = new Set(campo.modificate);
-  const locali = campo.registrazioni.filter((r) => mod.has(r.id) && !(nelPacchetto.get(r.id)?.updatedAt >= r.updatedAt));
-  const idLocali = new Set(locali.map((r) => r.id));
+  const reg = unisci(pacchetto.registrazioni, campo.registrazioni, mod);
+  const tempi = unisci(pacchetto.giochi?.tempi ?? [], campo.tempi ?? [], mod);
   return {
     ...campo,
-    pacchetto: { ...pacchetto, registrazioni: undefined },
-    registrazioni: [...pacchetto.registrazioni.filter((r) => !idLocali.has(r.id)), ...locali],
+    pacchetto: { ...pacchetto, registrazioni: undefined, giochi: pacchetto.giochi ? { ...pacchetto.giochi, tempi: undefined } : undefined },
+    registrazioni: reg.lista,
+    tempi: tempi.lista,
     modificate: campo.modificate,
-    nonEsportate: (campo.nonEsportate ?? []).filter((id) => idLocali.has(id)),
+    nonEsportate: (campo.nonEsportate ?? []).filter((id) => reg.idTenuti.has(id) || tempi.idTenuti.has(id)),
     importatoIl: ora.toISOString()
   };
 }
@@ -43,16 +51,44 @@ export const campoLivello = (campo, p) => conAzione(campo, A.impostaLivello, p);
 export const campoStato = (campo, p) => conAzione(campo, A.impostaStatoGiornata, p);
 export const campoRecupero = (campo, p) => conAzione(campo, A.impostaRecupero, p);
 
+// ---------- Tempi dei Giochi (cronometro) ----------
+
+export const idTempo = ({ anno, rilevazione, alunnoId, prova }) => `g|${anno}|${rilevazione}|${alunnoId}|${prova}`;
+
+export const trovaTempo = (campo, chiave) => (campo.tempi ?? []).find((t) => t.id === idTempo(chiave));
+
+/** Salva (o cancella con tempo null) il tempo di un alunno in una prova a tempo. */
+export function campoTempo(campo, { anno, classe, rilevazione, alunnoId, prova, tempo, penalita = 0 }, ora = new Date()) {
+  if (!['supergym', 'ostacoli'].includes(prova)) throw new Error('Prova a tempo non valida.');
+  if (tempo != null && !(Number.isFinite(tempo) && tempo > 0 && tempo < 3600)) throw new Error('Tempo non valido.');
+  if (!(Number.isInteger(penalita) && penalita >= 0)) throw new Error('Penalità non valide.');
+  const id = idTempo({ anno, rilevazione, alunnoId, prova });
+  const t = { id, anno, classe, rilevazione, alunnoId, prova, tempo, penalita: prova === 'supergym' ? penalita : 0, updatedAt: ora.toISOString(), deviceId: campo.deviceId };
+  return {
+    ...campo,
+    tempi: [...(campo.tempi ?? []).filter((x) => x.id !== id), t],
+    modificate: [...new Set([...campo.modificate, id])],
+    nonEsportate: [...new Set([...(campo.nonEsportate ?? []), id])]
+  };
+}
+
 /** Registrazioni da esportare: modificate qui dopo l'ultimo export (o tutte quelle fatte su questo iPad). */
 export function daEsportare(campo, tutte = false) {
   const ids = new Set(tutte ? campo.modificate : (campo.nonEsportate ?? []));
   return campo.registrazioni.filter((r) => ids.has(r.id));
 }
 
+export function tempiDaEsportare(campo, tutte = false) {
+  const ids = new Set(tutte ? campo.modificate : (campo.nonEsportate ?? []));
+  return (campo.tempi ?? []).filter((t) => ids.has(t.id));
+}
+
+/** Numero totale di elementi da esportare (voti e tempi). */
+export const nDaEsportare = (campo, tutte = false) => daEsportare(campo, tutte).length + tempiDaEsportare(campo, tutte).length;
+
 export function esportaVoti(campo, { tutte = false, ora = new Date() } = {}) {
-  const registrazioni = daEsportare(campo, tutte);
   return {
-    file: creaFileVoti({ registrazioni, deviceId: campo.deviceId, ora }),
+    file: creaFileVoti({ registrazioni: daEsportare(campo, tutte), tempi: tempiDaEsportare(campo, tutte), deviceId: campo.deviceId, ora }),
     campo: { ...campo, ultimoExport: ora.toISOString(), nonEsportate: [] }
   };
 }
@@ -102,7 +138,7 @@ export const giornataDellaLezione = (l) => l.giornataId ?? l.recuperoDi ?? null;
 
 /** Promemoria: registrazioni non esportate modificate da più di 24 ore. */
 export function promemoriaExport(campo, ora = new Date()) {
-  const nonEsportate = daEsportare(campo);
+  const nonEsportate = [...daEsportare(campo), ...tempiDaEsportare(campo)];
   if (!nonEsportate.length) return null;
   const piuVecchia = nonEsportate.map((r) => r.updatedAt).filter(Boolean).sort()[0];
   if (!piuVecchia || ora - new Date(piuVecchia) < PROMEMORIA_EXPORT_ORE * 3600000) return null;

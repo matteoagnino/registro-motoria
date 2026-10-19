@@ -46,5 +46,8 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Test: 129 unitari, 8 E2E. La ricezione da cartella è testata nella logica (importaAutomatico), non end-to-end:
   la File System Access API richiede la scelta manuale della cartella.
 
+## Cronometro Giochi (0.6.0, 2026-10-19)
+- Tempi registrati sull'iPad → file voti (versione 2, campo `tempi`) → risultati Giochi sul Mac.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

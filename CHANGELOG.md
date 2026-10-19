@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.6.0 — cronometro dei Giochi sull'iPad (2026-10-19)
+- Campo → classe → «Giochi: cronometro»: Super Gym School e Superiamo gli ostacoli, 1ª e 2ª rilevazione.
+- VIA/STOP grandi, schermo sempre acceso durante la prova, conta-penalità con la tabella FGI 2025/26,
+  «Salva e avanti» al prossimo alunno senza tempo, «Annulla».
+- I tempi viaggiano nel file voti insieme ai voti: sul Mac entrano da soli nei Giochi (gli adattamenti restano),
+  un tempo diverso da quello già presente va confermato.
+
 ## 0.5.0 — Argo, Giochi 2025/26, voti automatici e aiuti in palestra (2026-10-19)
 - Import anagrafiche dall'Excel «Lista schede alunno» di Argo: anteprima, numeri di Argo per le classi vuote,
   nuovi in coda, ritirati segnati, nessun alunno cancellato, backup prima dell'import.

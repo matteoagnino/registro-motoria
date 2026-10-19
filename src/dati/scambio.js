@@ -1,5 +1,6 @@
 // Scambio file a senso unico (SPEC §2): pacchetto classe Mac→iPad, file voti iPad→Mac.
 import { pianificaTutte } from '../pianificazione/planner.js';
+import { aggiornaRisultato, impostaIndividuale, trovaRisultato, PROVE_TEMPO } from '../giochi/giochi.js';
 
 export const FORMATO_PACCHETTO = 'registro-motoria-pacchetto';
 export const FORMATO_VOTI = 'registro-motoria-voti';
@@ -31,8 +32,23 @@ export function creaPacchetto(stato, codiciClassi, ora = new Date()) {
     sottoObiettivi: Object.fromEntries(livelli.map((l) => [l, stato.didattica.sottoObiettivi[l]])),
     scala: stato.impostazioni.scala,
     codiciStato: stato.didattica.codiciStato,
-    registrazioni: stato.registrazioni.filter((r) => ids.has(r.alunnoId))
+    registrazioni: stato.registrazioni.filter((r) => ids.has(r.alunnoId)),
+    giochi: {
+      anno: stato.anno.id,
+      penalita: stato.giochi.penalitaSupergym,
+      tempi: tempiDelMac(stato, codiciClassi)
+    }
   };
+}
+
+/** Tempi già registrati sul Mac per le classi del pacchetto (anno in corso), nel formato del cronometro. */
+function tempiDelMac(stato, codiciClassi) {
+  return stato.giochi.risultati
+    .filter((r) => r.anno === stato.anno.id && codiciClassi.includes(r.classe))
+    .flatMap((r) => r.individuali.flatMap((i) => PROVE_TEMPO.filter((p) => i[p]?.tempo != null).map((prova) => ({
+      id: `g|${r.anno}|${r.rilevazione}|${i.alunnoId}|${prova}`, anno: r.anno, classe: r.classe, rilevazione: r.rilevazione,
+      alunnoId: i.alunnoId, prova, tempo: i[prova].tempo, penalita: i[prova].penalita ?? 0, updatedAt: null
+    }))));
 }
 
 export function leggiPacchetto(testo) {
@@ -47,8 +63,8 @@ export function leggiPacchetto(testo) {
   return p;
 }
 
-export function creaFileVoti({ registrazioni, deviceId, ora = new Date() }) {
-  return { formato: FORMATO_VOTI, versione: 1, creatoIl: ora.toISOString(), deviceId, registrazioni };
+export function creaFileVoti({ registrazioni, tempi = [], deviceId, ora = new Date() }) {
+  return { formato: FORMATO_VOTI, versione: 2, creatoIl: ora.toISOString(), deviceId, registrazioni, tempi };
 }
 
 export function leggiFileVoti(testo) {
@@ -64,7 +80,11 @@ export function leggiFileVoti(testo) {
     if (r.livelli.some((l) => l != null && !(Number.isInteger(l) && l >= 5 && l <= 10))) throw new Error('File voti danneggiato: livello non valido.');
     if (r.stato != null && !['AS', 'NV', 'ES'].includes(r.stato)) throw new Error('File voti danneggiato: stato non valido.');
   }
-  return f;
+  for (const t of f.tempi ?? []) {
+    if (!t.alunnoId || !t.anno || !t.classe || !PROVE_TEMPO.includes(t.prova) || ![1, 2].includes(t.rilevazione)) throw new Error('File voti danneggiato: tempo dei Giochi incompleto.');
+    if (t.tempo != null && !(Number.isFinite(t.tempo) && t.tempo > 0)) throw new Error('File voti danneggiato: tempo non valido.');
+  }
+  return { ...f, tempi: f.tempi ?? [] };
 }
 
 const stessoContenuto = (a, b) => CONTENUTO.every((k) => JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null));
@@ -79,7 +99,7 @@ export function analizzaImport(stato, fileVoti) {
   const perId = new Map(stato.registrazioni.map((r) => [r.id, r]));
   const perChiave = new Map(stato.registrazioni.map((r) => [chiave(r), r]));
   const alunni = new Set(stato.alunni.map((a) => a.id));
-  const esito = { nuove: [], uguali: [], modifiche: [], sconosciute: [] };
+  const esito = { nuove: [], uguali: [], modifiche: [], sconosciute: [], tempi: analizzaTempi(stato, fileVoti.tempi ?? [], alunni) };
   for (const r of fileVoti.registrazioni) {
     if (!alunni.has(r.alunnoId)) {
       esito.sconosciute.push(r);
@@ -94,6 +114,28 @@ export function analizzaImport(stato, fileVoti) {
   return esito;
 }
 
+/** Valore del tempo sul Mac per un tempo del file ({tempo, penalita} o null). */
+function tempoSulMac(stato, t) {
+  const i = trovaRisultato(stato, t.anno, t.classe, t.rilevazione)?.individuali.find((x) => x.alunnoId === t.alunnoId);
+  return i?.[t.prova]?.tempo != null ? { tempo: i[t.prova].tempo, penalita: i[t.prova].penalita ?? 0 } : null;
+}
+
+function analizzaTempi(stato, tempi, alunni) {
+  const esito = { nuovi: [], uguali: [], modifiche: [] };
+  for (const t of tempi) {
+    if (!alunni.has(t.alunnoId)) continue;
+    const mac = tempoSulMac(stato, t);
+    if (!mac) { if (t.tempo != null) esito.nuovi.push(t); } else if (mac.tempo === t.tempo && mac.penalita === (t.penalita ?? 0)) esito.uguali.push(t);
+    else esito.modifiche.push({ prima: mac, dopo: t });
+  }
+  return esito;
+}
+
+function applicaTempi(stato, tempi) {
+  return tempi.reduce((s, t) => aggiornaRisultato(s, { anno: t.anno, classe: t.classe, rilevazione: t.rilevazione },
+    (r) => impostaIndividuale(r, t.alunnoId, { [t.prova]: { tempo: t.tempo, penalita: t.penalita ?? 0 } })), stato);
+}
+
 /** Applica l'import: aggiunge le nuove e le modifiche accettate (per id del file). */
 export function applicaImport(stato, analisi, idModificheAccettate = []) {
   const accettate = new Set(idModificheAccettate);
@@ -103,7 +145,8 @@ export function applicaImport(stato, analisi, idModificheAccettate = []) {
   const pulisci = ({ sostituisce: _s, ...r }) => r;
   const aggiornate = stato.registrazioni.map((r) => (daSostituire.has(r.id) ? pulisci(daSostituire.get(r.id)) : r));
   const aggiunte = analisi.nuove.filter((r) => !r.sostituisce).map(pulisci);
-  return { ...stato, registrazioni: [...aggiornate, ...aggiunte] };
+  const tempi = [...(analisi.tempi?.nuovi ?? []), ...(analisi.tempi?.modifiche ?? []).filter((m) => accettate.has(m.dopo.id)).map((m) => m.dopo)];
+  return applicaTempi({ ...stato, registrazioni: [...aggiornate, ...aggiunte] }, tempi);
 }
 
 /**
@@ -112,10 +155,11 @@ export function applicaImport(stato, analisi, idModificheAccettate = []) {
  */
 export function importaAutomatico(stato, fileVoti) {
   const analisi = analizzaImport(stato, fileVoti);
+  const nuove = analisi.nuove.length + analisi.tempi.nuovi.length;
   return {
-    stato: analisi.nuove.length ? applicaImport(stato, analisi, []) : stato,
-    nuove: analisi.nuove.length,
-    modifiche: analisi.modifiche.length,
+    stato: nuove ? applicaImport(stato, analisi, []) : stato,
+    nuove,
+    modifiche: analisi.modifiche.length + analisi.tempi.modifiche.length,
     sconosciute: analisi.sconosciute.length
   };
 }

@@ -3,13 +3,14 @@ import { h, avviso, conferma } from '../dom.js';
 import { vai } from '../app.js';
 import { leggiPacchetto } from '../../dati/scambio.js';
 import {
-  importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, daEsportare, trovaCampo,
+  importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, nDaEsportare, trovaCampo,
   recuperiInSospeso, lezioniDiOggi, giornataDellaLezione, promemoriaExport
 } from '../../dati/campo.js';
 import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
+import { vistaCronometro } from './cronometro.js';
 
 const LIVELLI = [10, 9, 8, 7, 6, 5];
 const GIUDIZI = ['Ottimo', 'Distinto', 'Buono', 'Discreto', 'Sufficiente', 'Non sufficiente'];
@@ -23,6 +24,7 @@ export function vistaCampo(ctx, rotta) {
   else if (rotta.vista === 'classe') corpo = sceltaGiornata(ctx, classe);
   else if (rotta.vista === 'registra') corpo = registra(ctx, classe, giornataId);
   else if (rotta.vista === 'esporta') corpo = esporta(ctx);
+  else if (rotta.vista === 'giochi') corpo = vistaCronometro(ctx, classe, rotta.resto[1], rotta.resto[2], testa, indietro) ?? home(ctx);
   else corpo = home(ctx);
   return h('div.campo-app', corpo);
 }
@@ -33,8 +35,8 @@ async function importa(ctx) {
   try {
     const p = leggiPacchetto(f.testo);
     const c = ctx.campoStore.get();
-    if (daEsportare(c).length && !(await conferma('Ci sono voti non esportati',
-      `Hai ${daEsportare(c).length} registrazioni non ancora esportate: restano sull'iPad anche con il nuovo pacchetto, ma esportale appena puoi.`, 'Importa comunque', false))) return;
+    if (nDaEsportare(c) && !(await conferma('Ci sono voti non esportati',
+      `Hai ${nDaEsportare(c)} registrazioni non ancora esportate: restano sull'iPad anche con il nuovo pacchetto, ma esportale appena puoi.`, 'Importa comunque', false))) return;
     ctx.campoStore.aggiorna((s) => importaPacchetto(s, p));
     avviso(`Pacchetto importato: ${p.classi.length} classi, ${p.alunni.length} alunni`);
     vai('campo', 'home');
@@ -63,11 +65,11 @@ function home(ctx) {
   }
   const oggi = oggiISO();
   const gs = giornoSettimana(oggi);
-  const nDaEsportare = daEsportare(c).length;
+  const nEsp = nDaEsportare(c);
   return h('div',
     testa('Scegli la classe', `Pacchetto del ${new Date(c.pacchetto.creatoIl).toLocaleString('it-IT')} · ${c.pacchetto.anno}`,
       h('button.grande', { onclick: () => importa(ctx) }, 'Nuovo pacchetto'),
-      h('a.bottone.grande.primario', { href: '#/campo/esporta' }, icona('esporta'), `Esporta voti${nDaEsportare ? ` (${nDaEsportare})` : ''}`)),
+      h('a.bottone.grande.primario', { href: '#/campo/esporta' }, icona('esporta'), `Esporta voti${nEsp ? ` (${nEsp})` : ''}`)),
     h('div.campo-corpo',
       bannerPromemoria(c),
       bannerAdesso(c, oggi),
@@ -100,7 +102,7 @@ function bannerAdesso(c, oggi) {
   if (!l) return null;
   const gId = giornataDellaLezione(l);
   const rec = recuperiInSospeso(c, l.classe);
-  const tipo = l.tipo === 'prova' ? `Prova ${l.giornataId}` : l.recuperoDi ? `Recupero di ${l.recuperoDi}` : 'Lezione';
+  const tipo = l.giornataId ? `Prova ${l.giornataId}` : l.recuperoDi ? `Recupero di ${l.recuperoDi}` : 'Lezione';
   return h('div.banner-campo.adesso',
     h('div', h('div.tenue', l.adesso ? 'Adesso' : 'Prossima lezione'), h('strong', `${l.classe} · ${l.inizio}–${l.fine} · ${tipo}`),
       rec.length ? h('div', 'Da recuperare: ', rec.map((x) => `n. ${x.alunno.numero} (${x.giornataId})`).join(', ')) : null),
@@ -130,7 +132,8 @@ function sceltaGiornata(ctx, codice) {
   const pre = giornataPreselezionata(cl.giornate, oggiISO());
   const rec = recuperiInSospeso(c, codice);
   return h('div',
-    testa(`${cl.codice} · scegli la giornata`, 'La giornata più vicina a oggi è evidenziata', indietro('#/campo/home', 'Classi')),
+    testa(`${cl.codice} · scegli la giornata`, 'La giornata più vicina a oggi è evidenziata', indietro('#/campo/home', 'Classi'),
+      h('a.bottone.grande', { href: `#/campo/giochi/${cl.codice}/supergym/1` }, 'Giochi: cronometro')),
     rec.length ? h('div.campo-corpo', h('div.banner-campo.attenzione',
       h('div', h('b', 'Da recuperare'), h('div', rec.map((x) => h('a.bottone', {
         href: `#/campo/registra/${codice}/${x.giornataId}`, style: { margin: '6px 8px 0 0' }
@@ -244,24 +247,25 @@ function bottoneLivello(ctx, livello, scelto, onTocco, onLungo, etichetta) {
 
 function esporta(ctx) {
   const c = ctx.campoStore.get();
-  const nuove = daEsportare(c);
-  const tutte = daEsportare(c, true);
+  const nuove = nDaEsportare(c);
+  const tutte = nDaEsportare(c, true);
   const fai = async (tutteLeModifiche) => {
     const { file, campo } = esportaVoti(c, { tutte: tutteLeModifiche });
-    if (!file.registrazioni.length) return avviso('Niente da esportare', 'errore');
+    const n = file.registrazioni.length + file.tempi.length;
+    if (!n) return avviso('Niente da esportare', 'errore');
     const esito = await condividiOScarica(`voti_${c.deviceId}_${marcaTemporale()}.rmvoti.json`, JSON.stringify(file));
     if (esito === 'annullato') return avviso('Esportazione annullata', 'errore');
     ctx.campoStore.aggiorna(() => campo);
-    avviso(`File voti esportato (${file.registrazioni.length} registrazioni)`);
+    avviso(`File voti esportato (${file.registrazioni.length} voti, ${file.tempi.length} tempi dei Giochi)`);
   };
   return h('div',
     testa('Esporta file voti', 'Condividi → Salva su File (cartella «voti-ipad») oppure AirDrop', indietro('#/campo/home', 'Classi')),
     h('div.campo-corpo', h('div.scheda',
-      h('p', h('strong', `${nuove.length} registrazioni`), ' nuove o modificate dall\'ultimo export',
+      h('p', h('strong', `${nuove} registrazioni`), ' (voti e tempi dei Giochi) nuove o modificate dall\'ultimo export',
         c.ultimoExport ? ` (${new Date(c.ultimoExport).toLocaleString('it-IT')})` : '', '.'),
-      h('button.primario.grande', { onclick: () => fai(false), disabled: !nuove.length }, 'Esporta e condividi (AirDrop)'),
+      h('button.primario.grande', { onclick: () => fai(false), disabled: !nuove }, 'Esporta e condividi (AirDrop)'),
       h('p', h('b', 'Per farli arrivare da soli sul Mac: '), 'nel menu Condividi scegli «Salva su File» e la cartella «voti-ipad» dentro la cartella archivio (iCloud Drive o Drive). L\'iPad ricorda l\'ultima cartella usata; il gestionale sul Mac li importa da solo.'),
-      h('p.tenue', { style: { marginTop: '1rem' } }, `Hai perso un file? Puoi riesportare tutte le ${tutte.length} registrazioni fatte su questo iPad: sul Mac i doppioni vengono ignorati.`),
-      h('button.grande', { onclick: () => fai(true), disabled: !tutte.length }, 'Riesporta tutto')),
+      h('p.tenue', { style: { marginTop: '1rem' } }, `Hai perso un file? Puoi riesportare tutte le ${tutte} registrazioni fatte su questo iPad: sul Mac i doppioni vengono ignorati.`),
+      h('button.grande', { onclick: () => fai(true), disabled: !tutte }, 'Riesporta tutto')),
     h('p.tenue', 'Nessun dato lascia l\'iPad senza questa tua azione.')));
 }
