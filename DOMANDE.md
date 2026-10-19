@@ -21,8 +21,20 @@ Formato: domanda · ipotesi prudente adottata · dove si cambia. Rispondi pure q
 - ~~**D5 · Prova recuperata.**~~ **Risolta il 2026-10-19**: il voto si registra il giorno in cui l'alunno
   sostiene davvero la prova. Un alunno AS non può avere livelli finché non c'è la data del recupero
   (Mac: colonna «Recup.»; iPad: bottone «Recupera oggi»); peso e data della prova seguono il giorno del recupero.
-- **D6 · Classifica Giochi.** *Ipotesi*: classifiche separate per le quarte e per le quinte (si propone una
-  4ª e una 5ª); punti 8,7,…,1 (dall'8ª in giù 1) assegnati in ogni prova; classifica generale = somma dei punti;
-  spareggio con il giudizio di fair play.
-- **D7 · Correttivo disabilità Giochi.** *Ipotesi*: percentuale di riduzione del tempo (es. 30%), come nella
-  formula dell'Excel `(tempo + penalità) × (1 − correttivo)`.
+- **D6 · Classifica Giochi** — ricerca del 19/10/2026 in `reports/Regole Giochi della Gioventù primaria.md`.
+  Per la primaria non c'è un regolamento nazionale completo; le schede 2026/27 non sono ancora pubbliche.
+  Da decidere:
+  1. Scala dei punti per prova: 8, 7, … 1 (FIDAL 2025/26) oppure N, N−1, … (scheda punteggi 2024/25)? Con 11
+     classi danno risultati diversi.
+  2. Atletica: una sola voce in classifica o tre prove separate?
+  3. Classifica d'istituto con 4ª e 5ª separate (come la provinciale di Torino 2025/26) o insieme?
+  4. Assenti: la media dei tempi si divide per i presenti o per tutti gli iscritti?
+  5. Spareggio: prova supplementare tra le classi a pari punti? Il fair play è un premio a parte, non uno spareggio.
+  *Ipotesi attuale*: 4ª e 5ª separate, scala 8→1, somma dei punti, media sui presenti.
+- **D7 · Correttivo disabilità Giochi.** L'unica indicazione ufficiale (FIDAL) dà solo esempi: tempo −30%/−50%,
+  oppure +0,5/+1 punto nella prova, oppure esclusione del risultato nei casi complessi. Non dice chi decide né
+  quando. La formula `(tempo + penalità) × (1 − correttivo)` è una tua scelta, non una norma.
+  Da decidere: tipo e valore del correttivo, alunno per alunno e prova per prova; il tempo di un circuito
+  adattato (FGI) entra nella media della classe? *Proposta*: correttivo configurabile per alunno e prova, con
+  motivazione obbligatoria e **senza diagnosi** nel registro. Conviene chiedere all'UST se per la fase
+  provinciale esiste un criterio concordato con il CIP.
