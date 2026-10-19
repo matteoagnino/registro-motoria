@@ -10,7 +10,7 @@ const FORBIDDEN_PATHS = [
   { re: /\.rmvoti\.json$/i, why: 'file voti (contiene valutazioni)' },
   { re: /archivio[^/]*\.json$/i, why: 'archivio del registro' },
   { re: /(^|\/)backup\//i, why: 'cartella backup' },
-  { re: /(^|\/)dati\//i, why: 'cartella dati' }
+  { re: /^dati\//i, why: 'cartella dati (radice)' }
 ];
 
 // Nomi ammessi: solo palesemente finti.

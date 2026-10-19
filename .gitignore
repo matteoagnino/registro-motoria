@@ -10,7 +10,7 @@ loop.log
 *.rmvoti.json
 *archivio*.json
 backup/
-dati/
+/dati/
 *.xlsx
 !riferimenti/*.xlsx
 node_modules.nosync/
