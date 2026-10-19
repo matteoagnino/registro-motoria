@@ -2,8 +2,8 @@
 
 /** h('div.classe#id', {attr, onclick}, ...figli) */
 export function h(sel, attrs, ...figli) {
-  const [tagEId, ...classi] = sel.split('.');
-  const [tag, id] = tagEId.split('#');
+  const id = sel.match(/#([^.#]+)/)?.[1];
+  const [tag, ...classi] = sel.replace(/#[^.#]+/, '').split('.');
   const el = document.createElement(tag || 'div');
   if (id) el.id = id;
   if (classi.length) el.className = classi.join(' ');

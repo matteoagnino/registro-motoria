@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.3 — correzione avviso cartella archivio (2026-10-19)
+- Mac: l'avviso «Voti dall'iPad in pausa» si ripeteva a ogni controllo (ogni minuto e a ogni cambio di schermata)
+  fino a riempire la pagina, e compariva senza il suo stile. Ora resta uno solo, in basso.
+
 ## 0.7.2 — alunno attivo in palestra (2026-10-19)
 - iPad, registrazione voti: nella barra in fondo il cerchio dell'alunno a cui stai mettendo il voto è più grande,
   con un anello blu e il nome sotto; la barra scorre da sola per tenerlo in vista.
