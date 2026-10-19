@@ -19,7 +19,8 @@ export function vociVoto({ registrazioni, quadrimestre, dataGiornata, quadrimest
   return registrazioni
     .filter((r) => quadrimestreDi(r.giornataId) === quadrimestre)
     .map((r) => {
-      const data = dataGiornata(r.giornataId);
+      // Prova recuperata: conta la data in cui l'alunno l'ha davvero sostenuta.
+      const data = r.recuperataIl || dataGiornata(r.giornataId);
       return {
         giornataId: r.giornataId,
         sottoObiettivo: r.sottoObiettivo,

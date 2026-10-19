@@ -2,7 +2,7 @@
 import { h, avviso, conferma } from '../dom.js';
 import { vai } from '../app.js';
 import { leggiPacchetto } from '../../dati/scambio.js';
-import { importaPacchetto, campoLivello, campoStato, esportaVoti, daEsportare, trovaCampo } from '../../dati/campo.js';
+import { importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, daEsportare, trovaCampo } from '../../dati/campo.js';
 import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
@@ -132,12 +132,19 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
     return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', a.numero), a.cognomeNome, h('small.tenue', ' · esonerato')));
   }
   const setStato = (v) => ctx.campoStore.aggiorna((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }));
+  const recuperata = regs.find((r) => r?.recuperataIl)?.recuperataIl ?? null;
+  const setRecupero = (data) => ctx.campoStore.aggiorna((s) => campoRecupero(s, { ...base, sottoObiettivi: g.sottoObiettivi, data }));
   return h(`section.scheda-alunno.${st}`, { id: `alunno-${a.numero}` },
     h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
       h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
         onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? v
       }, v)))),
-    statoGiorno && statoGiorno !== 'AS' ? null : sos.map((so, k) => {
+    statoGiorno === 'AS' ? h('div.recupero-campo',
+      recuperata
+        ? [h('span', `Prova recuperata il ${formatta(recuperata, true)}`), h('button', { onclick: () => setRecupero(null) }, 'Annulla recupero')]
+        : [h('span.tenue', 'Assente: il voto si registra il giorno in cui recupera la prova.'),
+          h('button.primario.grande', { onclick: () => setRecupero(oggiISO()) }, 'Recupera oggi')]) : null,
+    (statoGiorno && statoGiorno !== 'AS') || (statoGiorno === 'AS' && !recuperata) ? null : sos.map((so, k) => {
       const r = regs[k];
       const voto = votoRegistrazione(r);
       const parziale = r?.livelli?.some((l) => l != null);

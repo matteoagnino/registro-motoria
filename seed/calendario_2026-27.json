@@ -17,6 +17,11 @@
  ],
  "chiusure": [
   {
+   "dal": "2026-09-14",
+   "al": "2026-09-18",
+   "motivo": "Orario ridotto (fino alle 12:30): solo supporto alle classi, nessuna lezione"
+  },
+  {
    "dal": "2026-11-01",
    "al": "2026-11-01",
    "motivo": "Ognissanti"
@@ -61,9 +66,9 @@
   {
    "plesso": "Boncompagni",
    "dal": "2026-09-14",
-   "al": "2026-10-31",
+   "al": "2027-06-10",
    "tipo": "spazio",
-   "nota": "Palestra inagibile: lezioni in aula (25-30 m², volume basso, poco materiale)"
+   "nota": "Palestra inagibile fino a nuova comunicazione: lezioni in aula (25-30 m², volume basso, poco materiale)"
   },
   {
    "plesso": "Manzoni",
@@ -119,7 +124,7 @@
      "3.3"
     ]
    },
-   "settimana_Manzoni": "2026-10-26",
+   "settimana_Manzoni": "2026-10-19",
    "settimana_Boncompagni": null
   },
   {

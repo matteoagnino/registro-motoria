@@ -165,6 +165,14 @@ describe('stati (§4.7) e avvisi (§4.8)', () => {
     expect(r.daRecuperare).toBe(0);
     expect(r.obiettivi.A).toMatchObject({ n: 2, media: 7.5, calcolato: 'Buono' });
   });
+  test('prova recuperata: data e peso sono quelli del giorno del recupero', () => {
+    const recuperata = { ...BIANCHI[3], livelli: [8, 8, 8, 9], recuperataIl: '2026-12-02' };
+    const voci = vociVoto({
+      registrazioni: [recuperata], quadrimestre: 'Q1', metaISO: META_Q1, parametri: impostazioni.parametri,
+      dataGiornata: (g) => DATE[g], quadrimestreDi: (g) => g.slice(0, 2)
+    });
+    expect(voci[0]).toMatchObject({ data: '2026-12-02', peso: impostazioni.parametri.peso_seconda_meta, voto: 8 });
+  });
   test('AS con data di recupero ma senza voto: non più da recuperare', () => {
     expect(daRecuperare({ stato: 'AS', recuperataIl: '2026-11-09', livelli: [] })).toBe(false);
   });

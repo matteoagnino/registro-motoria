@@ -1,6 +1,6 @@
 # PROGRESS — Registro Motoria
 
-Ultimo aggiornamento: 2026-10-06
+Ultimo aggiornamento: 2026-10-19
 
 STATO: VERSIONE GREZZA COMPLETATA
 
@@ -36,6 +36,10 @@ STATO: VERSIONE GREZZA COMPLETATA
 
 ## Stile Apple (2026-10-12)
 - Approvato da Matteo e applicato a tutta l'app (vedi CHANGELOG 0.3.0). Sostituisce lo stile «pista tecnica».
+
+## Correzioni 2026-10-19 (0.4.0)
+- D2/D3/D5 risolte (vedi DOMANDE.md), D4 in stand-by, osservazione basket Manzoni alla settimana del 19/10.
+- Schema v2 con migrazione; test: 113 unitari, 7 E2E. Ricerca D6/D7 in `reports/` (fuori da git).
 
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

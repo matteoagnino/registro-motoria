@@ -14,3 +14,5 @@ dati/
 *.xlsx
 !riferimenti/*.xlsx
 node_modules.nosync/
+research_notes/
+reports/

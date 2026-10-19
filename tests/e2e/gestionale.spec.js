@@ -60,6 +60,8 @@ test('M4: i dati del modello Excel classe 4 danno gli stessi voti, medie e giudi
   await livelli(page, 1, '1.2', [7, 7, 8, 7]);
   await livelli(page, 1, 'TEC.1', [9, 9, 8, 9]);
   await page.getByLabel('Stato 2').selectOption('AS');
+  // assente: nessun livello finché non c'è la data del recupero
+  await expect(page.getByLabel('2 1.1 I1', { exact: true })).toBeDisabled();
   const r1 = page.locator('tbody tr').first().locator('td.calc');
   await expect(r1).toHaveText(['8', 'Buono', '7', 'Discreto', '9', 'Distinto']);
 

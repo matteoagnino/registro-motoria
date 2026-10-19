@@ -60,6 +60,8 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   for (const so of ['1.1', '1.2', 'TEC.1']) await tocca(page, 2, so, 1, 10);
   await page.locator('#alunno-3').getByRole('button', { name: 'AS' }).click();
   await expect(page.locator('.contatore')).toHaveText('Registrati 3/3 · mancano 0');
+  await expect(page.locator('#alunno-3 .livelli')).toHaveCount(0);
+  await expect(page.locator('#alunno-3').getByRole('button', { name: 'Recupera oggi' })).toBeVisible();
   // bottoni grandi per la palestra
   const box = await b.boundingBox();
   expect(box.width).toBeGreaterThanOrEqual(44);
@@ -100,5 +102,12 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await page.getByRole('button', { name: 'Importa', exact: true }).click();
   await apri(page, '#/gestionale/registro?classe=4BM&g=Q1-G03');
   await expect(page.getByLabel('1 1.1 I1', { exact: true })).toHaveValue('10');
+
+  // recupero dell'assente sull'iPad: il voto si registra nel giorno del recupero
+  await apri(page, '#/campo/registra/4BM/Q1-G03');
+  await page.locator('#alunno-3').getByRole('button', { name: 'Recupera oggi' }).click();
+  await expect(page.locator('#alunno-3')).toContainText('Prova recuperata il');
+  await tocca(page, 3, '1.1', 1, 9);
+  await expect(page.getByLabel('3 1.1 I1 livello 9', { exact: true })).toHaveAttribute('aria-pressed', 'true');
   expect(esterne).toEqual([]);
 });

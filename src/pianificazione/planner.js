@@ -106,12 +106,16 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
       const codici = g.sottoObiettivi?.[livello] ?? [];
       if (g.progetto) {
         const delProgetto = lezioni.filter((l) => l.tipo === 'progetto' && progetti.find((p) => p.id === l.progettoId)?.codice === g.progetto);
-        const l = delProgetto[delProgetto.length - 1];
+        // Settimana indicata → prima lezione di progetto da quel lunedì (le successive servono da recupero); altrimenti l'ultima.
+        const settimana = g.ancora?.[classe.plesso] ? lunediDi(g.ancora[classe.plesso]) : null;
+        const k = settimana ? delProgetto.findIndex((x) => x.data >= settimana) : delProgetto.length - 1;
+        const l = delProgetto[k];
         if (!l) {
           esito[g.id] = { data: null, stato: 'da pianificare' };
           avvisi.push(`${g.id}: progetto "${g.progetto}" senza date per ${classe.plesso}`);
           continue;
         }
+        for (const r of delProgetto.slice(k + 1)) r.recuperoDi = g.id;
         l.giornataId = g.id;
         l.sottoObiettivi = codici;
         esito[g.id] = { data: l.data, stato: 'pianificata' };

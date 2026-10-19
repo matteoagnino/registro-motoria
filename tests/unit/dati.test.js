@@ -121,6 +121,30 @@ describe('archivio JSON e migrazioni', () => {
     const testo = JSON.stringify({ formato: 'registro-motoria-archivio', stato: vecchio });
     expect(leggiArchivio(testo).schemaVersion).toBe(SCHEMA_VERSION);
   });
+  test('migrazione 1 → 2: correzioni di calendario solo se i valori sono quelli iniziali', () => {
+    const base = creaStatoIniziale();
+    const v1 = {
+      ...base, schemaVersion: 1,
+      anno: {
+        ...base.anno,
+        chiusure: base.anno.chiusure.filter((c) => c.dal !== '2026-09-14'),
+        vincoli: base.anno.vincoli.map((v) => ({ ...v, al: '2026-10-31', nota: 'Palestra inagibile: lezioni in aula' }))
+      },
+      impostazioni: { ...base.impostazioni, settimanaRifVenerdi1: '' },
+      giornate: base.giornate.map((g) => (g.id === 'Q1-G02' ? { ...g, ancora: { ...g.ancora, Manzoni: '2026-10-26' } } : g))
+    };
+    const m = migra(v1);
+    expect(m.schemaVersion).toBe(2);
+    expect(m.anno.chiusure[0]).toMatchObject({ dal: '2026-09-14', al: '2026-09-18' });
+    expect(m.anno.vincoli[0]).toMatchObject({ al: '2027-06-10' });
+    expect(m.anno.vincoli[0].nota).toMatch(/nuova comunicazione/);
+    expect(m.impostazioni.settimanaRifVenerdi1).toBe('2026-10-19');
+    expect(m.giornate.find((g) => g.id === 'Q1-G02').ancora.Manzoni).toBe('2026-10-19');
+    // valori già cambiati da Matteo: restano
+    const scelto = migra({ ...v1, impostazioni: { ...v1.impostazioni, settimanaRifVenerdi1: '2026-10-12' } });
+    expect(scelto.impostazioni.settimanaRifVenerdi1).toBe('2026-10-12');
+    expect(migra(m)).toEqual(m);
+  });
   test('schema più recente dell\'app → errore', () => {
     expect(() => migra({ schemaVersion: SCHEMA_VERSION + 1 })).toThrow(/più recente/);
   });

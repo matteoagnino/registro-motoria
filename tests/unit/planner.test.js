@@ -24,7 +24,7 @@ describe('pianificazione 2026/27', () => {
   });
   test('G01 il 28/09 e G03 di 4BM lunedì 2/11/2026', () => {
     expect(piano['4BM'].giornate['Q1-G01'].data).toBe('2026-09-28');
-    expect(piano['4BM'].giornate['Q1-G02'].data).toBe('2026-10-26');
+    expect(piano['4BM'].giornate['Q1-G02'].data).toBe('2026-10-19');
     expect(piano['4BM'].giornate['Q1-G03'].data).toBe('2026-11-02');
   });
   test('alternanza prova → recupero e progetto basket come blocco', () => {
@@ -83,6 +83,28 @@ describe('pianificazione 2026/27', () => {
     const p = pianificaTutte({ ...stato, giornate: [...stato.giornate, ...molte] })['4BM'];
     expect(p.avvisi.some((a) => /cuscinett/.test(a))).toBe(true);
     expect(p.violazioni).toEqual([]);
+  });
+  test('prima settimana (orario ridotto) senza lezioni', () => {
+    for (const p of Object.values(piano)) expect(p.lezioni[0].data >= '2026-09-21').toBe(true);
+  });
+  test('osservazione basket Manzoni nella settimana del 19/10, la lezione dopo è di recupero', () => {
+    const l = piano['4BM'].lezioni;
+    expect(l.find((x) => x.data === '2026-10-19')).toMatchObject({ tipo: 'progetto', giornataId: 'Q1-G02' });
+    expect(l.find((x) => x.data === '2026-10-26')).toMatchObject({ tipo: 'progetto', recuperoDi: 'Q1-G02' });
+  });
+  test('progetto senza settimana indicata → giornata nell\'ultima lezione del progetto', () => {
+    const giornate = stato.giornate.map((g) => (g.id === 'Q1-G02' ? { ...g, ancora: {} } : g));
+    expect(pianificaTutte({ ...stato, giornate })['4BM'].giornate['Q1-G02'].data).toBe('2026-10-26');
+  });
+  test('5BB: venerdì 23/10 fascia V1 10:30–12:30, ricostruita a ritroso e dopo le vacanze', () => {
+    const orario = (d) => piano['5BB'].lezioni.find((x) => x.data === d);
+    expect(orario('2026-10-23')).toMatchObject({ inizio: '10:30', scenario: 'Venerdì 1' });
+    expect(orario('2026-10-16')).toMatchObject({ inizio: '14:30', scenario: 'Venerdì 2' });
+    expect(orario('2026-10-09')).toMatchObject({ inizio: '10:30' });
+    expect(orario('2026-09-25')).toMatchObject({ inizio: '10:30' });
+    expect(orario('2026-09-18')).toBeUndefined();
+    // 21/12 V2 · settimana 28/12 di vacanza non conta · 8/01 V1
+    expect(orario('2027-01-08')).toMatchObject({ inizio: '10:30', scenario: 'Venerdì 1' });
   });
   test('5BB: venerdì alternati tra due fasce', () => {
     const l = piano['5BB'].lezioni;

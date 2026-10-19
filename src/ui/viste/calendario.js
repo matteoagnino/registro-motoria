@@ -59,7 +59,7 @@ function editorGiornata(ctx, g, nuova) {
       campo('Settimana Manzoni (lunedì)', h('input', { type: 'date', name: 'aM', value: g.ancora?.Manzoni || '' })),
       campo('Settimana Boncompagni (lunedì)', h('input', { type: 'date', name: 'aB', value: g.ancora?.Boncompagni || '' }))),
     campo('Collegata a un progetto', select([['', 'No'], ...[...new Set(stato.progetti.map((p) => p.codice))].map((c) => [c, c])], g.progetto || '', { name: 'progetto' }),
-      'Le giornate di progetto cadono nell\'ultima lezione del progetto e non richiedono una lezione di recupero.'));
+      'Le giornate di progetto cadono nella prima lezione di progetto della settimana indicata (senza settimana: nell\'ultima); le lezioni di progetto successive servono a recuperare gli assenti.'));
   const leggi = () => {
     const f = form.elements;
     const lista = (p) => [0, 1, 2, 3].map((i) => f[`${p}${i}`].value).filter(Boolean);
@@ -86,15 +86,23 @@ function editorGiornata(ctx, g, nuova) {
 function progetti(ctx) {
   const stato = ctx.store.get();
   const agg = (p, patch) => prova(() => ctx.store.aggiorna((s) => A.salvaProgetto(s, { ...p, ...patch })), 'Progetto aggiornato');
+  const aggV = (i, patch) => prova(() => ctx.store.aggiorna((s) => A.aggiornaVincolo(s, i, patch)), 'Calendario aggiornato');
   return h('details.scheda',
-    h('summary', h('strong', 'Progetti (sospendono la sequenza)')),
+    h('summary', h('strong', 'Progetti e palestre non agibili')),
     h('table', h('thead', h('tr', ['Progetto', 'Plesso', 'Dal', 'Al', 'N. lezioni', 'Note'].map((t) => h('th', t)))),
       h('tbody', stato.progetti.map((p) => h('tr',
         h('td', p.nome), h('td', p.plesso),
         h('td', h('input', { type: 'date', value: p.dal || '', onchange: (e) => agg(p, { dal: e.target.value || null }) })),
         h('td', h('input', { type: 'date', value: p.al || '', onchange: (e) => agg(p, { al: e.target.value || null }) })),
         h('td', h('input', { type: 'number', min: 1, max: 10, value: p.nLezioni, style: { width: '4rem' }, onchange: (e) => agg(p, { nLezioni: Number(e.target.value) }) })),
-        h('td.tenue', p.nota || ''))))));
+        h('td.tenue', p.nota || ''))))),
+    h('h3', 'Palestre non agibili (lezioni in aula)'),
+    h('table', h('thead', h('tr', ['Plesso', 'Dal', 'Fino al', 'Note'].map((t) => h('th', t)))),
+      h('tbody', (stato.anno.vincoli ?? []).map((v, i) => v.tipo !== 'spazio' ? null : h('tr',
+        h('td', v.plesso),
+        h('td', h('input', { type: 'date', value: v.dal || '', 'aria-label': `Inagibile dal ${v.plesso}`, onchange: (e) => aggV(i, { dal: e.target.value || null }) })),
+        h('td', h('input', { type: 'date', value: v.al || '', 'aria-label': `Inagibile fino al ${v.plesso}`, onchange: (e) => aggV(i, { al: e.target.value || null }) })),
+        h('td.tenue', v.nota || ''))))));
 }
 
 function lezioniClasse(ctx, cl) {

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.4.0 — correzioni di calendario e recuperi (2026-10-19)
+- 5B Boncompagni: «Venerdì 1» (10:30–12:30) dalla settimana del 19/10, ricostruito a ritroso; le settimane di
+  vacanza intera non contano nell'alternanza.
+- Prima settimana (14–18/09, orario ridotto) senza lezioni.
+- Osservazione del progetto basket a Manzoni anticipata alla settimana del 19/10; la lezione di progetto
+  successiva serve a recuperare gli assenti. Le giornate di progetto seguono la settimana indicata.
+- Palestra Boncompagni inagibile fino a nuova comunicazione, con data modificabile dal Calendario.
+- Prove recuperate: niente livelli a un assente senza data di recupero; «Recupera oggi» sull'iPad; peso e data
+  dal giorno del recupero.
+- Schema dati v2: migrazione automatica dei registri già salvati (solo dove i valori sono quelli iniziali).
+
 ## 0.3.0 — stile Apple (2026-10-12)
 - Rivisto con la skill `apple-design` (emilkowalski/skills) e le Human Interface Guidelines di Apple.
 - Font di sistema San Francisco (niente più font incorporati: app più leggera), titoli grandi con tracking negativo.

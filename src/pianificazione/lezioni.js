@@ -1,14 +1,28 @@
 // Generazione delle lezioni reali di una classe dal calendario e dall'orario.
-import { aggiungiGiorni, giornoSettimana, giorniTra, lunediDi, inIntervallo } from './date.js';
+import { aggiungiGiorni, giornoSettimana, lunediDi, inIntervallo } from './date.js';
 
 export function isChiuso(iso, chiusure) {
   return chiusure.some((c) => inIntervallo(iso, c.dal, c.al));
 }
 
-/** Scenario del venerdì alternato: settimane pari/dispari rispetto al lunedì di riferimento. */
-export function scenarioSettimana(iso, rifVenerdi1, scenari) {
+/** Settimana interamente chiusa (lunedì–venerdì): vacanza, non conta nell'alternanza. */
+const settimanaChiusa = (lunedi, chiusure) =>
+  [0, 1, 2, 3, 4].every((i) => isChiuso(aggiungiGiorni(lunedi, i), chiusure));
+
+/**
+ * Scenario del venerdì alternato: settimane di scuola pari/dispari rispetto alla settimana di riferimento.
+ * Le settimane di vacanza intera non contano (l'alternanza riprende da dove si era fermata).
+ */
+export function scenarioSettimana(iso, rifVenerdi1, scenari, chiusure = []) {
   if (!rifVenerdi1 || !scenari?.length) return scenari?.[0] ?? 'tutte';
-  const settimane = Math.round(giorniTra(lunediDi(rifVenerdi1), lunediDi(iso)) / 7);
+  const da = lunediDi(rifVenerdi1);
+  const a = lunediDi(iso);
+  const verso = a >= da ? 7 : -7;
+  let settimane = 0;
+  for (let l = da; l !== a; l = aggiungiGiorni(l, verso)) {
+    const prossimo = aggiungiGiorni(l, verso);
+    if (!settimanaChiusa(verso > 0 ? prossimo : l, chiusure)) settimane += Math.sign(verso);
+  }
   return scenari[((settimane % scenari.length) + scenari.length) % scenari.length];
 }
 
@@ -25,7 +39,7 @@ export function generaLezioni(classe, anno, impostazioni = {}) {
     const gs = giornoSettimana(d);
     const delGiorno = classe.lezioni.filter((l) => l.giorno === gs);
     if (!delGiorno.length) continue;
-    const sc = scenarioSettimana(d, rif, scenari);
+    const sc = scenarioSettimana(d, rif, scenari, anno.chiusure);
     const lez = delGiorno.find((l) => l.scenario === 'tutte' || l.scenario === sc);
     if (!lez) continue;
     const spazio = (anno.vincoli || []).find(
