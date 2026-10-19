@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.1 — nuova icona (2026-10-19)
+- Icona «Slancio»: tre tratti in successione (arancio, verde, blu) su fondo chiaro, l'idea del movimento senza
+  un singolo sport. SVG, PNG 192/512 (anche «maskable» per Android/Chrome) e icona 180 px per la schermata Home dell'iPad.
+
 ## 0.7.0 — regole Giochi decise, giudizi per Argo, iscrizione, avviso fine quadrimestre (2026-10-19)
 - Giochi: punti 8…1 come nelle schede tecniche (scelta della scala tolta); spareggio su rispetto delle regole,
   comportamento e fair play.

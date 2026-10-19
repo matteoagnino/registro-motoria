@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#1f4e79"/><circle cx="256" cy="150" r="56" fill="#ffe699"/><path d="M256 220 L256 340 M256 250 L170 300 M256 250 L350 210 M256 340 L190 440 M256 340 L330 430" stroke="#fff" stroke-width="34" stroke-linecap="round" fill="none"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><defs>
+ <linearGradient id="carta" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#ECEEF2"/></linearGradient>
+ <linearGradient id="g-blu" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#5AC8FA"/><stop offset="1" stop-color="#0A6CFF"/></linearGradient>
+ <linearGradient id="g-verde" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9BF5B4"/><stop offset="1" stop-color="#1DB954"/></linearGradient>
+ <linearGradient id="g-arancio" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FFD66B"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+ <path id="s" d="M96 392 C 180 360 280 270 366 150 C 378 134 404 140 398 160 C 340 300 230 380 96 392 Z"/>
+</defs><rect width="512" height="512" fill="url(#carta)"/><use href="#s" fill="url(#g-arancio)" transform="translate(-46 -59) translate(250 263) scale(0.66) translate(-250 -263)"/><use href="#s" fill="url(#g-verde)" transform="translate(6 -7) translate(250 263) scale(0.82) translate(-250 -263)"/><use href="#s" fill="url(#g-blu)" transform="translate(58 45) translate(250 263) scale(0.95) translate(-250 -263)"/></svg>
