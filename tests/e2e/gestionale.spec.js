@@ -26,6 +26,24 @@ test('M2: creo una classe di prova con 3 alunni finti', async ({ page }) => {
   expect(esterne).toEqual([]);
 });
 
+test('import anagrafiche dall\'Excel di Argo (file finto)', async ({ page }) => {
+  const esterne = sorvegliaRete(page);
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('foglio1');
+  ws.addRow(['Lista schede alunno']);
+  ws.addRow(['Alunno', 'Recapiti alunno', 'Note']);
+  ['ALUNNO PROVA 01', 'ALUNNO PROVA 02', 'ALUNNO PROVA 03'].forEach((n, i) => ws.addRow([`          ${i + 1}       ${n}${' '.repeat(40)}`, '-', '-']));
+  const buffer = Buffer.from(await wb.xlsx.writeBuffer());
+  await apri(page, '#/gestionale/classi?classe=4CM');
+  const [fc] = await Promise.all([page.waitForEvent('filechooser'), page.getByRole('button', { name: 'Importa da Argo (Excel)…' }).click()]);
+  await fc.setFiles({ name: 'Lista schede alunno.xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', buffer });
+  await expect(page.getByRole('dialog')).toContainText('Nuovi alunni (3)');
+  await page.getByRole('button', { name: 'Importa', exact: true }).click();
+  await expect(page.locator('tbody tr')).toHaveCount(3);
+  await expect(page.getByLabel('Nome alunno 2')).toHaveValue('Alunno Prova 02');
+  expect(esterne).toEqual([]);
+});
+
 test('M2: la modifica di un descrittore si riflette nelle rubriche', async ({ page }) => {
   await apri(page, '#/gestionale/impostazioni?sez=sotto&liv=4&so=1.1&ind=0');
   const area = page.getByLabel('Descrittore Ottimo indicatore 1');

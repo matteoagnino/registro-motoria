@@ -2,6 +2,8 @@
 import { h, select, campo, modale, conferma, prova, avviso } from '../dom.js';
 import { conParametri } from '../app.js';
 import * as A from '../../dati/azioni.js';
+import { leggiExcelArgo, analizzaArgo, applicaArgo } from '../../dati/argo.js';
+import { scegliFile } from '../../dati/archivio.js';
 import { intestazione, selettoreClasse, classeScelta } from './comuni.js';
 
 export function vistaClassi(ctx, { params }) {
@@ -26,7 +28,8 @@ export function vistaClassi(ctx, { params }) {
       },
       campo('Nuovo alunno (in coda)', h('input', { name: 'nome', placeholder: 'Cognome Nome', autocomplete: 'off', 'data-focus': 'nuovo-alunno' })),
       h('button.primario', { type: 'submit' }, 'Aggiungi')),
-      h('button', { onclick: () => incollaElenco(ctx, cl.codice, alunni.length === 0) }, 'Incolla elenco…')),
+      h('button', { onclick: () => incollaElenco(ctx, cl.codice, alunni.length === 0) }, 'Incolla elenco…'),
+      h('button', { onclick: () => importaArgo(ctx, cl.codice) }, 'Importa da Argo (Excel)…')),
     alunni.length === 0
       ? h('div.vuoto', 'Nessun alunno. Incolla l\'elenco della classe (uno per riga): verrà ordinato alfabeticamente e numerato.')
       : h('div.tabella-scorri', h('table',
@@ -88,6 +91,36 @@ function incollaElenco(ctx, classe, vuota) {
     azioni: [{
       testo: 'Aggiungi', primario: true,
       azione: () => Boolean(prova(() => ctx.store.aggiorna((s) => A.importaElencoAlunni(s, classe, ta.value.split('\n'))), 'Elenco aggiunto'))
+    }]
+  });
+}
+
+async function importaArgo(ctx, classe) {
+  const f = await scegliFile('.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', true);
+  if (!f) return;
+  let analisi;
+  try {
+    analisi = analizzaArgo(ctx.store.get(), classe, await leggiExcelArgo(f.buffer));
+  } catch (e) {
+    return avviso(e.message, 'errore');
+  }
+  const elenco = (titolo, voci) => (voci.length ? h('div', h('h3', `${titolo} (${voci.length})`), h('p', voci.map((x) => x.cognomeNome).join(' · '))) : null);
+  const niente = !analisi.nuovi.length && !analisi.ritirati.length;
+  modale(`Importa da Argo · ${classe}`, h('div',
+    h('p.tenue', `File «${f.nome}»: controlla che sia proprio l'elenco della ${classe}. Il file non viene salvato da nessuna parte.`),
+    elenco('Nuovi alunni', analisi.nuovi),
+    elenco('Da segnare come ritirati', analisi.ritirati),
+    h('p.tenue', `${analisi.invariati.length} già presenti e invariati.`),
+    analisi.soloRegistro.length ? h('p.violazione', `Nel registro ma non in Argo: ${analisi.soloRegistro.map((a) => a.cognomeNome).join(' · ')}. Non li tocco: se hanno lasciato la classe segnali «Ritirato».`) : null,
+    niente ? h('p', h('strong', 'Nessuna modifica da fare.')) : null), {
+    largo: true,
+    azioni: niente ? [] : [{
+      testo: 'Importa', primario: true,
+      azione: async () => {
+        await ctx.persistenza.aggiungiBackup(ctx.store.get(), `prima di importare da Argo (${classe})`);
+        return Boolean(prova(() => ctx.store.aggiorna((s) => applicaArgo(s, classe, analisi)),
+          `Argo: ${analisi.nuovi.length} nuovi, ${analisi.ritirati.length} ritirati (backup creato)`));
+      }
     }]
   });
 }

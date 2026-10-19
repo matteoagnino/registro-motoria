@@ -73,7 +73,7 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
 
   // Mac: import
   await apri(page, '#/gestionale/scambio');
-  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti…' }).click(), voti1);
+  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti a mano…' }).click(), voti1);
   await expect(page.getByRole('dialog')).toContainText('9 registrazioni nuove');
   await page.getByRole('button', { name: 'Importa', exact: true }).click();
   await apri(page, '#/gestionale/verifica?classe=4BM');
@@ -83,7 +83,7 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
 
   // stesso file: nessun duplicato
   await apri(page, '#/gestionale/scambio');
-  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti…' }).click(), voti1);
+  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti a mano…' }).click(), voti1);
   await expect(page.getByRole('dialog')).toContainText('0 registrazioni nuove');
   await expect(page.getByRole('dialog')).toContainText('9 già presenti e identiche');
   await page.getByRole('button', { name: 'Importa', exact: true }).click();
@@ -95,7 +95,7 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.getByText('1 registrazioni')).toBeVisible();
   const voti2 = await scarica(page, () => page.getByRole('button', { name: 'Esporta e condividi (AirDrop)' }).click(), 'v2.rmvoti.json');
   await apri(page, '#/gestionale/scambio');
-  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti…' }).click(), voti2);
+  await scegliFile(page, () => page.getByRole('button', { name: 'Importa file voti a mano…' }).click(), voti2);
   await expect(page.getByRole('dialog')).toContainText('1 modifiche da confermare');
   await expect(page.getByRole('dialog').locator('tbody tr')).toContainText('[8 7 8 7]');
   await expect(page.getByRole('dialog').locator('tbody tr')).toContainText('[10 7 8 7]');
@@ -109,5 +109,9 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.locator('#alunno-3')).toContainText('Prova recuperata il');
   await tocca(page, 3, '1.1', 1, 9);
   await expect(page.getByLabel('3 1.1 I1 livello 9', { exact: true })).toHaveAttribute('aria-pressed', 'true');
+  // «Annulla» dopo un tocco sbagliato
+  await tocca(page, 3, '1.1', 2, 5);
+  await page.locator('#toast').getByRole('button', { name: 'Annulla' }).click();
+  await expect(page.getByLabel('3 1.1 I2 livello 5', { exact: true })).toHaveAttribute('aria-pressed', 'false');
   expect(esterne).toEqual([]);
 });

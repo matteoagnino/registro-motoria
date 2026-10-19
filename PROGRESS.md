@@ -41,5 +41,10 @@ STATO: VERSIONE GREZZA COMPLETATA
 - D2/D3/D5 risolte (vedi DOMANDE.md), D4 in stand-by, osservazione basket Manzoni alla settimana del 19/10.
 - Schema v2 con migrazione; test: 113 unitari, 7 E2E. Ricerca D6/D7 in `reports/` (fuori da git).
 
+## Batch 2026-10-19 (0.5.0)
+- Import Argo, Giochi da schede 2025/26, ricezione automatica voti iPad (cartella «voti-ipad»), 7 migliorie approvate.
+- Test: 129 unitari, 8 E2E. La ricezione da cartella è testata nella logica (importaAutomatico), non end-to-end:
+  la File System Access API richiede la scelta manuale della cartella.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

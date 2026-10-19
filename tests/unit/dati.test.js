@@ -134,7 +134,7 @@ describe('archivio JSON e migrazioni', () => {
       giornate: base.giornate.map((g) => (g.id === 'Q1-G02' ? { ...g, ancora: { ...g.ancora, Manzoni: '2026-10-26' } } : g))
     };
     const m = migra(v1);
-    expect(m.schemaVersion).toBe(2);
+    expect(m.schemaVersion).toBe(SCHEMA_VERSION);
     expect(m.anno.chiusure[0]).toMatchObject({ dal: '2026-09-14', al: '2026-09-18' });
     expect(m.anno.vincoli[0]).toMatchObject({ al: '2027-06-10' });
     expect(m.anno.vincoli[0].nota).toMatch(/nuova comunicazione/);
@@ -144,6 +144,15 @@ describe('archivio JSON e migrazioni', () => {
     const scelto = migra({ ...v1, impostazioni: { ...v1.impostazioni, settimanaRifVenerdi1: '2026-10-12' } });
     expect(scelto.impostazioni.settimanaRifVenerdi1).toBe('2026-10-12');
     expect(migra(m)).toEqual(m);
+  });
+  test('migrazione 2 → 3: correttivo Giochi dell\'alunno → riduzione per prova', () => {
+    const base = creaStatoIniziale();
+    const v2 = { ...base, schemaVersion: 2, giochi: { ...base.giochi, risultati: [{ anno: '2026/27', classe: '4BM', rilevazione: 1, squadra: {},
+      individuali: [{ alunnoId: 'a', correttivo: 0.3, supergym: { tempo: 50 }, ostacoli: { tempo: 10 } }] }] } };
+    const ind = migra(v2).giochi.risultati[0].individuali[0];
+    expect(ind.correttivo).toBeUndefined();
+    expect(ind.supergym).toEqual({ riduzione: 0.3, tempo: 50 });
+    expect(ind.ostacoli).toEqual({ riduzione: 0.3, tempo: 10 });
   });
   test('schema più recente dell\'app → errore', () => {
     expect(() => migra({ schemaVersion: SCHEMA_VERSION + 1 })).toThrow(/più recente/);

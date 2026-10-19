@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import * as A from '../../src/dati/azioni.js';
-import { creaPacchetto, leggiPacchetto, leggiFileVoti, analizzaImport, applicaImport } from '../../src/dati/scambio.js';
+import { creaPacchetto, leggiPacchetto, leggiFileVoti, analizzaImport, applicaImport, importaAutomatico, creaFileVoti } from '../../src/dati/scambio.js';
 import { campoVuoto, importaPacchetto, campoLivello, campoStato, esportaVoti, daEsportare } from '../../src/dati/campo.js';
 import { riepilogoClasse } from '../../src/dati/selettori.js';
 
@@ -81,5 +81,23 @@ describe('flusso completo iPad → Mac', () => {
     const c2 = importaPacchetto(campo, creaPacchetto(s, ['4BM']));
     expect(c2.registrazioni).toHaveLength(1);
     expect(daEsportare(c2)).toHaveLength(1);
+  });
+});
+
+describe('ricezione automatica dei voti dall\'iPad', () => {
+  test('applica da sola solo i voti nuovi; le modifiche restano da confermare', () => {
+    let s = { ...creaStatoIniziale(), alunni: [] };
+    s = A.importaElencoAlunni(s, '4BM', ['Alunno Prova 01', 'Alunno Prova 02']);
+    const [a1, a2] = A.alunniDi(s, '4BM');
+    s = A.impostaLivello(s, { classe: '4BM', alunnoId: a1.id, giornataId: 'Q1-G01', sottoObiettivo: '1.1', indice: 0, valore: 7 });
+    let c = importaPacchetto(campoVuoto('ipad-x'), creaPacchetto(s, ['4BM']));
+    c = campoLivello(c, { classe: '4BM', alunnoId: a1.id, giornataId: 'Q1-G01', sottoObiettivo: '1.1', indice: 0, valore: 9 });
+    c = campoLivello(c, { classe: '4BM', alunnoId: a2.id, giornataId: 'Q1-G01', sottoObiettivo: '1.1', indice: 0, valore: 8 });
+    const file = creaFileVoti({ registrazioni: daEsportare(c), deviceId: 'ipad-x' });
+    const esito = importaAutomatico(s, file);
+    expect(esito).toMatchObject({ nuove: 1, modifiche: 1 });
+    expect(A.trovaRegistrazione(esito.stato, a2.id, 'Q1-G01', '1.1').livelli[0]).toBe(8);
+    expect(A.trovaRegistrazione(esito.stato, a1.id, 'Q1-G01', '1.1').livelli[0]).toBe(7); // non sovrascritto
+    expect(importaAutomatico(esito.stato, file)).toMatchObject({ nuove: 0, modifiche: 1 }); // nessun doppione
   });
 });

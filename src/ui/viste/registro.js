@@ -2,7 +2,7 @@
 import { h, select, modale, prova } from '../dom.js';
 import { conParametri } from '../app.js';
 import * as A from '../../dati/azioni.js';
-import { giornateClasse, sottoObiettivo, giudizioDiVoto } from '../../dati/selettori.js';
+import { giornateClasse, sottoObiettivo, giudizioDiVoto, avanzamentoGiornata } from '../../dati/selettori.js';
 import { votoRegistrazione, pesoProva, daRecuperare } from '../../calcolo/voti.js';
 import { spiegaVoto } from '../../calcolo/riepilogo.js';
 import { formatta } from '../../pianificazione/date.js';
@@ -44,10 +44,7 @@ export function vistaRegistro(ctx, { params }) {
   const sos = g.codici.map((c) => sottoObiettivo(stato, cl.livello, c)).filter(Boolean);
   const valutabili = alunni.filter((a) => a.stato === 'Attivo');
   const regsDi = (a) => sos.map((so) => A.trovaRegistrazione(stato, a.id, g.id, so.codice));
-  const fatti = valutabili.filter((a) => {
-    const r = regsDi(a);
-    return r.some((x) => x?.stato) || r.every((x) => votoRegistrazione(x) != null);
-  }).length;
+  const { fatti } = avanzamentoGiornata(stato, cl.codice, g.id);
   const daRec = valutabili.filter((a) => regsDi(a).some(daRecuperare)).length;
 
   return h('div',

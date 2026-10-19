@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.5.0 — Argo, Giochi 2025/26, voti automatici e aiuti in palestra (2026-10-19)
+- Import anagrafiche dall'Excel «Lista schede alunno» di Argo: anteprima, numeri di Argo per le classi vuote,
+  nuovi in coda, ritirati segnati, nessun alunno cancellato, backup prima dell'import.
+- Giochi secondo le schede 2025/26: riduzione del tempo ed esclusione dalla media per singola prova, circuito
+  adattato, correttivo di classifica della classe (+0,5/+1), scala dei punti 8→1 o N→1.
+- Voti dall'iPad al Mac in automatico: l'iPad salva il file nella cartella «voti-ipad», il Mac lo importa da solo
+  (le modifiche a voti già presenti restano da confermare).
+- iPad: banner «lezione di adesso» con recuperi in sospeso, anello di avanzamento e badge recuperi sulle classi,
+  «Annulla» dopo ogni tocco, promemoria se ci sono voti non esportati da più di 24 ore.
+- Mac: recuperi in sospeso e avanzamento delle prove nella Settimana, andamento dei voti nel Riepilogo.
+- Schema dati v3 (correttivi Giochi per prova) con migrazione automatica.
+
 ## 0.4.0 — correzioni di calendario e recuperi (2026-10-19)
 - 5B Boncompagni: «Venerdì 1» (10:30–12:30) dalla settimana del 19/10, ricostruito a ritroso; le settimane di
   vacanza intera non contano nell'alternanza.

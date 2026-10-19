@@ -1,13 +1,26 @@
-// Giochi della Gioventù: calcoli da schede tecniche, statistiche di classe, classifiche, storico.
+// Giochi della Gioventù: calcoli dalle schede tecniche 2025/26 (FGI, FIDAL, FIPAV), statistiche, classifiche, storico.
 import { arrotonda } from '../calcolo/voti.js';
 
 const numero = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 
-/** Super Gym: (tempo + penalità) × (1 − correttivo); ostacoli: tempo × (1 − correttivo). Al centesimo. */
-export function tempoGara(tempo, penalita = 0, correttivo = 0) {
+/** Prove individuali a tempo: chiave nel risultato dell'alunno. */
+export const PROVE_TEMPO = ['supergym', 'ostacoli'];
+
+/**
+ * Tempo di gara = (tempo + penalità) × (1 − riduzione). Al centesimo.
+ * La riduzione (es. 0,3 = −30%) è il «correttivo sul risultato» delle schede FIDAL per alunni con disabilità.
+ */
+export function tempoGara(tempo, penalita = 0, riduzione = 0) {
   const t = numero(tempo);
   if (t == null) return null;
-  return arrotonda((t + (numero(penalita) ?? 0)) * (1 - (numero(correttivo) ?? 0)), 2);
+  return arrotonda((t + (numero(penalita) ?? 0)) * (1 - (numero(riduzione) ?? 0)), 2);
+}
+
+/** Tempo di gara di un alunno in una prova; null se manca o se il risultato è escluso dal calcolo. */
+export function tempoAlunno(individuale, prova) {
+  const r = individuale?.[prova];
+  if (!r || r.escluso) return null;
+  return tempoGara(r.tempo, prova === 'supergym' ? r.penalita : 0, r.riduzione);
 }
 
 export function statistiche(valori) {
@@ -29,18 +42,16 @@ export function statistiche(valori) {
   };
 }
 
-/** Statistiche di una classe in una rilevazione per tutte le prove. */
+/** Statistiche di una classe in una rilevazione. Media = somma dei tempi / alunni che hanno un tempo valido. */
 export function statisticheClasse(risultato) {
   const ind = risultato?.individuali ?? [];
-  const sg = ind.map((i) => tempoGara(i.supergym?.tempo, i.supergym?.penalita, i.correttivo));
-  const os = ind.map((i) => tempoGara(i.ostacoli?.tempo, 0, i.correttivo));
   const squadra = (id) => {
     const gruppi = (risultato?.squadra?.[id] ?? []).filter((x) => numero(x) != null);
     return gruppi.length ? arrotonda(gruppi.reduce((a, b) => a + b, 0), 2) : null;
   };
   return {
-    supergym: statistiche(sg),
-    ostacoli: statistiche(os),
+    supergym: statistiche(ind.map((i) => tempoAlunno(i, 'supergym'))),
+    ostacoli: statistiche(ind.map((i) => tempoAlunno(i, 'ostacoli'))),
     lancia: squadra('lancia'),
     staffetta: squadra('staffetta'),
     spikeball: squadra('spikeball')
@@ -53,15 +64,21 @@ export function punteggioProva(stat, prova) {
   return stat[prova.id] ?? null;
 }
 
-/** Punti di classifica: 1ª = 8, poi 7…; dall'8ª in giù 1 punto. Pari merito = stessi punti. */
-export const puntiPosizione = (pos) => Math.max(1, 9 - pos);
+/**
+ * Punti di classifica per posizione. Pari merito = stessi punti.
+ * 'max8' (scheda FIDAL 2025/26): 1ª = 8, poi 7…, dall'8ª in giù 1 punto.
+ * 'partecipanti' (scheda punteggi 2024/25): 1ª = N classi partecipanti, poi N−1…
+ */
+export const SCALE_PUNTI = { max8: '8, 7, … 1 (scheda FIDAL 2025/26)', partecipanti: 'N, N−1, … 1 (N = classi in gara)' };
+export const puntiPosizione = (pos, n = 8, scala = 'max8') => (scala === 'partecipanti' ? Math.max(1, n + 1 - pos) : Math.max(1, 9 - pos));
 
 /**
- * Classifica tra classi.
- * @param voci [{classe, stat, fairPlay}] — classi dello stesso livello
+ * Classifica tra classi. In ogni prova: punti 8…1 per posizione + eventuale «correttivo di classifica»
+ * (+0,5/+1 pt) assegnato alla classe per alunni con disabilità. Classifica generale = somma dei punti.
+ * @param voci [{classe, stat, fairPlay, bonus}] — classi dello stesso livello
  * @param prove definizioni delle prove
  */
-export function classifica(voci, prove) {
+export function classifica(voci, prove, scala = 'max8') {
   const perProva = {};
   const totali = new Map(voci.map((v) => [v.classe, 0]));
   for (const p of prove) {
@@ -71,7 +88,8 @@ export function classifica(voci, prove) {
     const righe = [];
     valori.forEach((x, i) => {
       const pos = i > 0 && x.valore === valori[i - 1].valore ? righe[i - 1].posizione : i + 1;
-      righe.push({ ...x, posizione: pos, punti: puntiPosizione(pos) });
+      const bonus = numero(voci.find((v) => v.classe === x.classe)?.bonus?.[p.id]) ?? 0;
+      righe.push({ ...x, posizione: pos, bonus, punti: puntiPosizione(pos, valori.length, scala) + bonus });
     });
     for (const r of righe) totali.set(r.classe, totali.get(r.classe) + r.punti);
     perProva[p.id] = righe;
@@ -95,9 +113,9 @@ export function classificheAnno(stato, anno, rilevazione) {
   for (const livello of [4, 5]) {
     const voci = stato.classi.filter((c) => c.livello === livello).map((c) => {
       const ris = stato.giochi.risultati.find((r) => r.anno === anno && r.classe === c.codice && r.rilevazione === rilevazione);
-      return { classe: c.codice, stat: statisticheClasse(ris), fairPlay: ris?.fairPlay };
+      return { classe: c.codice, stat: statisticheClasse(ris), fairPlay: ris?.fairPlay, bonus: ris?.bonus };
     }).filter((v) => Object.values(v.stat).some((x) => (typeof x === 'object' ? x?.n : x != null)));
-    const cl = classifica(voci, stato.giochi.prove);
+    const cl = classifica(voci, stato.giochi.prove, stato.giochi.regole?.scalaPunti);
     out[livello] = { ...cl, proposta: cl.generale[0]?.classe ?? null };
   }
   return out;
@@ -116,7 +134,7 @@ export function rigaStorico(classe, anno, rilevazione, stat) {
 // ---------- Azioni pure sui risultati ----------
 
 export function risultatoVuoto(anno, classe, rilevazione) {
-  return { anno, classe, rilevazione, individuali: [], squadra: { lancia: [], staffetta: [], spikeball: [] }, fairPlay: null };
+  return { anno, classe, rilevazione, individuali: [], squadra: { lancia: [], staffetta: [], spikeball: [] }, bonus: {}, fairPlay: null };
 }
 
 export function trovaRisultato(stato, anno, classe, rilevazione) {
@@ -131,14 +149,27 @@ export function aggiornaRisultato(stato, { anno, classe, rilevazione }, fn) {
   return { ...stato, giochi: { ...stato.giochi, risultati: [...altri, nuovo] } };
 }
 
+/** patch: { supergym: {tempo, penalita, riduzione, escluso, adattato}, ostacoli: {tempo, riduzione, escluso}, nota } */
 export function impostaIndividuale(risultato, alunnoId, patch) {
-  const prima = risultato.individuali.find((i) => i.alunnoId === alunnoId) ?? { alunnoId, correttivo: 0, supergym: {}, ostacoli: {} };
+  const prima = risultato.individuali.find((i) => i.alunnoId === alunnoId) ?? { alunnoId, supergym: {}, ostacoli: {} };
   const dopo = {
     ...prima, ...patch,
     supergym: { ...prima.supergym, ...(patch.supergym || {}) },
     ostacoli: { ...prima.ostacoli, ...(patch.ostacoli || {}) }
   };
   return { ...risultato, individuali: [...risultato.individuali.filter((i) => i.alunnoId !== alunnoId), dopo] };
+}
+
+/** Correttivo di classifica della classe in una prova (es. +0,5 o +1 punto). */
+export function impostaBonus(risultato, prova, valore) {
+  const v = numero(valore);
+  if (v != null && (v < 0 || v > 3)) throw new Error('Correttivo di classifica tra 0 e 3 punti.');
+  return { ...risultato, bonus: { ...(risultato.bonus ?? {}), [prova]: v } };
+}
+
+export function aggiornaRegoleGiochi(stato, patch) {
+  if (patch.scalaPunti && !SCALE_PUNTI[patch.scalaPunti]) throw new Error('Scala dei punti non valida.');
+  return { ...stato, giochi: { ...stato.giochi, regole: { ...stato.giochi.regole, ...patch } } };
 }
 
 export function impostaGruppo(risultato, prova, indice, valore) {

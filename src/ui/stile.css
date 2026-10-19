@@ -298,6 +298,16 @@ td.msg-riga.as { color: var(--rosso); }
 .toast::before { content: "✓ "; color: var(--t9); font-weight: 700; }
 .toast.errore::before { content: "! "; color: var(--rosso); }
 .toast.visibile { transform: translate(-50%, 0); opacity: 1; }
+.toast-azione { pointer-events: auto; margin-left: 12px; padding: 6px 14px; min-height: 36px; border-radius: 999px; border: 0; background: var(--accent); color: var(--onaccent); font: 600 14px var(--font); cursor: pointer; }
+.banner-campo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; margin: 0 0 16px; border-radius: 14px; background: var(--content); box-shadow: var(--shadow); }
+.banner-campo.attenzione { border-left: 5px solid var(--l5); }
+.banner-campo.adesso { border-left: 5px solid var(--accent); }
+.banner-campo .spazio { flex: 1; }
+.badge-rec { display: inline-block; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--rosso); color: #fff; font: 700 12px var(--font); text-align: center; }
+.anello { --p: 0; width: 34px; height: 34px; border-radius: 50%; background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--fill) 0); display: inline-grid; place-items: center; font: 600 10px var(--font); }
+.anello::before { content: ""; grid-area: 1 / 1; width: 26px; height: 26px; border-radius: 50%; background: var(--content); }
+.anello span { grid-area: 1 / 1; position: relative; }
+.sparkline { vertical-align: middle; margin-left: 6px; color: var(--sec); }
 @keyframes compari { from { opacity: 0; } }
 @keyframes materializza { from { opacity: 0; transform: scale(.96); filter: blur(4px); } }
 

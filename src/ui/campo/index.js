@@ -2,7 +2,10 @@
 import { h, avviso, conferma } from '../dom.js';
 import { vai } from '../app.js';
 import { leggiPacchetto } from '../../dati/scambio.js';
-import { importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, daEsportare, trovaCampo } from '../../dati/campo.js';
+import {
+  importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, daEsportare, trovaCampo,
+  recuperiInSospeso, lezioniDiOggi, giornataDellaLezione, promemoriaExport
+} from '../../dati/campo.js';
 import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
@@ -65,11 +68,52 @@ function home(ctx) {
     testa('Scegli la classe', `Pacchetto del ${new Date(c.pacchetto.creatoIl).toLocaleString('it-IT')} · ${c.pacchetto.anno}`,
       h('button.grande', { onclick: () => importa(ctx) }, 'Nuovo pacchetto'),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, icona('esporta'), `Esporta voti${nDaEsportare ? ` (${nDaEsportare})` : ''}`)),
-    h('div.campo-corpo', h('div.tessere', c.pacchetto.classi.map((cl) => {
-      const diOggi = cl.lezioni.some((l) => l.giorno === gs);
-      return h(`a.tessera${diOggi ? '.evidenza' : ''}`, { href: `#/campo/classe/${cl.codice}` },
-        h('strong', cl.codice), h('span', `${cl.livello}ª · ${cl.plesso}`), diOggi ? h('span.ok-testo', '● lezione oggi') : null);
-    }))));
+    h('div.campo-corpo',
+      bannerPromemoria(c),
+      bannerAdesso(c, oggi),
+      h('div.tessere', c.pacchetto.classi.map((cl) => {
+        const diOggi = cl.calendario ? cl.calendario.some((l) => l.data === oggi) : cl.lezioni.some((l) => l.giorno === gs);
+        const rec = recuperiInSospeso(c, cl.codice).length;
+        const pre = cl.giornate.find((g) => g.id === giornataPreselezionata(cl.giornate, oggi));
+        const pct = pre ? avanzamento(c, cl, pre) : 0;
+        return h(`a.tessera${diOggi ? '.evidenza' : ''}`, { href: `#/campo/classe/${cl.codice}` },
+          h('div.riga', h('strong', cl.codice), h('span.spazio'),
+            pre ? h('span.anello', { style: `--p: ${pct}`, title: `${pre.id}: ${pct}% registrati` }, h('span', `${pct}%`)) : null),
+          h('span', `${cl.livello}ª · ${cl.plesso}`),
+          diOggi ? h('span.ok-testo', '● lezione oggi') : null,
+          rec ? h('span', h('span.badge-rec', rec), ' da recuperare') : null);
+      }))));
+}
+
+function bannerPromemoria(c) {
+  const p = promemoriaExport(c);
+  if (!p) return null;
+  return h('div.banner-campo.attenzione', { role: 'status' },
+    h('span', h('b', `${p.n} registrazioni non ancora esportate`), ` (la prima del ${new Date(p.dal).toLocaleString('it-IT')}). Esportale per averle sul Mac.`),
+    h('span.spazio'), h('a.bottone.grande.primario', { href: '#/campo/esporta' }, 'Esporta ora'));
+}
+
+function bannerAdesso(c, oggi) {
+  const ora = new Date().toTimeString().slice(0, 5);
+  const lezioni = lezioniDiOggi(c.pacchetto, oggi, ora);
+  const l = lezioni.find((x) => x.adesso) ?? lezioni.find((x) => x.inizio > ora);
+  if (!l) return null;
+  const gId = giornataDellaLezione(l);
+  const rec = recuperiInSospeso(c, l.classe);
+  const tipo = l.tipo === 'prova' ? `Prova ${l.giornataId}` : l.recuperoDi ? `Recupero di ${l.recuperoDi}` : 'Lezione';
+  return h('div.banner-campo.adesso',
+    h('div', h('div.tenue', l.adesso ? 'Adesso' : 'Prossima lezione'), h('strong', `${l.classe} · ${l.inizio}–${l.fine} · ${tipo}`),
+      rec.length ? h('div', 'Da recuperare: ', rec.map((x) => `n. ${x.alunno.numero} (${x.giornataId})`).join(', ')) : null),
+    h('span.spazio'),
+    gId ? h('a.bottone.grande.primario', { href: `#/campo/registra/${l.classe}/${gId}` }, 'Apri registro') : h('a.bottone.grande', { href: `#/campo/classe/${l.classe}` }, 'Apri classe'));
+}
+
+/** Percentuale di alunni registrati (o assenti/esonerati) in una giornata. */
+function avanzamento(c, cl, g) {
+  const alunni = c.pacchetto.alunni.filter((a) => a.classe === cl.codice && a.stato !== 'Ritirato');
+  if (!alunni.length) return 0;
+  const fatti = alunni.filter((a) => ['completo', 'assente', 'es'].includes(statoScheda(c, a, g))).length;
+  return Math.round((fatti / alunni.length) * 100);
 }
 
 /** Giornata preselezionata: quella di oggi, altrimenti la più vicina nel tempo. */
@@ -84,8 +128,13 @@ function sceltaGiornata(ctx, codice) {
   const cl = c.pacchetto.classi.find((x) => x.codice === codice);
   if (!cl) return home(ctx);
   const pre = giornataPreselezionata(cl.giornate, oggiISO());
+  const rec = recuperiInSospeso(c, codice);
   return h('div',
     testa(`${cl.codice} · scegli la giornata`, 'La giornata più vicina a oggi è evidenziata', indietro('#/campo/home', 'Classi')),
+    rec.length ? h('div.campo-corpo', h('div.banner-campo.attenzione',
+      h('div', h('b', 'Da recuperare'), h('div', rec.map((x) => h('a.bottone', {
+        href: `#/campo/registra/${codice}/${x.giornataId}`, style: { margin: '6px 8px 0 0' }
+      }, `n. ${x.alunno.numero} ${x.alunno.cognomeNome} · ${x.giornataId}`)))))) : null,
     h('div.campo-corpo', h('div.tessere', cl.giornate.map((g) => h(`a.tessera${g.id === pre ? '.evidenza' : ''}`, { href: `#/campo/registra/${cl.codice}/${g.id}` },
       h('strong', g.id), h('span', g.descrizione), h('span.tenue', g.data ? formatta(g.data, true) : 'data da fissare'),
       h('span', g.sottoObiettivi.join(' · ')))))));
@@ -131,9 +180,16 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
   if (a.stato === 'ES') {
     return h('section.scheda-alunno', { id: `alunno-${a.numero}` }, h('h2', h('span.numero', a.numero), a.cognomeNome, h('small.tenue', ' · esonerato')));
   }
-  const setStato = (v) => ctx.campoStore.aggiorna((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }));
+  const conAnnulla = (fn, msg) => {
+    const prima = ctx.campoStore.get();
+    ctx.campoStore.aggiorna(fn);
+    avviso(msg, 'ok', { testo: 'Annulla', fn: () => ctx.campoStore.sostituisci(prima) });
+  };
+  const setStato = (v) => conAnnulla((s) => campoStato(s, { ...base, sottoObiettivi: g.sottoObiettivi, valore: statoGiorno === v ? null : v }),
+    `n. ${a.numero}: ${statoGiorno === v ? 'stato tolto' : v}`);
   const recuperata = regs.find((r) => r?.recuperataIl)?.recuperataIl ?? null;
-  const setRecupero = (data) => ctx.campoStore.aggiorna((s) => campoRecupero(s, { ...base, sottoObiettivi: g.sottoObiettivi, data }));
+  const setRecupero = (data) => conAnnulla((s) => campoRecupero(s, { ...base, sottoObiettivi: g.sottoObiettivi, data }),
+    `n. ${a.numero}: ${data ? 'recupero oggi' : 'recupero annullato'}`);
   return h(`section.scheda-alunno.${st}`, { id: `alunno-${a.numero}` },
     h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
       h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
@@ -159,7 +215,8 @@ function schedaAlunno(ctx, cl, g, sos, a, st) {
           return h('div', h(`div.indicatore-riga${parziale && val == null ? '.mancante' : ''}`,
             h('span.nome-ind', h('i', `I${i + 1}`), ind.nome),
             h('div.livelli', LIVELLI.map((l) => bottoneLivello(ctx, l, val === l, () => {
-              ctx.campoStore.aggiorna((s) => campoLivello(s, { ...base, sottoObiettivo: so.codice, indice: i, valore: val === l ? null : l }));
+              conAnnulla((s) => campoLivello(s, { ...base, sottoObiettivo: so.codice, indice: i, valore: val === l ? null : l }),
+                `n. ${a.numero} ${so.codice} I${i + 1}: ${val === l ? 'tolto' : l}`);
             }, () => {
               ctx.descrittoreCampo = mostra && ctx.descrittoreCampo.livello === l ? null : { chiave: chiaveDesc, livello: l };
               ctx.ridisegna();
@@ -198,11 +255,12 @@ function esporta(ctx) {
     avviso(`File voti esportato (${file.registrazioni.length} registrazioni)`);
   };
   return h('div',
-    testa('Esporta file voti', 'Condividi → AirDrop al Mac', indietro('#/campo/home', 'Classi')),
+    testa('Esporta file voti', 'Condividi → Salva su File (cartella «voti-ipad») oppure AirDrop', indietro('#/campo/home', 'Classi')),
     h('div.campo-corpo', h('div.scheda',
       h('p', h('strong', `${nuove.length} registrazioni`), ' nuove o modificate dall\'ultimo export',
         c.ultimoExport ? ` (${new Date(c.ultimoExport).toLocaleString('it-IT')})` : '', '.'),
       h('button.primario.grande', { onclick: () => fai(false), disabled: !nuove.length }, 'Esporta e condividi (AirDrop)'),
+      h('p', h('b', 'Per farli arrivare da soli sul Mac: '), 'nel menu Condividi scegli «Salva su File» e la cartella «voti-ipad» dentro la cartella archivio (iCloud Drive o Drive). L\'iPad ricorda l\'ultima cartella usata; il gestionale sul Mac li importa da solo.'),
       h('p.tenue', { style: { marginTop: '1rem' } }, `Hai perso un file? Puoi riesportare tutte le ${tutte.length} registrazioni fatte su questo iPad: sul Mac i doppioni vengono ignorati.`),
       h('button.grande', { onclick: () => fai(true), disabled: !tutte.length }, 'Riesporta tutto')),
     h('p.tenue', 'Nessun dato lascia l\'iPad senza questa tua azione.')));

@@ -1,7 +1,7 @@
 // Settimana condivisa: tutte le classi, giorno per giorno, con cosa si valuta e chi deve recuperare.
 import { h } from '../dom.js';
 import { conParametri } from '../app.js';
-import { piano, daRecuperareClasse, giornata } from '../../dati/selettori.js';
+import { piano, daRecuperareClasse, giornata, avanzamentoGiornata } from '../../dati/selettori.js';
 import { alunniDi } from '../../dati/azioni.js';
 import { lunediDi, aggiungiGiorni, oggiISO, formatta, GIORNI_LUNGHI, toDate } from '../../pianificazione/date.js';
 import { intestazione, etichettaTipo, chipSotto } from './comuni.js';
@@ -29,6 +29,7 @@ export function vistaOggi(ctx, { params }) {
       h('button', { onclick: () => conParametri({ settimana: settimanaIniziale(stato) }) }, 'Questa settimana'),
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, 7) }), 'aria-label': 'Settimana successiva' }, 'Successiva ›'),
       h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) })),
+    pannelloRecuperi(stato),
     h('div.settimana', giorni.map((d) => {
       const lezioni = stato.classi
         .map((c) => ({ c, l: p[c.codice]?.lezioni.find((x) => x.data === d) }))
@@ -50,11 +51,32 @@ function schedaLezione(stato, c, l) {
   return h(`div.lezione.t-${l.tipo}`,
     h('div.riga', h('strong', c.codice), h('small', `${l.inizio}–${l.fine}`), etichettaTipo(l.tipo)),
     l.aula ? h('div.avviso-cella', 'In aula (palestra inagibile)') : null,
-    g ? h('div', h('a', { href: `#/gestionale/registro?classe=${c.codice}&g=${g.id}` }, `${g.id} · ${g.descrizione}`)) : null,
+    g ? h('div', h('a', { href: `#/gestionale/registro?classe=${c.codice}&g=${g.id}` }, `${g.id} · ${g.descrizione}`), avanzamento(stato, c, g)) : null,
     l.sottoObiettivi?.length ? h('div', l.sottoObiettivi.map((cod) => chipSotto(stato, c.livello, cod))) : null,
     l.tipo === 'recupero' && l.recuperoDi ? h('div', `Recupero di ${l.recuperoDi}`) : null,
     l.motivo && l.tipo !== 'prova' ? h('div.tenue', l.motivo) : null,
     nomi.length && ['recupero', 'normale', 'cuscinetto'].includes(l.tipo)
       ? h('div.avviso-cella', `Da recuperare: ${nomi.map((a) => `${a.numero} ${a.cognomeNome}`).join(', ')}`)
       : null);
+}
+
+function avanzamento(stato, c, g) {
+  const { fatti, totale } = avanzamentoGiornata(stato, c.codice, g.id);
+  if (!totale) return null;
+  const pct = Math.round((fatti / totale) * 100);
+  return h('span.anello', { style: `--p: ${pct}`, title: `Registrati ${fatti}/${totale}`, 'aria-label': `Registrati ${fatti} su ${totale}` }, h('span', `${pct}%`));
+}
+
+/** Recuperi in sospeso di tutte le classi, con collegamento al registro della giornata. */
+function pannelloRecuperi(stato) {
+  const voci = stato.classi.flatMap((c) => {
+    const daRec = daRecuperareClasse(stato, c.codice);
+    return alunniDi(stato, c.codice).filter((a) => daRec.has(a.id))
+      .flatMap((a) => [...daRec.get(a.id)].map((gId) => ({ c, a, gId })));
+  });
+  if (!voci.length) return null;
+  return h('details.scheda',
+    h('summary', h('strong', 'Recuperi in sospeso '), h('span.badge-rec', voci.length)),
+    h('ul', voci.map(({ c, a, gId }) => h('li',
+      h('a', { href: `#/gestionale/registro?classe=${c.codice}&g=${gId}` }, `${c.codice} · n. ${a.numero} ${a.cognomeNome} · ${gId}`)))));
 }

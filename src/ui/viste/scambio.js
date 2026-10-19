@@ -2,7 +2,7 @@
 import { h, select, modale, conferma, avviso } from '../dom.js';
 import {
   supportaCartella, scegliCartella, salvaInCartella, leggiDaCartella, serializzaArchivio, deserializzaArchivio,
-  scaricaTesto, scaricaBlob, scegliFile, marcaTemporale, NOME_ARCHIVIO
+  scaricaTesto, scaricaBlob, scegliFile, marcaTemporale, NOME_ARCHIVIO, CARTELLA_VOTI
 } from '../../dati/archivio.js';
 import { creaPacchetto, leggiFileVoti, analizzaImport, applicaImport } from '../../dati/scambio.js';
 import { excelClasse, excelRiepiloghi } from '../../export/excel.js';
@@ -102,17 +102,22 @@ function sezioneIpad(ctx, stato) {
         avviso('Pacchetto creato: invialo all\'iPad con AirDrop');
       }
     }, 'Crea pacchetto classe'),
-    h('h3', { style: { marginTop: '1rem' } }, '2 · File voti (iPad → Mac)'),
-    h('p.tenue', 'Reimportare lo stesso file non crea doppioni. Le registrazioni già presenti con valori diversi ti vengono mostrate da accettare o rifiutare. Prima di importare viene fatto un backup.'),
-    h('button.primario', { onclick: () => importaVoti(ctx) }, 'Importa file voti…'));
+    h('h3', { style: { marginTop: '1rem' } }, '2 · Voti dall\'iPad al Mac'),
+    h('p', h('b', 'Automatico: '), `sull'iPad «Esporta voti» → Condividi → Salva su File → cartella «${CARTELLA_VOTI}» dentro la cartella archivio (iCloud Drive o Drive sincronizzato sul Mac). Il gestionale la controlla da solo ogni minuto e quando torni sulla finestra: importa i voti nuovi e ti chiede conferma solo se un voto già presente è cambiato.`),
+    h('p.tenue', 'In alternativa: AirDrop e importa a mano. Reimportare lo stesso file non crea doppioni. Prima di ogni import viene fatto un backup.'),
+    h('button', { onclick: () => importaVoti(ctx) }, 'Importa file voti a mano…'));
 }
 
 async function importaVoti(ctx) {
   const f = await scegliFile('.json,.rmvoti.json,application/json');
-  if (!f) return;
+  if (f) rivediFileVoti(ctx, f.nome, f.testo);
+}
+
+/** Anteprima di un file voti con le modifiche da accettare; `dopo` viene chiamata a import fatto. */
+export function rivediFileVoti(ctx, nome, testo, dopo) {
   let file;
   try {
-    file = leggiFileVoti(f.testo);
+    file = leggiFileVoti(testo);
   } catch (e) {
     return avviso(e.message, 'errore');
   }
@@ -124,7 +129,7 @@ async function importaVoti(ctx) {
   };
   const accettate = new Set(an.modifiche.map((m) => m.dopo.id));
   const desc = (r) => `${r.stato ? `${r.stato} ` : ''}[${r.livelli.map((l) => l ?? '–').join(' ')}]${r.recuperataIl ? ` rec. ${r.recuperataIl}` : ''}`;
-  modale(`Importa «${f.nome}»`, h('div',
+  modale(`Importa «${nome}»`, h('div',
     h('ul',
       h('li', `${an.nuove.length} registrazioni nuove`),
       h('li', `${an.uguali.length} già presenti e identiche (ignorate)`),
@@ -140,9 +145,10 @@ async function importaVoti(ctx) {
     azioni: [{
       testo: 'Importa', primario: true,
       azione: async () => {
-        await ctx.persistenza.aggiungiBackup(ctx.store.get(), `prima di importare ${f.nome}`);
+        await ctx.persistenza.aggiungiBackup(ctx.store.get(), `prima di importare ${nome}`);
         ctx.store.aggiorna((s) => applicaImport(s, an, [...accettate]));
         avviso(`Import completato: ${an.nuove.length} nuove, ${accettate.size} modifiche accettate`);
+        await dopo?.();
       }
     }]
   });

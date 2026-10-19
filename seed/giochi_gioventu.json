@@ -1,5 +1,5 @@
 {
- "_nota": "Schede tecniche ultima edizione (FGI Super Gym School, FIDAL Triathlon, FIPAV Spikeball). Partecipazione per classe, tutti gli alunni concorrono. Le schede possono cambiare: tutto modificabile da interfaccia.",
+ "_nota": "Schede tecniche 2025/26 (FGI Super Gym School delibera 18/SN 27/1/2026, FIDAL Triathlon, FIPAV Spikeball); progetto tecnico 2026/27 con le stesse discipline. Partecipazione per classe, tutti gli alunni concorrono. Le schede possono cambiare: tutto modificabile da interfaccia.",
  "prove": [
   {
    "id": "supergym",
@@ -42,7 +42,7 @@
   }
  ],
  "classifica_generale": "somma dei punteggi ottenuti nelle diverse attività da ogni classe",
- "correttivi_disabilita": "riduzione del tempo registrato (es. -30%/-50%) o punti compensativi (+0,5/+1) secondo criteri prestabiliti",
+ "correttivi_disabilita": "schede 2025/26 — FIDAL: riduzione del tempo registrato (es. −30%/−50%, criteri stabiliti dal docente) nelle prove a tempo, punti aggiuntivi alla classe nella classifica della prova (es. +0,5/+1), esclusione del risultato dalla media nei casi più complessi; FGI: circuiti adattati e graduatorie specifiche facoltative, nessuna riduzione; FIPAV: solo adattamenti (versione sitting, palle sonore)",
  "spareggio": "a parità di punti: fair play e partecipazione (giudizio del docente)",
  "statistiche_richieste": [
   "media ufficiale",

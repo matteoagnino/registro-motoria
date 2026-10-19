@@ -1,5 +1,5 @@
 // Giochi della Gioventù: inserimento risultati, statistiche, classifiche, storico pluriennale.
-import { h, select, modale, prova, avviso } from '../dom.js';
+import { h, select, modale, prova, avviso, campo as campoForm } from '../dom.js';
 import { conParametri } from '../app.js';
 import { alunniDi } from '../../dati/azioni.js';
 import * as G from '../../giochi/giochi.js';
@@ -21,7 +21,7 @@ export function vistaGiochi(ctx, { params }) {
     h('div.barra', [['inserimento', 'Inserimento per classe'], ['classifiche', 'Classifiche e proposta'], ['storico', 'Storico pluriennale']].map(([id, n]) =>
       h(`button${tab === id ? '.primario' : ''}`, { onclick: () => conParametri({ tab: id }) }, n))),
     tab === 'inserimento' ? inserimento(ctx, cl, anno, ril) : tab === 'classifiche' ? classifiche(ctx, anno, ril) : storico(ctx),
-    h('p.tenue', 'Il tempo non è un voto. Correttivo % solo per alunni con disabilità, secondo la scheda tecnica (riduce il tempo registrato).'));
+    h('p.tenue', 'Il tempo non è un voto. Adattamenti e correttivi solo per alunni con disabilità, come nelle schede tecniche 2025/26: riduzione del tempo (FIDAL), esclusione del risultato dalla media nei casi più complessi, circuito adattato (FGI). Non scrivere diagnosi.'));
 }
 
 function inserimento(ctx, cl, anno, ril) {
@@ -35,18 +35,19 @@ function inserimento(ctx, cl, anno, ril) {
   return h('div',
     h('div.barra', selettoreClasse(stato, cl.codice)),
     alunni.length === 0 ? h('div.vuoto', 'Nessun alunno in questa classe.') : h('div.tabella-scorri', h('table',
-      h('thead', h('tr', ['N°', 'Alunno', 'Correttivo %', 'Super Gym tempo (s)', 'Penalità (s)', 'Tempo gara', 'Ostacoli tempo (s)', 'Tempo gara'].map((t) => h('th', t)))),
+      h('thead', h('tr', ['N°', 'Alunno', 'Super Gym tempo (s)', 'Penalità (s)', 'Tempo gara', 'Ostacoli tempo (s)', 'Tempo gara', 'Adattamenti'].map((t) => h('th', t)))),
       h('tbody', alunni.map((a) => {
-        const i = ris.individuali.find((x) => x.alunnoId === a.id) ?? { correttivo: 0, supergym: {}, ostacoli: {} };
+        const i = ris.individuali.find((x) => x.alunnoId === a.id) ?? { supergym: {}, ostacoli: {} };
+        const set = (prova, campo) => (e) => agg((r) => G.impostaIndividuale(r, a.id, { [prova]: { [campo]: NUM(e.target.value) } }));
         return h('tr',
           h('td.num', a.numero), h('td', a.cognomeNome),
-          h('td', inp(i.correttivo ? Math.round(i.correttivo * 100) : '', (e) => agg((r) => G.impostaIndividuale(r, a.id, { correttivo: (NUM(e.target.value) ?? 0) / 100 })), `Correttivo ${a.numero}`, '5')),
-          h('td', inp(i.supergym?.tempo, (e) => agg((r) => G.impostaIndividuale(r, a.id, { supergym: { tempo: NUM(e.target.value) } })), `Super Gym ${a.numero}`)),
-          h('td', inp(i.supergym?.penalita, (e) => agg((r) => G.impostaIndividuale(r, a.id, { supergym: { penalita: NUM(e.target.value) } })), `Penalità ${a.numero}`, '1'),
+          h('td', inp(i.supergym?.tempo, set('supergym', 'tempo'), `Super Gym ${a.numero}`)),
+          h('td', inp(i.supergym?.penalita, set('supergym', 'penalita'), `Penalità ${a.numero}`, '1'),
             h('button', { title: 'Calcola dalle penalità', onclick: () => calcolatorePenalita(ctx, (sec) => agg((r) => G.impostaIndividuale(r, a.id, { supergym: { penalita: sec } }))) }, '+')),
-          h('td.calc', fmt(G.tempoGara(i.supergym?.tempo, i.supergym?.penalita, i.correttivo))),
-          h('td', inp(i.ostacoli?.tempo, (e) => agg((r) => G.impostaIndividuale(r, a.id, { ostacoli: { tempo: NUM(e.target.value) } })), `Ostacoli ${a.numero}`)),
-          h('td.calc', fmt(G.tempoGara(i.ostacoli?.tempo, 0, i.correttivo))));
+          h('td.calc', tempoMostrato(i, 'supergym')),
+          h('td', inp(i.ostacoli?.tempo, set('ostacoli', 'tempo'), `Ostacoli ${a.numero}`)),
+          h('td.calc', tempoMostrato(i, 'ostacoli')),
+          h('td', h('button', { onclick: () => editorAdattamenti(ctx, chiave, a, i), 'aria-label': `Adattamenti ${a.numero}` }, riassuntoAdattamenti(i) || 'Nessuno')));
       })))),
     h('div.griglia-2',
       h('div.scheda', h('h2', 'Statistiche di classe'),
@@ -61,8 +62,54 @@ function inserimento(ctx, cl, anno, ril) {
             h('th', p.nome),
             [0, 1, 2, 3, 4].map((k) => h('td', inp(ris.squadra[p.id]?.[k], (e) => agg((r) => G.impostaGruppo(r, p.id, k, NUM(e.target.value))), `${p.nome} gruppo ${k + 1}`, '0.25'))),
             h('td.calc', fmt(stat[p.id])))))),
+        h('h3', 'Correttivo di classifica (alunni con disabilità)'),
+        h('p.tenue', 'Punti aggiunti alla classe nella classifica della singola prova (schede FIDAL: es. +0,5 o +1).'),
+        h('div.riga', stato.giochi.prove.map((p) => h('label.campo', h('span.etichetta', p.nome),
+          inp(ris.bonus?.[p.id], (e) => agg((r) => G.impostaBonus(r, p.id, NUM(e.target.value))), `Correttivo classifica ${p.nome}`, '0.5')))),
         h('label.campo', h('span.etichetta', 'Fair play e partecipazione della classe (per lo spareggio, 1–10)'),
           inp(ris.fairPlay, (e) => agg((r) => ({ ...r, fairPlay: NUM(e.target.value) })), 'Fair play', '0.5')))));
+}
+
+function tempoMostrato(i, prova) {
+  if (i[prova]?.escluso) return h('span.tenue', 'escluso');
+  return fmt(G.tempoAlunno(i, prova));
+}
+
+function riassuntoAdattamenti(i) {
+  const parti = [];
+  for (const [p, n] of [['supergym', 'SG'], ['ostacoli', 'Ost.']]) {
+    const r = i[p] ?? {};
+    if (r.escluso) parti.push(`${n} escluso`);
+    else if (r.riduzione) parti.push(`${n} −${Math.round(r.riduzione * 100)}%`);
+    if (p === 'supergym' && r.adattato) parti.push('circuito adattato');
+  }
+  return parti.join(' · ');
+}
+
+function editorAdattamenti(ctx, chiave, alunno, i) {
+  const form = h('form',
+    [['supergym', 'Super Gym School (FGI)'], ['ostacoli', 'Superiamo gli ostacoli (FIDAL)']].map(([p, nome]) => h('fieldset',
+      h('legend', nome),
+      h('div.riga',
+        campoForm('Riduzione del tempo %', h('input', { type: 'number', name: `${p}_rid`, min: 0, max: 90, step: 5, value: i[p]?.riduzione ? Math.round(i[p].riduzione * 100) : '' })),
+        h('label', h('input', { type: 'checkbox', name: `${p}_escl`, checked: Boolean(i[p]?.escluso) }), ' Escludi il risultato dalla media'),
+        p === 'supergym' ? h('label', h('input', { type: 'checkbox', name: 'supergym_adatt', checked: Boolean(i.supergym?.adattato) }), ' Circuito adattato') : null))),
+    campoForm('Nota (motivo del correttivo, senza diagnosi)', h('input', { name: 'nota', value: i.nota || '', size: 50 })));
+  modale(`Adattamenti · n. ${alunno.numero}`, form, {
+    azioni: [{
+      testo: 'Salva', primario: true,
+      azione: () => {
+        const f = form.elements;
+        const rid = (p) => (NUM(f[`${p}_rid`].value) ?? 0) / 100;
+        if ([rid('supergym'), rid('ostacoli')].some((x) => x < 0 || x > 0.9)) { avviso('Riduzione tra 0 e 90%', 'errore'); return false; }
+        return Boolean(prova(() => ctx.store.aggiorna((s) => G.aggiornaRisultato(s, chiave, (r) => G.impostaIndividuale(r, alunno.id, {
+          supergym: { riduzione: rid('supergym'), escluso: f.supergym_escl.checked, adattato: f.supergym_adatt.checked },
+          ostacoli: { riduzione: rid('ostacoli'), escluso: f.ostacoli_escl.checked },
+          nota: f.nota.value.trim()
+        }))), 'Adattamenti salvati'));
+      }
+    }]
+  });
 }
 
 function confronto(stato, anno, classe, ril) {
@@ -93,7 +140,11 @@ function classifiche(ctx, anno, ril) {
   const cl = G.classificheAnno(stato, anno, ril);
   const prove = stato.giochi.prove;
   return h('div',
-    h('div.barra', h('button', {
+    h('div.barra',
+      h('label', 'Punti per posizione in ogni prova: ', select(Object.entries(G.SCALE_PUNTI), stato.giochi.regole?.scalaPunti ?? 'max8', {
+        'aria-label': 'Scala dei punti', onchange: (e) => prova(() => ctx.store.aggiorna((s) => G.aggiornaRegoleGiochi(s, { scalaPunti: e.target.value })), 'Scala dei punti aggiornata')
+      })),
+      h('button', {
       onclick: () => {
         ctx.store.aggiorna((s) => G.archiviaStorico(s, anno, ril));
         avviso('Statistiche archiviate nello storico pluriennale');
@@ -104,12 +155,12 @@ function classifiche(ctx, anno, ril) {
       cl[liv].generale.length === 0 ? h('p.tenue', 'Nessun risultato inserito.') : h('div.griglia-2',
         h('div', h('h3', 'Classifica generale'), h('table',
           h('thead', h('tr', ['Pos.', 'Classe', 'Punti', 'Fair play'].map((t) => h('th', t)))),
-          h('tbody', cl[liv].generale.map((g) => h('tr', h('td.num', g.posizione), h('td', g.classe), h('td.num', g.punti),
+          h('tbody', cl[liv].generale.map((g) => h('tr', h('td.num', g.posizione), h('td', g.classe), h('td.num', fmt(g.punti)),
             h('td.num', fmt(g.fairPlay), g.spareggioFairPlay ? h('small', ' (spareggio)') : null)))))),
-        h('div', h('h3', 'Per prova (punti 8…1)'), prove.map((p) => h('div',
+        h('div', h('h3', 'Per prova'), prove.map((p) => h('div',
           h('strong', p.nome),
           h('table', h('tbody', (cl[liv].perProva[p.id] || []).map((r) => h('tr',
-            h('td.num', r.posizione), h('td', r.classe), h('td.num', fmt(r.valore)), h('td.num', `${r.punti} pt`))))))))))));
+            h('td.num', r.posizione), h('td', r.classe), h('td.num', fmt(r.valore)), h('td.num', `${fmt(r.punti)} pt`, r.bonus ? h('small', ` (+${fmt(r.bonus)})`) : null))))))))))));
 }
 
 function storico(ctx) {

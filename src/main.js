@@ -8,6 +8,7 @@ import { salvaInCartella } from './dati/archivio.js';
 import { nuovoId } from './dati/id.js';
 import { campoVuoto } from './dati/campo.js';
 import { avviaApp } from './ui/app.js';
+import { avviaRicezioneVoti } from './ui/arrivi.js';
 import { viste } from './ui/viste/index.js';
 import { vistaCampo } from './ui/campo/index.js';
 import { home } from './ui/viste/home.js';
@@ -136,6 +137,7 @@ async function avvia() {
   avviaApp(radice, ctx, { viste, vistaCampo, home });
   ctx.campoStore.ascolta(() => ctx.ridisegna());
   controllaAggiornamenti().catch((e) => console.warn('Controllo aggiornamenti non riuscito', e));
+  if (!erroreAvvio) avviaRicezioneVoti(ctx);
   if (erroreAvvio) {
     document.body.prepend(h('div.banner-errore', `Impossibile leggere il registro salvato: ${erroreAvvio.message}. Vai in Import/Export per ripristinare un backup.`));
   }

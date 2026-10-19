@@ -62,7 +62,8 @@ function riga(ctx, q, sos, a, r) {
   const classi = a.stato === 'Ritirato' ? '.ritirato' : a.stato === 'ES' ? '.es' : '';
   const testa = [
     h('td.num', a.numero),
-    h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null),
+    h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null,
+      a.stato === 'Attivo' ? sparkline(r) : null),
     sos.map((s, i) => {
       const v = a.stato === 'Attivo' ? r.perSotto[s.codice] : null;
       return h(`td.media${i === sos.length - 1 ? '.fine-gruppo' : ''}`, { 'data-l': livelloValore(v) }, fmt(v));
@@ -91,6 +92,27 @@ function riga(ctx, q, sos, a, r) {
       onchange: (e) => prova(() => ctx.store.aggiorna((s) => A.impostaRubrica(s, a.id, q, e.target.value === '' ? null : Number(e.target.value))))
     })),
     cellaAvvisi(r));
+}
+
+const SPARK_L = 64;
+const SPARK_A = 18;
+
+/** Andamento dei voti del quadrimestre in ordine di data (5–10), come piccola linea accanto al nome. */
+function sparkline(r) {
+  const voti = Object.values(r.obiettivi).flatMap((o) => o.voti)
+    .filter((v) => v.data).sort((x, y) => x.data.localeCompare(y.data) || x.sottoObiettivo.localeCompare(y.sottoObiettivo));
+  if (voti.length < 2) return null;
+  const px = (i) => ((i / (voti.length - 1)) * (SPARK_L - 4) + 2).toFixed(1);
+  const py = (v) => (SPARK_A - 2 - ((v - 5) / 5) * (SPARK_A - 4)).toFixed(1);
+  const punti = voti.map((v, i) => `${px(i)},${py(v.voto)}`).join(' ');
+  const ultimo = voti[voti.length - 1];
+  const span = h('span.sparkline', {
+    role: 'img', 'aria-label': `Andamento: ${voti.map((v) => v.voto).join(', ')}`,
+    title: voti.map((v) => `${v.data.slice(8, 10)}/${v.data.slice(5, 7)} ${v.sottoObiettivo}: ${v.voto}`).join('\n')
+  });
+  // SVG statico con soli numeri calcolati qui: nessun testo dell'utente.
+  span.innerHTML = `<svg width="${SPARK_L}" height="${SPARK_A}" viewBox="0 0 ${SPARK_L} ${SPARK_A}" aria-hidden="true"><polyline points="${punti}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="${px(voti.length - 1)}" cy="${py(ultimo.voto)}" r="2.2" fill="currentColor"/></svg>`;
+  return span;
 }
 
 function cellaFinale(ctx, q, a, k, o) {

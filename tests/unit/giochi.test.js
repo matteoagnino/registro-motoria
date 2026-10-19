@@ -20,8 +20,28 @@ describe('calcoli da scheda tecnica', () => {
     expect(G.statistiche([10, 12, 14, 30]).troncata).toBe(13);
     expect(G.statistiche([10, 12, 14, 30]).mediana).toBe(13);
   });
+  test('adattamenti per prova (schede 2025/26): riduzione, esclusione dalla media', () => {
+    let r = G.risultatoVuoto('2026/27', '4BM', 1);
+    r = G.impostaIndividuale(r, 'a', { supergym: { tempo: 50, penalita: 4 }, ostacoli: { tempo: 10 } });
+    r = G.impostaIndividuale(r, 'b', { supergym: { tempo: 80, penalita: 0, escluso: true }, ostacoli: { tempo: 20, riduzione: 0.5 } });
+    const st = G.statisticheClasse(r);
+    expect(st.supergym).toMatchObject({ n: 1, media: 54 }); // b escluso: non entra né nella somma né nel divisore
+    expect(st.ostacoli.media).toBe(10); // (10 + 20×0,5) / 2
+    expect(G.tempoAlunno(r.individuali.find((i) => i.alunnoId === 'b'), 'supergym')).toBeNull();
+  });
+  test('correttivo di classifica: punti aggiunti alla classe nella singola prova', () => {
+    const voci = [
+      { classe: 'X', stat: { lancia: 30 }, bonus: {} },
+      { classe: 'Y', stat: { lancia: 20 }, bonus: { lancia: 1 } }
+    ];
+    const r = G.classifica(voci, [{ id: 'lancia', tipo: 'squadra_punti' }]);
+    expect(r.perProva.lancia.map((x) => [x.classe, x.posizione, x.punti])).toEqual([['X', 1, 8], ['Y', 2, 8]]);
+    expect(() => G.impostaBonus(G.risultatoVuoto('a', 'b', 1), 'lancia', 5)).toThrow(/tra 0 e 3/);
+  });
   test('punti 8, 7, … e 1 dall\'8ª in giù', () => {
-    expect([1, 2, 3, 7, 8, 9, 12].map(G.puntiPosizione)).toEqual([8, 7, 6, 2, 1, 1, 1]);
+    expect([1, 2, 3, 7, 8, 9, 12].map((p) => G.puntiPosizione(p))).toEqual([8, 7, 6, 2, 1, 1, 1]);
+    // scala N…1 con 11 classi in gara
+    expect([1, 2, 11].map((p) => G.puntiPosizione(p, 11, 'partecipanti'))).toEqual([11, 10, 1]);
   });
 });
 

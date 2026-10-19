@@ -44,16 +44,20 @@ export function campo(etichetta, controllo, aiuto) {
 }
 
 let toastTimer;
-export function avviso(testo, tipo = 'ok') {
+const DURATA_ANNULLA_MS = 5000;
+/** Avviso breve; con `azione` ({testo, fn}) mostra un bottone (es. «Annulla») e resta visibile più a lungo. */
+export function avviso(testo, tipo = 'ok', azione = null) {
   let t = document.getElementById('toast');
   if (!t) {
     t = h('div#toast', { role: 'status', 'aria-live': 'polite' });
     document.body.append(t);
   }
   t.className = `toast ${tipo} visibile`;
-  t.textContent = testo;
+  t.replaceChildren(...[h('span', testo), azione ? h('button.toast-azione', {
+    onclick: () => { t.classList.remove('visibile'); azione.fn(); }
+  }, azione.testo) : null].filter(Boolean));
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('visibile'), tipo === 'errore' ? 6000 : 2600);
+  toastTimer = setTimeout(() => t.classList.remove('visibile'), tipo === 'errore' ? 6000 : azione ? DURATA_ANNULLA_MS : 2600);
 }
 
 /** Finestra modale accessibile. Restituisce una funzione di chiusura. */
