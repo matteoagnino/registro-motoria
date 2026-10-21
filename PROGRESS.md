@@ -81,6 +81,8 @@ STATO: VERSIONE GREZZA COMPLETATA
 - 2026-10-21: progetto spostato in ~/Developer/registro-motoria (fuori da iCloud: la Scrivania ottimizzata
   toglieva dal Mac .git e node_modules e bloccava test e git). La vecchia cartella sulla Scrivania non si usa più.
 - Test finali: 165 unitari, 9 E2E verdi.
+- 2026-10-21: prova reale riuscita (Mac Chrome ↔ iPad Safari) con entrambi collegati all'hotspot del telefono.
+  Da provare ancora: Wi-Fi di casa e Wi-Fi della scuola.
 - Nota: con il Mac molto carico la build supera i 180 s del webServer di Playwright: fare `npm run build`,
   avviare l'anteprima e poi `npx playwright test`.
 
