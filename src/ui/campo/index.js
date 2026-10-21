@@ -218,7 +218,7 @@ function elencoClasse(ctx, stati) {
         if (ctx.elencoAperto) { ctx.elencoAperto = false; elenco.parentElement?.classList.remove('elenco-aperto'); }
       }
     }, h('span.numero', a.numero), h('span.nome', a.cognomeNome), h('span.pallino'))))));
-  evidenzia(elenco, ctx.alunnoAttivo.numero);
+  evidenzia(elenco, ctx.alunnoAttivo.numero, { porta: false }); // elenco fermo: niente scorrimento automatico
   return elenco;
 }
 

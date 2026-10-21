@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.1 — elenco della classe fermo (2026-10-21)
+- iPad: l'elenco della classe a lato non scorre più da solo quando cambia l'alunno attivo (i nomi restano
+  fermi e leggibili); l'alunno attivo è solo evidenziato. L'elenco si scorre solo con il dito.
+
 ## 0.8.0 — sincronizzazione diretta Mac ↔ iPad (2026-10-20)
 - Mac: Import/Export → «Sincronizza con l'iPad». iPad: «Sincronizza» nella schermata delle classi.
 - Si inquadrano due QR (l'iPad legge quello del Mac, il Mac legge quello dell'iPad con la sua fotocamera):

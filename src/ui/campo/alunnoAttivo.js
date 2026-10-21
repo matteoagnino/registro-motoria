@@ -28,8 +28,11 @@ export function prossimoDaRegistrare(stati, numero) {
   return ordine.find(([, st]) => !schedaFatta(st))?.[0].numero ?? null;
 }
 
-/** Evidenzia l'alunno `numero` in una barra (cerchi in fondo) o nell'elenco laterale e lo porta in vista. */
-export function evidenzia(contenitore, numero) {
+/**
+ * Evidenzia l'alunno `numero` in una barra (cerchi in fondo) o nell'elenco laterale.
+ * Con `porta` scorre il contenitore per mostrarlo; l'elenco laterale resta fermo (lo scorre solo chi lo usa).
+ */
+export function evidenzia(contenitore, numero, { porta = true } = {}) {
   for (const el of contenitore.querySelectorAll('[data-numero]')) {
     const on = Number(el.dataset.numero) === numero;
     el.classList.toggle('corrente', on);
@@ -37,15 +40,16 @@ export function evidenzia(contenitore, numero) {
     else el.removeAttribute('aria-current');
   }
   const el = contenitore.querySelector('.corrente');
-  if (el) requestAnimationFrame(() => portaInVista(contenitore, el));
+  if (el && porta) requestAnimationFrame(() => portaInVista(contenitore, el));
 }
 
-/** Evidenzia l'alunno ovunque compaia (barra in fondo ed elenco laterale). */
+/** Evidenzia l'alunno ovunque compaia: la barra in fondo lo porta in vista, l'elenco laterale no. */
 export function evidenziaOvunque(numero) {
-  for (const c of document.querySelectorAll('.nav-alunni.segui, .elenco-classe')) evidenzia(c, numero);
+  for (const c of document.querySelectorAll('.nav-alunni.segui')) evidenzia(c, numero);
+  for (const c of document.querySelectorAll('.elenco-classe')) evidenzia(c, numero, { porta: false });
 }
 
-/** Scorre solo il contenitore (mai la pagina) per mostrare l'elemento, in orizzontale o in verticale. */
+/** Scorre solo il contenitore (mai la pagina) per mostrare l'elemento. */
 function portaInVista(c, el) {
   const orizzontale = c.scrollWidth > c.clientWidth;
   const [inizio, lato, vista, pos] = orizzontale

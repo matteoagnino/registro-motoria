@@ -86,5 +86,9 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Nota: con il Mac molto carico la build supera i 180 s del webServer di Playwright: fare `npm run build`,
   avviare l'anteprima e poi `npx playwright test`.
 
+## 0.8.1 (2026-10-21)
+- Elenco laterale fermo: `evidenzia(..., { porta: false })` per `.elenco-classe` (solo la barra in fondo scorre
+  per mostrare l'alunno attivo). Test: 166 unitari (dom.test.js), 9 E2E.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.
