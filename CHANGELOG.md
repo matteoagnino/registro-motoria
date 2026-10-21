@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 0.8.0 — sincronizzazione diretta Mac ↔ iPad (2026-10-20)
+- Mac: Import/Export → «Sincronizza con l'iPad». iPad: «Sincronizza» nella schermata delle classi.
+- Si inquadrano due QR (l'iPad legge quello del Mac, il Mac legge quello dell'iPad con la sua fotocamera):
+  in un colpo solo i voti e i tempi dell'iPad arrivano sul Mac e le classi aggiornate tornano all'iPad.
+- Collegamento diretto sulla stessa Wi-Fi, cifrato, senza Internet né server. Stesse regole dei file voti:
+  backup prima di importare, i voti già presenti e cambiati restano da confermare («Rivedi le modifiche»).
+- Se la rete non lo permette (spesso a scuola): hotspot del telefono, oppure i file voti come prima.
+- Campo «Inserisci il codice a mano» se una fotocamera non è disponibile.
+- iPad, registrazione voti: elenco della classe a lato (numero, nome, pallino di stato) per trovare subito
+  un alunno preciso durante il gioco, quando le squadre non sono in ordine. Toccando un nome si va alla sua
+  scheda e si passa in «scelta libera»: finito quell'alunno si resta lì invece di passare al successivo
+  (toccando un cerchio della barra in fondo torna il passaggio automatico). Con l'iPad in verticale
+  l'elenco si apre dal tasto «Elenco».
+- Correzione: gli alunni ancora da registrare prendevano per errore lo stile dei riquadri vuoti (cerchi in
+  fondo troppo grandi, nomi degli indicatori centrati nella scheda).
+
 ## 0.7.3 — correzione avviso cartella archivio (2026-10-19)
 - Mac: l'avviso «Voti dall'iPad in pausa» si ripeteva a ogni controllo (ogni minuto e a ogni cambio di schermata)
   fino a riempire la pagina, e compariva senza il suo stile. Ora resta uno solo, in basso.

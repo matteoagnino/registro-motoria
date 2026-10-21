@@ -403,6 +403,50 @@ body[data-modo="campo"] .descrittore { margin: 0 14px 10px; display: block; back
 .nav-alunni a.assente { background: color-mix(in srgb, var(--l5) var(--tinta), transparent); color: var(--t5); }
 .nav-alunni a.es { opacity: .45; }
 /* Registrazione: alunno a cui si sta mettendo il voto (più grande, anello, nome sotto) */
+/* Registrazione: elenco della classe a lato, per cercare un alunno preciso */
+.registra-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: start; }
+.elenco-classe {
+  position: sticky; top: 104px; max-height: calc(100dvh - 104px - 110px); overflow-y: auto; overscroll-behavior: contain;
+  padding: 18px 0 18px 16px; -webkit-overflow-scrolling: touch;
+}
+.elenco-classe .modo { margin: 0 6px 8px; font-size: 13px; color: var(--sec); }
+.elenco-classe ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.elenco-classe button {
+  width: 100%; min-height: 46px; display: flex; align-items: center; gap: 10px; padding: 6px 10px; border: 0; border-radius: 12px;
+  background: transparent; color: var(--label); font: 500 15px var(--font); text-align: left; cursor: pointer; touch-action: manipulation;
+}
+.elenco-classe button .numero { min-width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--fill2); font-weight: 600; font-size: 13px; color: var(--sec); }
+.elenco-classe button .nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.elenco-classe button .pallino { width: 11px; height: 11px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1.5px var(--sep); }
+.elenco-classe button.completo .pallino { background: var(--l9); box-shadow: none; }
+.elenco-classe button.incompleto .pallino { background: var(--l7); box-shadow: none; }
+.elenco-classe button.assente .pallino { background: var(--l5); box-shadow: none; }
+.elenco-classe button.es { opacity: .5; }
+.elenco-classe button.corrente { background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: inset 3px 0 0 var(--accent); font-weight: 700; }
+.elenco-classe button.corrente .numero { background: var(--accent); color: var(--onaccent); }
+.apri-elenco { display: none !important; }
+@media (max-width: 899px) {
+  .registra-layout { grid-template-columns: minmax(0, 1fr); }
+  .apri-elenco { display: inline-flex !important; }
+  .elenco-classe {
+    position: fixed; z-index: 30; top: 0; bottom: 0; left: 0; width: min(320px, 86vw); max-height: none;
+    padding: 18px 12px calc(18px + env(safe-area-inset-bottom)); background: var(--content); box-shadow: var(--shadow-alta);
+    transform: translateX(-105%); transition: transform .22s ease-out; visibility: hidden;
+  }
+  .elenco-aperto .elenco-classe { transform: none; visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) { .elenco-classe { transition: none; } }
+
+/* Sincronizzazione Mac ↔ iPad */
+.sincro-passi { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.sincro-passi h3 { margin: 0 0 4px; }
+@media (max-width: 760px) { .sincro-passi { grid-template-columns: 1fr; } }
+figure.qr { margin: 12px auto; width: min(340px, 80vw); background: #fff; padding: 8px; border-radius: 12px; }
+figure.qr svg { display: block; width: 100%; height: auto; }
+.lettore-qr video { display: block; width: 100%; max-width: 480px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; background: #000; margin: 8px 0; }
+.lettore-qr.letto video { opacity: .35; }
+.lettore-qr textarea { width: 100%; font: 13px var(--mono); margin: 8px 0; }
+.codice-a-mano summary { cursor: pointer; color: var(--accent); }
 .nav-alunni.segui { align-items: center; padding-bottom: 30px; }
 .nav-alunni.segui a { position: relative; transition: min-width .15s, height .15s, box-shadow .15s; }
 .nav-alunni.segui a.corrente { min-width: 58px; height: 58px; font-size: 20px; color: var(--label); box-shadow: 0 0 0 3px var(--accent); }

@@ -11,17 +11,27 @@ import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archiv
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
 import { vistaCronometro } from './cronometro.js';
-import { evidenzia, vaiAllaScheda, seguiScorrimento, avanzaDopo, appenaCompletata, schedaFatta, pausaTraccia } from './alunnoAttivo.js';
+import { vistaSincro, chiudiSincro } from './sincro.js';
+import { evidenzia, evidenziaOvunque, vaiAllaScheda, seguiScorrimento, avanzaDopo, appenaCompletata, schedaFatta, pausaTraccia } from './alunnoAttivo.js';
 
 const LIVELLI = [10, 9, 8, 7, 6, 5];
 const GIUDIZI = ['Ottimo', 'Distinto', 'Buono', 'Discreto', 'Sufficiente', 'Non sufficiente'];
 const PRESSIONE_LUNGA_MS = 450;
+const ETICHETTE_STATO = { completo: 'registrato', incompleto: 'da completare', assente: 'assente', es: 'esonerato', vuoto: 'da registrare' };
+/** Classe CSS dello stato: «vuoto» si chiama «da-fare» per non ereditare lo stile generale `.vuoto` (riquadro vuoto). */
+const classeStato = (st) => (st === 'vuoto' ? 'da-fare' : st);
+const MODO = {
+  libero: 'Scelta libera: finito un alunno resti lì.',
+  ordine: 'Finito un alunno passi al successivo.'
+};
 
 export function vistaCampo(ctx, rotta) {
   const c = ctx.campoStore.get();
   const [classe, giornataId] = rotta.resto;
   let corpo;
-  if (!c.pacchetto || rotta.vista === 'home' || !rotta.vista) corpo = home(ctx);
+  if (rotta.vista !== 'sincro' && ctx.sincroCampo) chiudiSincro(ctx);
+  if (rotta.vista === 'sincro') corpo = vistaSincro(ctx, testa, indietro);
+  else if (!c.pacchetto || rotta.vista === 'home' || !rotta.vista) corpo = home(ctx);
   else if (rotta.vista === 'classe') corpo = sceltaGiornata(ctx, classe);
   else if (rotta.vista === 'registra') corpo = registra(ctx, classe, giornataId);
   else if (rotta.vista === 'esporta') corpo = esporta(ctx);
@@ -60,9 +70,12 @@ function home(ctx) {
     return h('div',
       testa('Registro Motoria · Campo', 'Registrazione voti in palestra · funziona offline', h('a.bottone.grande', { href: '#/gestionale/oggi' }, 'Gestionale')),
       h('div.campo-corpo', h('div.scheda',
-        h('h2', 'Nessun pacchetto classe'),
-        h('p', 'Sul Mac: Import/Export → «Crea pacchetto classe», poi invialo a questo iPad con AirDrop (salvalo in File).'),
-        h('button.primario.grande', { onclick: () => importa(ctx) }, 'Importa pacchetto classe'))));
+        h('h2', 'Nessuna classe su questo iPad'),
+        h('p', 'Con Mac e iPad sulla stessa Wi-Fi: sul Mac Import/Export → «Sincronizza con l\'iPad», poi qui «Sincronizza con il Mac».'),
+        h('div.barra',
+          h('a.bottone.primario.grande', { href: '#/campo/sincro' }, 'Sincronizza con il Mac'),
+          h('button.grande', { onclick: () => importa(ctx) }, 'Importa pacchetto classe')),
+        h('p.tenue', 'In alternativa: sul Mac «Crea pacchetto classe», invialo con AirDrop e importalo qui.'))));
   }
   const oggi = oggiISO();
   const gs = giornoSettimana(oggi);
@@ -70,6 +83,7 @@ function home(ctx) {
   return h('div',
     testa('Scegli la classe', `Pacchetto del ${new Date(c.pacchetto.creatoIl).toLocaleString('it-IT')} · ${c.pacchetto.anno}`,
       h('button.grande', { onclick: () => importa(ctx) }, 'Nuovo pacchetto'),
+      h('a.bottone.grande', { href: '#/campo/sincro' }, 'Sincronizza'),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, icona('esporta'), `Esporta voti${nEsp ? ` (${nEsp})` : ''}`)),
     h('div.campo-corpo',
       bannerPromemoria(c),
@@ -165,7 +179,10 @@ function registra(ctx, codice, giornataId) {
   const stati = leggiStati();
   const fatti = stati.filter(([, s]) => schedaFatta(s)).length;
   const chiave = `${cl.codice}/${g.id}`;
-  if (ctx.alunnoAttivo?.chiave !== chiave) ctx.alunnoAttivo = { chiave, numero: alunni[0]?.numero ?? null };
+  if (ctx.alunnoAttivo?.chiave !== chiave) {
+    ctx.alunnoAttivo = { chiave, numero: alunni[0]?.numero ?? null, libero: false };
+    ctx.elencoAperto = false;
+  }
   seguiScorrimento(ctx);
   const attivo = { chiave, leggiStati };
   return h('div',
@@ -173,18 +190,51 @@ function registra(ctx, codice, giornataId) {
       indietro(`#/campo/classe/${cl.codice}`, 'Giornate'),
       h('div.progresso', h('div.traccia', h('span', { style: { width: `${alunni.length ? Math.round((fatti / alunni.length) * 100) : 0}%` } })),
         h('span.contatore', { 'aria-live': 'polite' }, `Registrati ${fatti}/${alunni.length} · mancano ${alunni.length - fatti}`)),
+      h('button.grande.apri-elenco', {
+        'aria-expanded': String(Boolean(ctx.elencoAperto)),
+        onclick: () => { ctx.elencoAperto = !ctx.elencoAperto; ctx.ridisegna(); }
+      }, 'Elenco'),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, 'Esporta')),
-    h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st, attivo))),
+    h(`div.registra-layout${ctx.elencoAperto ? '.elenco-aperto' : ''}`,
+      elencoClasse(ctx, stati),
+      h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st, attivo)))),
     barraAlunni(ctx, stati));
 }
 
+/**
+ * Elenco della classe a lato: per trovare un alunno preciso durante il gioco (squadre non in ordine).
+ * Scegliere da qui attiva il «movimento libero»: finito un alunno non si passa da soli al successivo.
+ */
+function elencoClasse(ctx, stati) {
+  const elenco = h('aside.elenco-classe', { 'aria-label': 'Elenco della classe', 'data-scroll': 'elenco-classe' },
+    h('p.modo', { 'aria-live': 'polite' }, ctx.alunnoAttivo.libero ? MODO.libero : MODO.ordine),
+    h('ol', stati.map(([a, st]) => h('li', h(`button.${classeStato(st)}`, {
+      dataset: { numero: a.numero }, 'aria-label': `${a.numero} ${a.cognomeNome}, ${ETICHETTE_STATO[st]}`,
+      onclick: () => {
+        ctx.alunnoAttivo = { ...ctx.alunnoAttivo, numero: a.numero, libero: true };
+        scriviModo(true);
+        evidenziaOvunque(a.numero);
+        vaiAllaScheda(a.numero);
+        if (ctx.elencoAperto) { ctx.elencoAperto = false; elenco.parentElement?.classList.remove('elenco-aperto'); }
+      }
+    }, h('span.numero', a.numero), h('span.nome', a.cognomeNome), h('span.pallino'))))));
+  evidenzia(elenco, ctx.alunnoAttivo.numero);
+  return elenco;
+}
+
+function scriviModo(libero) {
+  const p = document.querySelector('.elenco-classe .modo');
+  if (p) p.textContent = libero ? MODO.libero : MODO.ordine;
+}
+
 function barraAlunni(ctx, stati) {
-  const nav = h('nav.nav-alunni.segui', { 'aria-label': 'Vai all\'alunno', 'data-scroll': 'nav-alunni' }, stati.map(([a, st]) => h(`a.${st}`, {
+  const nav = h('nav.nav-alunni.segui', { 'aria-label': 'Vai all\'alunno', 'data-scroll': 'nav-alunni' }, stati.map(([a, st]) => h(`a.${classeStato(st)}`, {
     href: `#alunno-${a.numero}`, title: a.cognomeNome, dataset: { numero: a.numero, nome: a.cognomeNome },
     onclick: (e) => {
       e.preventDefault();
-      ctx.alunnoAttivo = { ...ctx.alunnoAttivo, numero: a.numero };
-      evidenzia(nav, a.numero);
+      ctx.alunnoAttivo = { ...ctx.alunnoAttivo, numero: a.numero, libero: false };
+      scriviModo(false);
+      evidenziaOvunque(a.numero);
       vaiAllaScheda(a.numero);
     }
   }, a.numero)));
@@ -202,7 +252,9 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
   }
   const conAnnulla = (fn, msg) => {
     const prima = ctx.campoStore.get();
-    ctx.alunnoAttivo = { chiave: attivo.chiave, numero: a.numero };
+    // tocco su una scheda: diventa l'alunno attivo; resta «libero» se ci si era arrivati dall'elenco
+    const libero = Boolean(ctx.alunnoAttivo?.libero);
+    ctx.alunnoAttivo = { chiave: attivo.chiave, numero: a.numero, libero };
     pausaTraccia();
     ctx.campoStore.aggiorna(fn);
     if (appenaCompletata(st, statoScheda(ctx.campoStore.get(), a, g))) avanzaDopo(ctx, attivo.chiave, a.numero, attivo.leggiStati);
@@ -213,7 +265,7 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
   const recuperata = regs.find((r) => r?.recuperataIl)?.recuperataIl ?? null;
   const setRecupero = (data) => conAnnulla((s) => campoRecupero(s, { ...base, sottoObiettivi: g.sottoObiettivi, data }),
     `n. ${a.numero}: ${data ? 'recupero oggi' : 'recupero annullato'}`);
-  return h(`section.scheda-alunno.${st}`, { id: `alunno-${a.numero}` },
+  return h(`section.scheda-alunno.${classeStato(st)}`, { id: `alunno-${a.numero}` },
     h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
       h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
         onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? v

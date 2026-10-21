@@ -20,6 +20,10 @@ const NAME_FIELD = /["']?cognomeNome["']?\s*:\s*["']([^"']*)["']/g;
 const ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'www.w3.org'];
 const URL_RE = /https?:\/\/([a-z0-9.-]+)/gi;
 const NETWORK_API = /\b(fetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket|EventSource\s*\()/;
+// Unica eccezione: collegamento diretto Mac ↔ iPad sulla rete locale, senza server STUN/TURN.
+const RETE_LOCALE_FILE = 'src/sincro/connessione.js';
+const WEBRTC = /\bRTCPeerConnection\b/;
+const SERVER_ICE = /\b(stuns?|turns?):/i;
 
 const TEXT_EXT = /\.(js|mjs|cjs|json|html|css|md|txt|csv|svg|yml|yaml)$/i;
 
@@ -45,6 +49,9 @@ export function checkContent(path, text) {
       if (!ALLOWED_HOSTS.includes(host)) v.push(`${path}: URL esterno nel codice runtime (${host})`);
     }
     if (NETWORK_API.test(text)) v.push(`${path}: API di rete nel codice runtime`);
+    if (SERVER_ICE.test(text)) v.push(`${path}: server STUN/TURN esterno nel codice runtime`);
+    if (WEBRTC.test(text) && path !== RETE_LOCALE_FILE) v.push(`${path}: WebRTC fuori da ${RETE_LOCALE_FILE}`);
+    if (path === RETE_LOCALE_FILE && !/iceServers:\s*\[\]/.test(text)) v.push(`${path}: WebRTC senza «iceServers: []»`);
   }
   return v;
 }

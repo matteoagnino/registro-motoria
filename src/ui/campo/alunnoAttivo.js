@@ -1,5 +1,6 @@
 // Alunno attivo nella registrazione in palestra: cerchio evidenziato nella barra in fondo,
-// segue lo scorrimento della pagina e l'ultimo tocco, passa da solo al prossimo alunno.
+// e nell'elenco laterale; segue lo scorrimento e l'ultimo tocco, passa da solo al prossimo alunno
+// (tranne quando l'alunno si sceglie dall'elenco: in quel caso ci si muove liberamente).
 
 const FATTI = ['completo', 'assente', 'es'];
 const ATTESA_AVANZA_MS = 600;
@@ -27,23 +28,32 @@ export function prossimoDaRegistrare(stati, numero) {
   return ordine.find(([, st]) => !schedaFatta(st))?.[0].numero ?? null;
 }
 
-/** Evidenzia il cerchio dell'alunno `numero` e lo porta in vista nella barra. */
-export function evidenzia(nav, numero) {
-  for (const el of nav.children) {
+/** Evidenzia l'alunno `numero` in una barra (cerchi in fondo) o nell'elenco laterale e lo porta in vista. */
+export function evidenzia(contenitore, numero) {
+  for (const el of contenitore.querySelectorAll('[data-numero]')) {
     const on = Number(el.dataset.numero) === numero;
     el.classList.toggle('corrente', on);
     if (on) el.setAttribute('aria-current', 'true');
     else el.removeAttribute('aria-current');
   }
-  const el = nav.querySelector('.corrente');
-  if (el) requestAnimationFrame(() => centraInBarra(nav, el));
+  const el = contenitore.querySelector('.corrente');
+  if (el) requestAnimationFrame(() => portaInVista(contenitore, el));
 }
 
-function centraInBarra(nav, el) {
-  const sinistra = el.offsetLeft;
-  const destra = sinistra + el.offsetWidth;
-  if (sinistra >= nav.scrollLeft + MARGINE_BARRA_PX && destra <= nav.scrollLeft + nav.clientWidth - MARGINE_BARRA_PX) return;
-  nav.scrollTo({ left: sinistra - (nav.clientWidth - el.offsetWidth) / 2, behavior: 'smooth' });
+/** Evidenzia l'alunno ovunque compaia (barra in fondo ed elenco laterale). */
+export function evidenziaOvunque(numero) {
+  for (const c of document.querySelectorAll('.nav-alunni.segui, .elenco-classe')) evidenzia(c, numero);
+}
+
+/** Scorre solo il contenitore (mai la pagina) per mostrare l'elemento, in orizzontale o in verticale. */
+function portaInVista(c, el) {
+  const orizzontale = c.scrollWidth > c.clientWidth;
+  const [inizio, lato, vista, pos] = orizzontale
+    ? [el.offsetLeft, el.offsetWidth, c.clientWidth, c.scrollLeft]
+    : [el.offsetTop, el.offsetHeight, c.clientHeight, c.scrollTop]; // contenitori posizionati (fixed/sticky)
+  if (inizio >= pos + MARGINE_BARRA_PX && inizio + lato <= pos + vista - MARGINE_BARRA_PX) return;
+  const meta = inizio - (vista - lato) / 2;
+  c.scrollTo(orizzontale ? { left: meta, behavior: 'smooth' } : { top: meta, behavior: 'smooth' });
 }
 
 /** Per un attimo lo scorrimento non cambia l'alunno attivo (dopo un tocco o durante uno scorrimento automatico). */
@@ -76,12 +86,11 @@ export function seguiScorrimento(ctx) {
     richiesto = true;
     requestAnimationFrame(() => {
       richiesto = false;
-      const nav = document.querySelector('.nav-alunni.segui');
-      if (!nav || Date.now() < pausaFino || !ctx.alunnoAttivo) return;
+      if (!document.querySelector('.nav-alunni.segui') || Date.now() < pausaFino || !ctx.alunnoAttivo) return;
       const numero = alunnoInVista();
       if (numero == null || numero === ctx.alunnoAttivo.numero) return;
       ctx.alunnoAttivo = { ...ctx.alunnoAttivo, numero };
-      evidenzia(nav, numero);
+      evidenziaOvunque(numero);
     });
   }, { passive: true });
 }
@@ -89,18 +98,19 @@ export function seguiScorrimento(ctx) {
 /**
  * Dopo una breve pausa (per vedere la conferma) passa al prossimo alunno da registrare,
  * se la scheda è ancora fatta (un «Annulla» nel frattempo blocca il passaggio).
+ * Non scatta se l'alunno è stato scelto dall'elenco laterale (osservazione libera durante il gioco).
  */
 export function avanzaDopo(ctx, chiave, numero, leggiStati) {
+  if (ctx.alunnoAttivo?.libero) return;
   setTimeout(() => {
-    if (ctx.alunnoAttivo?.chiave !== chiave) return;
+    if (ctx.alunnoAttivo?.chiave !== chiave || ctx.alunnoAttivo.libero) return;
     const stati = leggiStati();
     const mio = stati.find(([a]) => a.numero === numero);
     if (!mio || !schedaFatta(mio[1])) return;
     const prossimo = prossimoDaRegistrare(stati, numero);
-    const nav = document.querySelector('.nav-alunni.segui');
-    if (prossimo == null || !nav) return;
+    if (prossimo == null || !document.querySelector('.nav-alunni.segui')) return;
     ctx.alunnoAttivo = { chiave, numero: prossimo };
-    evidenzia(nav, prossimo);
+    evidenziaOvunque(prossimo);
     vaiAllaScheda(prossimo);
   }, ATTESA_AVANZA_MS);
 }

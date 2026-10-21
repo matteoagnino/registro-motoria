@@ -44,6 +44,9 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.locator('.contatore')).toHaveText('Registrati 0/3 · mancano 3');
   const corrente = page.locator('.nav-alunni [aria-current="true"]');
   await expect(corrente).toHaveText('1');
+  // i cerchi degli alunni ancora da registrare restano piccoli (44 px), senza lo stile dei riquadri vuoti
+  expect((await page.locator('.nav-alunni a').nth(1).boundingBox()).width).toBeLessThan(50);
+  await expect(page.locator('#alunno-2')).toHaveClass(/da-fare/);
 
   for (const [i, l] of [[1, 8], [2, 7], [3, 8], [4, 7]]) await tocca(page, 1, '1.1', i, l);
   for (const [i, l] of [[1, 7], [2, 7], [3, 8], [4, 7]]) await tocca(page, 1, '1.2', i, l);
@@ -72,6 +75,14 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.locator('.contatore')).toHaveText('Registrati 3/3 · mancano 0');
   await expect(page.locator('#alunno-3 .livelli')).toHaveCount(0);
   await expect(page.locator('#alunno-3').getByRole('button', { name: 'Recupera oggi' })).toBeVisible();
+  // elenco della classe a lato: si sceglie un alunno preciso e si resta lì (movimento libero)
+  const elenco = page.getByRole('complementary', { name: 'Elenco della classe' });
+  await expect(elenco.getByRole('button')).toHaveCount(3);
+  await expect(elenco.getByRole('button', { name: /^3 Alunno Prova 03, assente/ })).toBeVisible();
+  await elenco.getByRole('button', { name: /^1 Alunno Prova 01/ }).click();
+  await expect(corrente).toHaveText('1');
+  await expect(elenco.locator('[aria-current="true"]')).toContainText('Alunno Prova 01');
+  await expect(elenco).toContainText('Scelta libera');
   // bottoni grandi per la palestra
   const box = await b.boundingBox();
   expect(box.width).toBeGreaterThanOrEqual(44);

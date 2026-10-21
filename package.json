@@ -1,7 +1,7 @@
 {
   "name": "registro-motoria",
   "private": true,
-  "version": "0.7.3",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "exceljs": "^4.4.0",
-    "idb": "^8.0.4"
+    "idb": "^8.0.4",
+    "jsqr": "1.4.0",
+    "qrcode-generator": "2.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

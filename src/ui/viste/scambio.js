@@ -8,6 +8,7 @@ import { creaPacchetto, leggiFileVoti, analizzaImport, applicaImport } from '../
 import { excelClasse, excelRiepiloghi } from '../../export/excel.js';
 import { alunniDi } from '../../dati/azioni.js';
 import { intestazione } from './comuni.js';
+import { sincronizzaConIpad } from '../sincroMac.js';
 
 export function vistaScambio(ctx) {
   const stato = ctx.store.get();
@@ -90,7 +91,10 @@ async function ripristina(ctx, testo, origine) {
 function sezioneIpad(ctx, stato) {
   const scelte = new Set(stato.classi.map((c) => c.codice));
   return h('div.scheda', h('h2', 'iPad: pacchetto classe e file voti'),
-    h('h3', '1 · Pacchetto classe (Mac → iPad)'),
+    h('h3', 'Sincronizzazione diretta (consigliata)'),
+    h('p.tenue', 'Mac e iPad sulla stessa Wi-Fi: in un colpo solo i voti arrivano qui e le classi aggiornate vanno all\'iPad. Si inquadrano due codici QR, i dati passano direttamente tra i due dispositivi.'),
+    h('button.primario', { onclick: () => sincronizzaConIpad(ctx) }, 'Sincronizza con l\'iPad'),
+    h('h3', { style: { marginTop: '1rem' } }, '1 · Pacchetto classe (Mac → iPad)'),
     h('p.tenue', 'Contiene nomi, giornate, rubriche e voti già registrati delle classi scelte. Mandalo all\'iPad con AirDrop e importalo in modalità Campo.'),
     h('div', stato.classi.map((c) => h('label', { style: { marginRight: '.8rem', display: 'inline-block' } },
       h('input', { type: 'checkbox', checked: true, onchange: (e) => (e.target.checked ? scelte.add(c.codice) : scelte.delete(c.codice)) }), ` ${c.codice}`))),

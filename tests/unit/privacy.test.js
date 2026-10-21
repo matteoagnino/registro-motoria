@@ -26,6 +26,13 @@ describe('privacy-check', () => {
     expect(checkContent('src/a.js', 'const ns = "http://www.w3.org/2000/svg"')).toEqual([]);
     expect(checkContent('tests/a.js', 'fetch("https://example.com")')).toEqual([]);
   });
+  test('WebRTC solo per la rete locale: nessun server STUN/TURN, solo nel modulo di sincronizzazione', () => {
+    const ok = 'const C = { iceServers: [] }; new RTCPeerConnection(C);';
+    expect(checkContent('src/sincro/connessione.js', ok)).toEqual([]);
+    expect(checkContent('src/ui/altro.js', ok)).toHaveLength(1);
+    expect(checkContent('src/sincro/connessione.js', 'new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.example.org" }] })').length).toBeGreaterThan(0);
+    expect(checkContent('src/a.js', 'const s = "turn:relay.example.org"')).toHaveLength(1);
+  });
 });
 
 // Requisito CLAUDE.md §2.3: zero richieste di rete dal codice dell'app.

@@ -15,6 +15,14 @@ export default defineConfig({
   },
   projects: [
     { name: 'mac', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } }, testIgnore: /campo/ },
-    { name: 'ipad', use: { ...devices['iPad (gen 7) landscape'], browserName: 'chromium', defaultBrowserType: 'chromium' }, testMatch: /campo/ }
+    {
+      name: 'ipad',
+      use: {
+        ...devices['iPad (gen 7) landscape'], browserName: 'chromium', defaultBrowserType: 'chromium',
+        // Sincronizzazione: fotocamera di prova e indirizzi locali reali (niente mDNS sulla macchina di test).
+        launchOptions: { args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--disable-features=WebRtcHideLocalIpsWithMdns'] }
+      },
+      testMatch: /campo/
+    }
   ]
 });

@@ -26,7 +26,10 @@ davvero e non è ricavabile da `SPEC.md`, dai seed o dai modelli Excel: in quel 
    gratuiti e locali. GitHub Pages (gratuito) è ammesso **solo per il codice** dell'app.
 3. **Privacy by design.** I dati vivono solo nel browser del dispositivo (IndexedDB) e nei file JSON che
    Matteo salva nelle sue cartelle (Mac, Drive d'istituto, AirDrop). L'app non fa richieste di rete
-   (verificalo con un test: zero `fetch`/XHR verso domini esterni).
+   (verificalo con un test: zero `fetch`/XHR verso domini esterni). **Unica eccezione** (decisa da Matteo
+   il 2026-10-20): la sincronizzazione diretta Mac ↔ iPad sulla **rete locale** via WebRTC, solo in
+   `src/sincro/connessione.js`, con `iceServers: []` (nessun server STUN/TURN, nessun dominio esterno);
+   i codici di collegamento passano solo dai QR. `privacy-check` lo verifica.
 4. **Guardia anti-dati prima di ogni commit/push**: esegui `npm run privacy-check` (vedi PIANO M0). Se
    fallisce, non committare.
 5. **Correttezza dei calcoli prima di tutto.** Le regole di calcolo di `SPEC.md` §4 sono vincolanti e
@@ -38,7 +41,8 @@ davvero e non è ricavabile da `SPEC.md`, dai seed o dai modelli Excel: in quel 
 
 - **Vite + JavaScript (ES modules)**, nessun framework pesante. UI in vanilla JS con piccoli componenti;
   CSS proprio. Ammesse solo dipendenze gratuite, mature e senza rete: `idb` (IndexedDB), `xlsx`/`exceljs`
-  per l'export Excel (solo lato client), `vitest`, `@playwright/test` (dev).
+  per l'export Excel (solo lato client), `qrcode-generator` e `jsqr` (QR della sincronizzazione),
+  `vitest`, `@playwright/test`, `jsdom` (dev).
 - **PWA** (manifest + service worker generato da `vite-plugin-pwa` o scritto a mano): funziona offline
   su Mac (Chrome) e iPad (Safari, "Aggiungi a Home").
 - **Persistenza**: IndexedDB + archivio JSON. Su Mac/Chrome usa la File System Access API per

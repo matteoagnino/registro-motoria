@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { schedaFatta, appenaCompletata, prossimoDaRegistrare } from '../../src/ui/campo/alunnoAttivo.js';
+import { describe, test, expect, vi } from 'vitest';
+import { schedaFatta, appenaCompletata, prossimoDaRegistrare, avanzaDopo } from '../../src/ui/campo/alunnoAttivo.js';
 
 const stati = (...s) => s.map((st, i) => [{ numero: i + 1 }, st]);
 
@@ -28,5 +28,14 @@ describe('alunno attivo in palestra', () => {
 
   test('nessun prossimo quando la classe è tutta registrata', () => {
     expect(prossimoDaRegistrare(stati('completo', 'assente', 'es'), 2)).toBeNull();
+  });
+
+  test('scelto dall\'elenco laterale (movimento libero) non si passa da soli al successivo', () => {
+    vi.useFakeTimers();
+    const leggiStati = vi.fn(() => stati('completo', 'vuoto'));
+    avanzaDopo({ alunnoAttivo: { chiave: 'k', numero: 1, libero: true } }, 'k', 1, leggiStati);
+    vi.runAllTimers();
+    expect(leggiStati).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 });

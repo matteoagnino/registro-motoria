@@ -1,6 +1,6 @@
 # PROGRESS — Registro Motoria
 
-Ultimo aggiornamento: 2026-10-19
+Ultimo aggiornamento: 2026-10-21
 
 STATO: VERSIONE GREZZA COMPLETATA
 
@@ -61,6 +61,28 @@ STATO: VERSIONE GREZZA COMPLETATA
 ## 0.7.3 (2026-10-19)
 - Bug: `h('div.classe#id')` ignorava l'id scritto dopo le classi → l'avviso cartella archivio si accumulava.
   Corretto `h()` in `src/ui/dom.js`; test `tests/unit/dom.test.js` (jsdom). Test: 145 unitari, 8 E2E.
+
+## 0.8.0 — sincronizzazione diretta Mac ↔ iPad (2026-10-20)
+- Scelte di Matteo: QR diretto (WebRTC, nessun server), nei due sensi, solo rete locale (CLAUDE.md §2.3
+  aggiornato), sincronizzazione sia a casa sia a scuola (riserva: hotspot del telefono o file voti).
+- Codice: `src/sincro/` (segnale.js: SDP compressa nel QR; pezzi.js: messaggi a pezzi; protocollo.js: logica
+  pura ciao → pacchetto → fatto; connessione.js: unico punto WebRTC, `iceServers: []`), `src/ui/qr.js`
+  (qrcode-generator + jsqr), `src/ui/sincroMac.js` (finestra in Import/Export), `src/ui/campo/sincro.js`
+  (#/campo/sincro). privacy-check: WebRTC solo in connessione.js, vietati stun:/turn:.
+- Fotocamera accesa prima di creare il collegamento: con il permesso i browser usano gli indirizzi locali
+  reali (le reti senza mDNS, come molte scolastiche, altrimenti non collegano).
+- Test: tests/unit/sincro.test.js (segnale, pezzi, protocollo), privacy.test.js (WebRTC);
+  e2e tests/e2e/campo-sincro.spec.js (due browser collegati, codici inseriti a mano).
+- Test: 164 unitari, 9 E2E verdi. DA FARE: prova reale Mac Chrome ↔ iPad Safari a casa e a scuola
+  (gli e2e usano due Chromium sulla stessa macchina, non Safari né una vera Wi-Fi).
+- Elenco della classe a lato (registrazione iPad): `elencoClasse` in src/ui/campo/index.js, «scelta libera»
+  (`ctx.alunnoAttivo.libero`) blocca il passaggio automatico; cassetto a scomparsa sotto 900 px.
+- Bug corretto: lo stato «vuoto» come classe CSS ereditava `.vuoto` (riquadro vuoto) → ora `da-fare`.
+- 2026-10-21: progetto spostato in ~/Developer/registro-motoria (fuori da iCloud: la Scrivania ottimizzata
+  toglieva dal Mac .git e node_modules e bloccava test e git). La vecchia cartella sulla Scrivania non si usa più.
+- Test finali: 165 unitari, 9 E2E verdi.
+- Nota: con il Mac molto carico la build supera i 180 s del webServer di Playwright: fare `npm run build`,
+  avviare l'anteprima e poi `npx playwright test`.
 
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.
