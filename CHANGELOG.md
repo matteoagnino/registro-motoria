@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.8.2 — settimana a griglia oraria (2026-10-21)
+- Mac, Settimana: le lezioni sono disposte come in un orario scolastico, una riga per fascia oraria
+  (orario a sinistra) e una colonna per giorno: le lezioni con lo stesso orario stanno sulla stessa riga.
+  Giorni di chiusura tratteggiati, colonna di oggi evidenziata.
+
 ## 0.8.1 — elenco della classe fermo (2026-10-21)
 - iPad: l'elenco della classe a lato non scorre più da solo quando cambia l'alunno attivo (i nomi restano
   fermi e leggibili); l'alunno attivo è solo evidenziato. L'elenco si scorre solo con il dito.

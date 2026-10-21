@@ -31,18 +31,39 @@ export function vistaOggi(ctx, { params }) {
       h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) })),
     pannelloPochiVoti(stato, oggi),
     pannelloRecuperi(stato),
-    h('div.settimana', giorni.map((d) => {
-      const lezioni = stato.classi
-        .map((c) => ({ c, l: p[c.codice]?.lezioni.find((x) => x.data === d) }))
-        .filter((x) => x.l)
-        .sort((a, b) => a.l.inizio.localeCompare(b.l.inizio));
-      const chiusura = stato.anno.chiusure.find((c) => d >= c.dal && d <= c.al);
-      return h(`section.giorno${d === oggi ? '.oggi' : ''}`,
-        h('h3', GIORNI_LUNGHI[toDate(d).getUTCDay()].slice(0, 3), h('small', formatta(d).slice(0, 5))),
-        chiusura ? h('p.tenue', `Chiuso: ${chiusura.motivo}`) : null,
-        lezioni.length === 0 && !chiusura ? h('p.tenue', 'Nessuna lezione') : null,
-        lezioni.map(({ c, l }) => schedaLezione(stato, c, l)));
-    })));
+    griglia(stato, p, giorni, oggi));
+}
+
+/** Fasce orarie distinte della settimana (stesso inizio e fine = stessa fascia), in ordine di orario. */
+export function fasceOrarie(lezioni) {
+  const minuti = (hhmm) => { const [o, m] = hhmm.split(':').map(Number); return o * 60 + m; };
+  const chiavi = [...new Set(lezioni.map((l) => `${l.inizio}–${l.fine}`))];
+  return chiavi.map((k) => {
+    const [inizio, fine] = k.split('–');
+    return { chiave: k, inizio, fine };
+  }).sort((a, b) => minuti(a.inizio) - minuti(b.inizio) || minuti(a.fine) - minuti(b.fine));
+}
+
+/** Orario settimanale: una riga per fascia oraria, una colonna per giorno; stesso orario = stessa riga. */
+function griglia(stato, p, giorni, oggi) {
+  const perGiorno = giorni.map((d) => ({
+    d,
+    chiusura: stato.anno.chiusure.find((c) => d >= c.dal && d <= c.al),
+    lezioni: stato.classi.map((c) => ({ c, l: p[c.codice]?.lezioni.find((x) => x.data === d) })).filter((x) => x.l)
+  }));
+  const fasce = fasceOrarie(perGiorno.flatMap((g) => g.lezioni.map((x) => x.l)));
+  const classiGiorno = (g) => `${g.d === oggi ? '.oggi' : ''}${g.chiusura ? '.chiuso' : ''}`;
+  return h('div.settimana-scorri', h('section.settimana-orario', { 'aria-label': 'Orario della settimana' },
+    h('div.angolo', 'Orario'),
+    perGiorno.map((g) => h(`div.testa-giorno${classiGiorno(g)}`,
+      h('h3', GIORNI_LUNGHI[toDate(g.d).getUTCDay()].slice(0, 3), h('small', formatta(g.d).slice(0, 5))),
+      g.chiusura ? h('p.tenue', `Chiuso: ${g.chiusura.motivo}`) : null,
+      !g.lezioni.length && !g.chiusura ? h('p.tenue', 'Nessuna lezione') : null)),
+    fasce.map((f) => [
+      h('div.fascia', { 'aria-label': `Fascia ${f.inizio}–${f.fine}` }, h('strong', f.inizio), h('span', f.fine)),
+      perGiorno.map((g) => h(`div.cella-fascia${classiGiorno(g)}`, { 'data-fascia': f.chiave },
+        g.lezioni.filter(({ l }) => `${l.inizio}–${l.fine}` === f.chiave).map(({ c, l }) => schedaLezione(stato, c, l))))
+    ])));
 }
 
 function schedaLezione(stato, c, l) {

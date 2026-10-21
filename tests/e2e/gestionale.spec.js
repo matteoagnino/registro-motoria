@@ -153,3 +153,18 @@ test('M7: griglia di stampa e accessibilità di base', async ({ page }) => {
     .filter((el) => !(el.getAttribute('aria-label') || el.labels?.length || el.textContent.trim() || el.title)).length);
   expect(senzaEtichetta).toBe(0);
 });
+
+test('Settimana: le lezioni con lo stesso orario stanno sulla stessa riga', async ({ page }) => {
+  await apri(page, '#/gestionale/oggi?settimana=2026-10-19');
+  const griglia = page.getByRole('region', { name: 'Orario della settimana' });
+  await expect(griglia.locator('.testa-giorno')).toHaveCount(5);
+  const lezioni = griglia.locator('.lezione');
+  expect(await lezioni.count()).toBeGreaterThan(5);
+  // ogni lezione è nella cella della sua fascia oraria
+  const fuoriPosto = await griglia.locator('.cella-fascia').evaluateAll((celle) => celle.flatMap((c) =>
+    [...c.querySelectorAll('.lezione small')].map((t) => t.textContent).filter((t) => t !== c.dataset.fascia)));
+  expect(fuoriPosto).toEqual([]);
+  // stessa fascia = stessa altezza sullo schermo in tutti i giorni
+  const altezze = await griglia.locator('.cella-fascia[data-fascia="08:30–10:30"]').evaluateAll((celle) => [...new Set(celle.map((c) => Math.round(c.getBoundingClientRect().top)))]);
+  expect(altezze).toHaveLength(1);
+});

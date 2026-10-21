@@ -207,12 +207,27 @@ th.fascia small { display: inline; font: 400 12px var(--font); color: var(--sec)
 tr.t-saltata td { color: var(--rosso); }
 
 /* ---------- Settimana ---------- */
-.settimana { display: grid; grid-template-columns: repeat(5, minmax(170px, 1fr)); gap: 14px; }
-.giorno { background: var(--content); border-radius: var(--raggio); box-shadow: var(--shadow); padding: 12px; min-height: 150px; }
-.giorno h3 { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; margin-bottom: 10px; text-transform: capitalize; }
-.giorno h3 small { font-weight: 400; font-size: 12px; }
-.giorno.oggi { box-shadow: 0 0 0 2px var(--accent), var(--shadow); }
-.giorno.oggi h3 { color: var(--accent); }
+/* Settimana: orario a griglia, stessa fascia oraria = stessa riga in tutti i giorni */
+.settimana-scorri { overflow-x: auto; }
+.settimana-orario {
+  display: grid; grid-template-columns: 64px repeat(5, minmax(170px, 1fr)); min-width: 920px;
+  background: var(--content); border-radius: var(--raggio); box-shadow: var(--shadow); overflow: hidden;
+}
+.settimana-orario > div { padding: 10px; border-top: 1px solid var(--sep2); }
+.settimana-orario > div:not(.angolo):not(.fascia) { border-left: 1px solid var(--sep2); }
+.settimana-orario .angolo, .settimana-orario .testa-giorno { border-top: 0; background: var(--alt); }
+.settimana-orario .angolo { font-size: 11px; color: var(--sec); text-transform: uppercase; letter-spacing: .04em; display: flex; align-items: flex-end; }
+.testa-giorno h3 { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; margin: 0; text-transform: capitalize; }
+.testa-giorno h3 small { font-weight: 400; font-size: 12px; }
+.testa-giorno p { margin: 4px 0 0; font-size: 12px; }
+.testa-giorno.oggi h3 { color: var(--accent); }
+.testa-giorno.oggi { box-shadow: inset 0 3px 0 var(--accent); }
+.cella-fascia.oggi { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.cella-fascia.chiuso { background: repeating-linear-gradient(135deg, transparent 0 8px, var(--fill2) 8px 16px); }
+.cella-fascia .lezione:last-child { margin-bottom: 0; }
+.fascia { display: flex; flex-direction: column; gap: 2px; font-variant-numeric: tabular-nums; }
+.fascia strong { font: 600 14px var(--font); }
+.fascia span { font-size: 12px; color: var(--sec); }
 .lezione { border-radius: 10px; padding: 9px 10px; margin: 0 0 8px; background: var(--alt); border-left: 3px solid var(--tipo, var(--ter)); font-size: 12px; }
 .lezione .riga { gap: 6px; align-items: center; }
 .lezione strong { font: 600 15px var(--font); letter-spacing: -.01em; }
@@ -505,6 +520,5 @@ body[data-modo="campo"] .banner-aggiorna { bottom: 108px; }
   .gestionale, .gestionale.senza-sidebar { grid-template-columns: 1fr; }
   .menu { position: static; height: auto; }
   .senza-sidebar .menu { display: none; }
-  .settimana { grid-template-columns: 1fr; }
   .scelte { grid-template-columns: 1fr; }
 }

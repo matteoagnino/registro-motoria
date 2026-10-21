@@ -90,5 +90,9 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Elenco laterale fermo: `evidenzia(..., { porta: false })` per `.elenco-classe` (solo la barra in fondo scorre
   per mostrare l'alunno attivo). Test: 166 unitari (dom.test.js), 9 E2E.
 
+## 0.8.2 (2026-10-21)
+- Settimana a griglia: `fasceOrarie` + `griglia` in src/ui/viste/oggi.js (fasce = coppie inizio–fine distinte,
+  ordine numerico). Test: tests/unit/settimana.test.js, e2e «Settimana: … stessa riga». 169 unitari, 10 E2E.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.
