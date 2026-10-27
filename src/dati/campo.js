@@ -50,6 +50,7 @@ function conAzione(campo, azione, payload) {
 export const campoLivello = (campo, p) => conAzione(campo, A.impostaLivello, p);
 export const campoStato = (campo, p) => conAzione(campo, A.impostaStatoGiornata, p);
 export const campoRecupero = (campo, p) => conAzione(campo, A.impostaRecupero, p);
+export const campoInfortunio = (campo, p) => conAzione(campo, A.impostaInfortunio, p);
 
 // ---------- Tempi dei Giochi (cronometro) ----------
 

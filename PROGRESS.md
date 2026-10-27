@@ -94,5 +94,18 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Settimana a griglia: `fasceOrarie` + `griglia` in src/ui/viste/oggi.js (fasce = coppie inizio–fine distinte,
   ordine numerico). Test: tests/unit/settimana.test.js, e2e «Settimana: … stessa riga». 169 unitari, 10 E2E.
 
+## 0.9.0 (2026-10-27) — richieste di Matteo
+- Stato giornata «INF» con `infortunio: {durata, dal, al}` sulla registrazione (src/dati/infortunio.js:
+  STATI_GIORNATA, DURATE_INFORTUNIO, validaInfortunio, descriviInfortunio; azione `impostaInfortunio`,
+  `campoInfortunio`). INF = nessun voto (come NV), non «da recuperare». Campo nuovo opzionale: nessuna
+  migrazione (assente = null); file voti e sincro lo trasportano (CONTENUTO in scambio.js) e lo validano.
+- iPad: data di recupero a scelta oltre a «Recupera oggi»; striscia `classiRapide` per cambiare classe.
+- `ordinaClassi` (azioni.js): Boncompagni → Manzoni, 4ª → 5ª, poi codice. Usata da selettoreClasse
+  (ora bottoni per plesso), classeScelta, Import/Export, home dell'iPad.
+- Ipotesi (DOMANDE.md): l'infortunato non recupera la prova; se rientra in tempo si cambia lo stato in AS.
+- Nota: l'intestazione del registro (fasce dei sotto-obiettivi impilate) appare scomposta negli screenshot
+  di Playwright anche prima di queste modifiche: da verificare su Chrome del Mac.
+- Test: 176 unitari (tests/unit/infortunio.test.js), 10 E2E verdi.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

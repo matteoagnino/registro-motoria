@@ -1,5 +1,6 @@
 // Azioni sui dati: funzioni pure (stato, …) → nuovo stato. Nessuna mutazione.
 import { nuovoId } from './id.js';
+import { STATI_GIORNATA, validaInfortunio } from './infortunio.js';
 
 const ora = () => new Date().toISOString();
 const confronto = (a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' });
@@ -19,6 +20,14 @@ export function aggiungiClasse(stato, classe) {
 export function modificaClasse(stato, codice, patch) {
   return { ...stato, classi: stato.classi.map((c) => (c.codice === codice ? { ...c, ...patch, codice } : c)) };
 }
+
+const ORDINE_PLESSI = ['Boncompagni', 'Manzoni'];
+const posPlesso = (p) => (ORDINE_PLESSI.includes(p) ? ORDINE_PLESSI.indexOf(p) : ORDINE_PLESSI.length);
+
+/** Classi in ordine per gli elenchi: prima Boncompagni poi Manzoni, prima le 4ª poi le 5ª, poi alfabetico. */
+export const ordinaClassi = (classi) => [...classi].sort((a, b) =>
+  posPlesso(a.plesso) - posPlesso(b.plesso) || (a.plesso ?? '').localeCompare(b.plesso ?? '')
+  || a.livello - b.livello || confronto(a.codice, b.codice));
 
 export const alunniDi = (stato, classe) =>
   stato.alunni.filter((a) => a.classe === classe).sort((a, b) => a.numero - b.numero);
@@ -103,11 +112,22 @@ export function impostaLivello(stato, { classe, alunnoId, giornataId, sottoObiet
   }, deviceId);
 }
 
-/** Stato dell'alunno nella giornata (AS/NV/ES/null), applicato a tutti i sotto-obiettivi del giorno. */
+/** Stato dell'alunno nella giornata (AS/NV/INF/ES/null), applicato a tutti i sotto-obiettivi del giorno. */
 export function impostaStatoGiornata(stato, { classe, alunnoId, giornataId, sottoObiettivi, valore, deviceId }) {
-  if (valore != null && !['AS', 'NV', 'ES'].includes(valore)) throw new Error('Stato non valido.');
+  if (valore != null && !STATI_GIORNATA.includes(valore)) throw new Error('Stato non valido.');
   return sottoObiettivi.reduce(
-    (s, so) => upsertRegistrazione(s, { classe, alunnoId, giornataId, sottoObiettivo: so }, (r) => ({ ...r, stato: valore }), deviceId),
+    (s, so) => upsertRegistrazione(s, { classe, alunnoId, giornataId, sottoObiettivo: so }, (r) => ({
+      ...r, stato: valore, infortunio: valore === 'INF' ? (r.infortunio ?? null) : null
+    }), deviceId),
+    stato
+  );
+}
+
+/** Durata dell'infortunio ({durata, dal, al}) per tutti i sotto-obiettivi del giorno. */
+export function impostaInfortunio(stato, { classe, alunnoId, giornataId, sottoObiettivi, infortunio, deviceId }) {
+  const inf = validaInfortunio(infortunio);
+  return sottoObiettivi.reduce(
+    (s, so) => upsertRegistrazione(s, { classe, alunnoId, giornataId, sottoObiettivo: so }, (r) => ({ ...r, stato: 'INF', infortunio: inf }), deviceId),
     stato
   );
 }

@@ -6,7 +6,7 @@ import {
 } from '../../dati/archivio.js';
 import { creaPacchetto, leggiFileVoti, analizzaImport, applicaImport } from '../../dati/scambio.js';
 import { excelClasse, excelRiepiloghi } from '../../export/excel.js';
-import { alunniDi } from '../../dati/azioni.js';
+import { alunniDi, ordinaClassi } from '../../dati/azioni.js';
 import { intestazione } from './comuni.js';
 import { sincronizzaConIpad } from '../sincroMac.js';
 
@@ -96,7 +96,7 @@ function sezioneIpad(ctx, stato) {
     h('button.primario', { onclick: () => sincronizzaConIpad(ctx) }, 'Sincronizza con l\'iPad'),
     h('h3', { style: { marginTop: '1rem' } }, '1 · Pacchetto classe (Mac → iPad)'),
     h('p.tenue', 'Contiene nomi, giornate, rubriche e voti già registrati delle classi scelte. Mandalo all\'iPad con AirDrop e importalo in modalità Campo.'),
-    h('div', stato.classi.map((c) => h('label', { style: { marginRight: '.8rem', display: 'inline-block' } },
+    h('div', ordinaClassi(stato.classi).map((c) => h('label', { style: { marginRight: '.8rem', display: 'inline-block' } },
       h('input', { type: 'checkbox', checked: true, onchange: (e) => (e.target.checked ? scelte.add(c.codice) : scelte.delete(c.codice)) }), ` ${c.codice}`))),
     h('button.primario', {
       onclick: () => {
@@ -168,7 +168,7 @@ export function rivediFileVoti(ctx, nome, testo, dopo) {
 }
 
 function sezioneExcel(ctx, stato) {
-  const classi = stato.classi.filter((c) => alunniDi(stato, c.codice).length);
+  const classi = ordinaClassi(stato.classi).filter((c) => alunniDi(stato, c.codice).length);
   const selC = select(classi.length ? classi.map((c) => c.codice) : [['', 'nessuna classe con alunni']], classi[0]?.codice, { 'aria-label': 'Classe da esportare' });
   const selQ = select([['Q1', '1° quadrimestre'], ['Q2', '2° quadrimestre']], 'Q1', { 'aria-label': 'Quadrimestre' });
   const scarica = async (fn, nome) => {

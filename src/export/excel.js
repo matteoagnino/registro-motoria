@@ -3,6 +3,13 @@ import { alunniDi } from '../dati/azioni.js';
 import { riepilogoClasse, sottoObiettiviDi, giornateClasse, sottoObiettivo, verificaVoti, classe as trovaClasse } from '../dati/selettori.js';
 import { votoRegistrazione, giudizioVoto } from '../calcolo/voti.js';
 import { formatta } from '../pianificazione/date.js';
+import { descriviInfortunio } from '../dati/infortunio.js';
+
+/** Data del recupero (assente) o durata dell'infortunio della giornata. */
+const dettaglioStato = (regs) => {
+  const inf = regs.find((r) => r?.stato === 'INF');
+  return inf ? `Infortunio: ${descriviInfortunio(inf.infortunio)}` : regs.find((r) => r?.recuperataIl)?.recuperataIl ?? '';
+};
 
 const COLORI_NUCLEO = { 1: 'FFC6E0B4', 2: 'FFF8CBAD', 3: 'FFBDD7EE', 4: 'FFFFE699', TEC: 'FFD9D2E9', CIV: 'FFD9D2E9' };
 const BLU = 'FF1F4E79';
@@ -74,7 +81,7 @@ function foglioRegistro(wb, stato, codice) {
   const ws = wb.addWorksheet('Registro');
   const alunni = alunniDi(stato, codice);
   titolo(ws, `REGISTRO DELLE PROVE · ${codice}`, 26);
-  ws.getCell(2, 1).value = 'Livelli: 10 Ottimo · 9 Distinto · 8 Buono · 7 Discreto · 6 Sufficiente · 5 Non sufficiente   ·   Stato: AS assente · NV non valutabile · ES esonerato';
+  ws.getCell(2, 1).value = 'Livelli: 10 Ottimo · 9 Distinto · 8 Buono · 7 Discreto · 6 Sufficiente · 5 Non sufficiente   ·   Stato: AS assente · NV non valutabile · INF infortunio · ES esonerato';
   let riga = 4;
   for (const g of giornateClasse(stato, codice).filter((x) => x.codici.length)) {
     const sos = g.codici.map((c) => sottoObiettivo(stato, cl.livello, c)).filter(Boolean);
@@ -84,7 +91,7 @@ function foglioRegistro(wb, stato, codice) {
     t.font = { bold: true, color: { argb: 'FFFFFFFF' } };
     t.fill = fill(BLU);
     riga++;
-    const h1 = ['N°', 'Alunno', 'Stato', 'Recuperata il'];
+    const h1 = ['N°', 'Alunno', 'Stato', 'Recuperata il / infortunio'];
     const h2 = ['', '', '', ''];
     for (const so of sos) {
       h1.push(`${so.codice} ${so.etichetta}`, '', '', '', '', '');
@@ -95,7 +102,7 @@ function foglioRegistro(wb, stato, codice) {
     riga += 2;
     for (const a of alunni) {
       const regs = sos.map((so) => stato.registrazioni.find((r) => r.alunnoId === a.id && r.giornataId === g.id && r.sottoObiettivo === so.codice));
-      const valori = [a.numero, a.cognomeNome, regs.find((r) => r?.stato)?.stato ?? '', regs.find((r) => r?.recuperataIl)?.recuperataIl ?? ''];
+      const valori = [a.numero, a.cognomeNome, regs.find((r) => r?.stato)?.stato ?? '', dettaglioStato(regs)];
       for (const r of regs) {
         const v = votoRegistrazione(r);
         valori.push(...[0, 1, 2, 3].map((i) => r?.livelli?.[i] ?? ''), v ?? '', giudizioVoto(v, stato.impostazioni.scala));

@@ -2,14 +2,16 @@
 import { h, avviso, conferma } from '../dom.js';
 import { vai } from '../app.js';
 import { leggiPacchetto } from '../../dati/scambio.js';
+import { ordinaClassi } from '../../dati/azioni.js';
 import {
-  importaPacchetto, campoLivello, campoStato, campoRecupero, esportaVoti, nDaEsportare, trovaCampo,
+  importaPacchetto, campoLivello, campoStato, campoRecupero, campoInfortunio, esportaVoti, nDaEsportare, trovaCampo,
   recuperiInSospeso, lezioniDiOggi, giornataDellaLezione, promemoriaExport
 } from '../../dati/campo.js';
 import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
+import { STATI_GIORNATA, DURATE_INFORTUNIO, descriviInfortunio } from '../../dati/infortunio.js';
 import { vistaCronometro } from './cronometro.js';
 import { vistaSincro, chiudiSincro } from './sincro.js';
 import { evidenzia, evidenziaOvunque, vaiAllaScheda, seguiScorrimento, avanzaDopo, appenaCompletata, schedaFatta, pausaTraccia } from './alunnoAttivo.js';
@@ -18,6 +20,7 @@ const LIVELLI = [10, 9, 8, 7, 6, 5];
 const GIUDIZI = ['Ottimo', 'Distinto', 'Buono', 'Discreto', 'Sufficiente', 'Non sufficiente'];
 const PRESSIONE_LUNGA_MS = 450;
 const ETICHETTE_STATO = { completo: 'registrato', incompleto: 'da completare', assente: 'assente', es: 'esonerato', vuoto: 'da registrare' };
+const ETICHETTE_BOTTONE = { INF: 'Infortunio' };
 /** Classe CSS dello stato: «vuoto» si chiama «da-fare» per non ereditare lo stile generale `.vuoto` (riquadro vuoto). */
 const classeStato = (st) => (st === 'vuoto' ? 'da-fare' : st);
 const MODO = {
@@ -62,6 +65,20 @@ function testa(titolo, sottotitolo, ...azioni) {
   return h('header.campo-testa', prima, h('div', h('h1', titolo), sottotitolo ? h('span.sottotitolo', sottotitolo) : null), h('div.spazio'), dopo);
 }
 
+/**
+ * Striscia per cambiare classe con un tocco. Con una giornata aperta porta alla stessa giornata
+ * dell'altra classe (se ce l'ha), altrimenti alla scelta della giornata.
+ */
+function classiRapide(c, attuale, giornataId = null) {
+  return h('nav.classi-rapide', { 'aria-label': 'Cambia classe' }, ordinaClassi(c.pacchetto.classi).map((cl) => {
+    const stessaGiornata = giornataId && cl.giornate.some((g) => g.id === giornataId);
+    return h(`a.bottone${cl.codice === attuale ? '.attivo' : ''}`, {
+      href: stessaGiornata ? `#/campo/registra/${cl.codice}/${giornataId}` : `#/campo/classe/${cl.codice}`,
+      'aria-current': cl.codice === attuale ? 'page' : null, title: `${cl.livello}ª · ${cl.plesso}`
+    }, cl.codice);
+  }));
+}
+
 const indietro = (href, testo) => h('a.bottone.grande.indietro', { href, 'aria-label': testo }, icona('indietro'), testo);
 
 function home(ctx) {
@@ -88,7 +105,7 @@ function home(ctx) {
     h('div.campo-corpo',
       bannerPromemoria(c),
       bannerAdesso(c, oggi),
-      h('div.tessere', c.pacchetto.classi.map((cl) => {
+      h('div.tessere', ordinaClassi(c.pacchetto.classi).map((cl) => {
         const diOggi = cl.calendario ? cl.calendario.some((l) => l.data === oggi) : cl.lezioni.some((l) => l.giorno === gs);
         const rec = recuperiInSospeso(c, cl.codice).length;
         const pre = cl.giornate.find((g) => g.id === giornataPreselezionata(cl.giornate, oggi));
@@ -149,6 +166,7 @@ function sceltaGiornata(ctx, codice) {
   return h('div',
     testa(`${cl.codice} · scegli la giornata`, 'La giornata più vicina a oggi è evidenziata', indietro('#/campo/home', 'Classi'),
       h('a.bottone.grande', { href: `#/campo/giochi/${cl.codice}/supergym/1` }, 'Giochi: cronometro')),
+    classiRapide(c, cl.codice),
     rec.length ? h('div.campo-corpo', h('div.banner-campo.attenzione',
       h('div', h('b', 'Da recuperare'), h('div', rec.map((x) => h('a.bottone', {
         href: `#/campo/registra/${codice}/${x.giornataId}`, style: { margin: '6px 8px 0 0' }
@@ -195,6 +213,7 @@ function registra(ctx, codice, giornataId) {
         onclick: () => { ctx.elencoAperto = !ctx.elencoAperto; ctx.ridisegna(); }
       }, 'Elenco'),
       h('a.bottone.grande.primario', { href: '#/campo/esporta' }, 'Esporta')),
+    classiRapide(c, cl.codice, g.id),
     h(`div.registra-layout${ctx.elencoAperto ? '.elenco-aperto' : ''}`,
       elencoClasse(ctx, stati),
       h('div.campo-corpo', stati.map(([a, st]) => schedaAlunno(ctx, cl, g, sos, a, st, attivo)))),
@@ -264,17 +283,25 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
     `n. ${a.numero}: ${statoGiorno === v ? 'stato tolto' : v}`);
   const recuperata = regs.find((r) => r?.recuperataIl)?.recuperataIl ?? null;
   const setRecupero = (data) => conAnnulla((s) => campoRecupero(s, { ...base, sottoObiettivi: g.sottoObiettivi, data }),
-    `n. ${a.numero}: ${data ? 'recupero oggi' : 'recupero annullato'}`);
+    `n. ${a.numero}: ${!data ? 'recupero annullato' : data === oggiISO() ? 'recupero oggi' : `recupero il ${formatta(data, true)}`}`);
+  const infortunio = regs.find((r) => r?.infortunio)?.infortunio ?? null;
+  const setInfortunio = (inf) => conAnnulla((s) => campoInfortunio(s, { ...base, sottoObiettivi: g.sottoObiettivi, infortunio: inf }),
+    `n. ${a.numero}: infortunio ${descriviInfortunio(inf)}`);
   return h(`section.scheda-alunno.${classeStato(st)}`, { id: `alunno-${a.numero}` },
     h('h2', h('span.numero', a.numero), h('span', a.cognomeNome, a.op ? h('small', ' (OP)') : null),
-      h('div.stati', ['AS', 'NV', 'ES'].map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
-        onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? v
-      }, v)))),
+      h('div.stati', STATI_GIORNATA.map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
+        onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? ETICHETTE_BOTTONE[v] ?? v
+      }, ETICHETTE_BOTTONE[v] ?? v)))),
     statoGiorno === 'AS' ? h('div.recupero-campo',
       recuperata
         ? [h('span', `Prova recuperata il ${formatta(recuperata, true)}`), h('button', { onclick: () => setRecupero(null) }, 'Annulla recupero')]
         : [h('span.tenue', 'Assente: il voto si registra il giorno in cui recupera la prova.'),
-          h('button.primario.grande', { onclick: () => setRecupero(oggiISO()) }, 'Recupera oggi')]) : null,
+          h('button.primario.grande', { onclick: () => setRecupero(oggiISO()) }, 'Recupera oggi'),
+          h('label.data-recupero', h('span', 'oppure il giorno'), h('input', {
+            type: 'date', 'aria-label': `Data recupero ${a.numero}`, min: g.data || undefined,
+            onchange: (e) => e.target.value && setRecupero(e.target.value)
+          }))]) : null,
+    statoGiorno === 'INF' ? sceltaInfortunio(a, infortunio, setInfortunio) : null,
     (statoGiorno && statoGiorno !== 'AS') || (statoGiorno === 'AS' && !recuperata) ? null : sos.map((so, k) => {
       const r = regs[k];
       const voto = votoRegistrazione(r);
@@ -300,6 +327,21 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
             ind.descrittori[GIUDIZI[LIVELLI.indexOf(ctx.descrittoreCampo.livello)]]) : null);
         }));
     }));
+}
+
+/** Durata dell'infortunio: un tocco per gli scaglioni, date dal–al per il periodo personalizzato. */
+function sceltaInfortunio(a, inf, salva) {
+  const data = (campo) => h('label', h('span', campo), h('input', {
+    type: 'date', value: inf?.[campo] ?? '', 'aria-label': `Infortunio ${campo} ${a.numero}`,
+    onchange: (e) => salva({ ...inf, durata: 'periodo', [campo]: e.target.value || null })
+  }));
+  return h('div.infortunio-campo',
+    h('span.tenue', 'Infortunio: nessun voto. Durata:'),
+    h('div.durate', DURATE_INFORTUNIO.map(([k, testo]) => h(`button.grande${inf?.durata === k ? '.attivo' : ''}`, {
+      'aria-pressed': String(inf?.durata === k),
+      onclick: () => salva(k === 'periodo' ? { durata: k, dal: inf?.dal ?? null, al: inf?.al ?? null } : { durata: k })
+    }, testo))),
+    inf?.durata === 'periodo' ? h('div.periodo', data('dal'), data('al')) : null);
 }
 
 /** Pulsante livello: tocco = imposta/toglie; tocco lungo = mostra il descrittore. */

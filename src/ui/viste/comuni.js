@@ -2,6 +2,7 @@
 import { h, select, modale } from '../dom.js';
 import { conParametri } from '../app.js';
 import { sottoObiettivo } from '../../dati/selettori.js';
+import { ordinaClassi } from '../../dati/azioni.js';
 import { formatta } from '../../pianificazione/date.js';
 
 export const NOMI_TIPO = {
@@ -23,11 +24,20 @@ export function etichettaTipo(tipo) {
 }
 
 /** Selettore di classe che aggiorna il parametro ?classe= della rotta. */
+/** Scelta della classe a un tocco: un bottone per classe, raggruppati per plesso (Boncompagni, poi Manzoni). */
 export function selettoreClasse(stato, valore, { conTutte = false, param = 'classe' } = {}) {
-  const opz = stato.classi.map((c) => [c.codice, `${c.codice} · ${c.livello}ª ${c.plesso}`]);
-  return select(conTutte ? [['', 'Tutte le classi'], ...opz] : opz, valore, {
-    'aria-label': 'Classe', 'data-focus': `sel-${param}`, onchange: (e) => conParametri({ [param]: e.target.value })
-  });
+  const scegli = (codice) => conParametri({ [param]: codice });
+  const bottone = (codice, testo, titolo) => h(`button.chip-classe${codice === valore ? '.scelta' : ''}`, {
+    type: 'button', title: titolo, 'aria-pressed': String(codice === valore), 'data-focus': `${param}-${codice || 'tutte'}`,
+    onclick: () => scegli(codice)
+  }, testo);
+  const ordinate = ordinaClassi(stato.classi);
+  const plessi = [...new Set(ordinate.map((c) => c.plesso))];
+  return h('div.scelta-classi', { role: 'group', 'aria-label': 'Classe' },
+    conTutte ? bottone('', 'Tutte', 'Tutte le classi') : null,
+    plessi.map((plesso) => [plesso, ordinate.filter((c) => c.plesso === plesso)]).map(([plesso, classi]) => h('div.gruppo-plesso',
+      h('span.plesso', plesso),
+      classi.map((c) => bottone(c.codice, c.codice, `${c.codice} · ${c.livello}ª ${c.plesso}`)))));
 }
 
 export function selettoreQuadrimestre(valore) {
@@ -37,7 +47,7 @@ export function selettoreQuadrimestre(valore) {
 }
 
 export function classeScelta(stato, params) {
-  return stato.classi.find((c) => c.codice === params.classe) ?? stato.classi[0];
+  return stato.classi.find((c) => c.codice === params.classe) ?? ordinaClassi(stato.classi)[0];
 }
 
 /** Modale con la rubrica di un sotto-obiettivo (o di un singolo indicatore). */

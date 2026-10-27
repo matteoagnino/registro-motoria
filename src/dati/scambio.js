@@ -1,10 +1,11 @@
 // Scambio file a senso unico (SPEC §2): pacchetto classe Mac→iPad, file voti iPad→Mac.
 import { pianificaTutte } from '../pianificazione/planner.js';
+import { STATI_GIORNATA, validaInfortunio } from './infortunio.js';
 import { aggiornaRisultato, impostaIndividuale, trovaRisultato, PROVE_TEMPO } from '../giochi/giochi.js';
 
 export const FORMATO_PACCHETTO = 'registro-motoria-pacchetto';
 export const FORMATO_VOTI = 'registro-motoria-voti';
-const CONTENUTO = ['livelli', 'stato', 'recuperataIl'];
+const CONTENUTO = ['livelli', 'stato', 'recuperataIl', 'infortunio'];
 
 /** Pacchetto per l'iPad: classi, alunni, giornate datate per classe, rubriche, codici stato, registrazioni esistenti. */
 export function creaPacchetto(stato, codiciClassi, ora = new Date()) {
@@ -78,7 +79,8 @@ export function leggiFileVoti(testo) {
   for (const r of f.registrazioni) {
     if (!r.id || !r.alunnoId || !r.giornataId || !r.sottoObiettivo || !Array.isArray(r.livelli)) throw new Error('File voti danneggiato: registrazione incompleta.');
     if (r.livelli.some((l) => l != null && !(Number.isInteger(l) && l >= 5 && l <= 10))) throw new Error('File voti danneggiato: livello non valido.');
-    if (r.stato != null && !['AS', 'NV', 'ES'].includes(r.stato)) throw new Error('File voti danneggiato: stato non valido.');
+    if (r.stato != null && !STATI_GIORNATA.includes(r.stato)) throw new Error('File voti danneggiato: stato non valido.');
+    try { validaInfortunio(r.infortunio); } catch { throw new Error('File voti danneggiato: infortunio non valido.'); }
   }
   for (const t of f.tempi ?? []) {
     if (!t.alunnoId || !t.anno || !t.classe || !PROVE_TEMPO.includes(t.prova) || ![1, 2].includes(t.rilevazione)) throw new Error('File voti danneggiato: tempo dei Giochi incompleto.');
@@ -88,7 +90,7 @@ export function leggiFileVoti(testo) {
 }
 
 const stessoContenuto = (a, b) => CONTENUTO.every((k) => JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null));
-const vuota = (r) => !r.stato && !r.recuperataIl && !(r.livelli || []).some((l) => l != null);
+const vuota = (r) => !r.stato && !r.recuperataIl && !r.infortunio && !(r.livelli || []).some((l) => l != null);
 const chiave = (r) => `${r.alunnoId}|${r.giornataId}|${r.sottoObiettivo}`;
 
 /**

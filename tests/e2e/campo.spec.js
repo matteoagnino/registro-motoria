@@ -75,6 +75,8 @@ test('pacchetto → registrazione offline → file voti → import idempotente e
   await expect(page.locator('.contatore')).toHaveText('Registrati 3/3 · mancano 0');
   await expect(page.locator('#alunno-3 .livelli')).toHaveCount(0);
   await expect(page.locator('#alunno-3').getByRole('button', { name: 'Recupera oggi' })).toBeVisible();
+  await expect(page.getByLabel('Data recupero 3')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Cambia classe' }).getByRole('link', { name: '4BM' })).toHaveAttribute('aria-current', 'page');
   // elenco della classe a lato: si sceglie un alunno preciso e si resta lì (movimento libero)
   const elenco = page.getByRole('complementary', { name: 'Elenco della classe' });
   await expect(elenco.getByRole('button')).toHaveCount(3);

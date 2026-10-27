@@ -80,6 +80,21 @@ test('M4: i dati del modello Excel classe 4 danno gli stessi voti, medie e giudi
   await page.getByLabel('Stato 2').selectOption('AS');
   // assente: nessun livello finché non c'è la data del recupero
   await expect(page.getByLabel('2 1.1 I1', { exact: true })).toBeDisabled();
+  await expect(page.getByLabel('Recuperata il 2')).toBeVisible();
+  // infortunio: durata a scaglioni o periodo personalizzato, nessun voto
+  await page.getByLabel('Stato 2').selectOption('INF');
+  await page.getByLabel('Durata infortunio 2').selectOption('periodo');
+  await page.getByLabel('Infortunio dal 2').fill('2026-11-02');
+  await expect(page.getByLabel('Infortunio dal 2')).toHaveValue('2026-11-02');
+  await page.getByLabel('Durata infortunio 2').selectOption('oltre14');
+  await expect(page.getByLabel('Infortunio dal 2')).toHaveCount(0);
+  await page.getByLabel('Stato 2').selectOption('AS');
+  // cambio classe con un tocco, classi in ordine Boncompagni → Manzoni, 4ª → 5ª
+  const classi = page.getByRole('group', { name: 'Classe' }).getByRole('button');
+  await expect(classi).toHaveText(['4AB', '4BB', '5AB', '5BB', '5CB', '4AM', '4BM', '4CM', '5AM', '5BM', '5CM']);
+  await classi.filter({ hasText: '4BB' }).click();
+  await expect(page).toHaveURL(/classe=4BB/);
+  await page.getByRole('button', { name: '4BM', exact: true }).click();
   const r1 = page.locator('tbody tr').first().locator('td.calc');
   await expect(r1).toHaveText(['8', 'Buono', '7', 'Discreto', '9', 'Distinto']);
 

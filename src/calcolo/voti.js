@@ -56,9 +56,9 @@ export function valoreFinale(media, rubrica, parametri) {
   return arrotonda(parametri.quota_prove * media + parametri.quota_processo * rubrica, 2);
 }
 
-/** Restituisce il voto di una registrazione, o null (AS non recuperato, NV, vuota). */
+/** Restituisce il voto di una registrazione, o null (AS non recuperato, NV, infortunio, vuota). */
 export function votoRegistrazione(reg) {
-  if (!reg || reg.stato === 'NV') return null;
+  if (!reg || reg.stato === 'NV' || reg.stato === 'INF') return null;
   return votoProva(reg.livelli);
 }
 

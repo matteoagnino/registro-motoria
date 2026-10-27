@@ -7,11 +7,14 @@ import { votoRegistrazione, pesoProva, daRecuperare } from '../../calcolo/voti.j
 import { spiegaVoto } from '../../calcolo/riepilogo.js';
 import { formatta } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
+import { DURATE_INFORTUNIO } from '../../dati/infortunio.js';
 import {
   intestazione, selettoreClasse, classeScelta, apriRubrica, LIVELLI, GIUDIZI, classeNucleo, contatore, legendaLivelli
 } from './comuni.js';
 
 const NOMI_Q = { Q1: '1° quadrimestre', Q2: '2° quadrimestre' };
+const OPZIONI_STATO = [['', '—'], ['AS', 'AS'], ['NV', 'NV'], ['INF', 'INF'], ['ES', 'ES']];
+const LEGENDA_STATI = 'AS assente · NV non valutabile · INF infortunio · ES esonerato';
 const pesoTesto = (p) => String(p).replace('.', ',');
 
 export function vistaRegistro(ctx, { params }) {
@@ -57,7 +60,7 @@ export function vistaRegistro(ctx, { params }) {
     alunni.length === 0 ? h('div.vuoto', 'Nessun alunno in questa classe: aggiungili da Classi e alunni.') :
       h('div.tabella-scorri', { 'data-scroll': 'registro' }, h('table.tab-registro',
         h('thead',
-          h('tr', h('th.num', { rowspan: 2 }, 'N°'), h('th.nome', { rowspan: 2 }, 'Alunno'), h('th', { rowspan: 2 }, 'Stato'), h('th', { rowspan: 2 }, 'Recup.'),
+          h('tr', h('th.num', { rowspan: 2 }, 'N°'), h('th.nome', { rowspan: 2 }, 'Alunno'), h('th', { rowspan: 2 }, 'Stato'), h('th', { rowspan: 2 }, 'Recupero / durata'),
             sos.map((so) => h(`th.fascia.${classeNucleo(so)}.fine-so`, { colspan: 6 },
               h('span.codice', so.codice), so.etichetta,
               h('small', `Ob. ${so.concorre[g.quadrimestre]} · peso ${pesoTesto(peso)}`)))),
@@ -84,17 +87,18 @@ function rigaAlunno(ctx, cl, g, sos, a) {
   return h(`tr${a.stato === 'Ritirato' ? '.ritirato' : a.stato === 'ES' ? '.es' : ''}`,
     h('td.num', a.numero),
     h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null),
-    h('td', select([['', '—'], ['AS', 'AS'], ['NV', 'NV'], ['ES', 'ES']], statoGiorno, {
+    h('td', select(OPZIONI_STATO, statoGiorno, {
       class: 'sel-stato', 'data-v': statoGiorno, 'aria-label': `Stato ${a.numero}`, 'data-focus': `st-${a.id}`, disabled: escluso,
-      title: 'AS assente · NV non valutabile · ES esonerato',
+      title: LEGENDA_STATI,
       onchange: (e) => agg((s) => A.impostaStatoGiornata(s, { ...base, sottoObiettivi: g.codici, valore: e.target.value || null }))
     })),
-    h('td', statoGiorno === 'AS' ? h('input', {
-      type: 'date', value: recuperata, 'aria-label': `Recuperata il ${a.numero}`, min: g.data || undefined,
+    h('td.dettaglio-stato', statoGiorno === 'AS' ? h('label.campo-recupero', h('span', 'Recuperata il'), h('input', {
+      type: 'date', value: recuperata, 'aria-label': `Recuperata il ${a.numero}`, min: g.data || undefined, 'data-focus': `rec-${a.id}`,
       title: 'Giorno in cui ha sostenuto la prova: sblocca i livelli e determina il peso',
       class: regs.some(daRecuperare) ? 'input-giallo' : '',
       onchange: (e) => agg((s) => A.impostaRecupero(s, { ...base, sottoObiettivi: g.codici, data: e.target.value }))
-    }) : ''),
+    })) : statoGiorno === 'INF' ? campiInfortunio(regs.find((r) => r?.infortunio)?.infortunio, a,
+      (infortunio) => agg((s) => A.impostaInfortunio(s, { ...base, sottoObiettivi: g.codici, infortunio }))) : ''),
     sos.map((so, k) => {
       const r = regs[k];
       const voto = votoRegistrazione(r);
@@ -122,6 +126,21 @@ function rigaAlunno(ctx, cl, g, sos, a) {
     }));
 }
 
+/** Durata dell'infortunio: scaglioni o periodo personalizzato (dal–al). */
+function campiInfortunio(inf, a, salva) {
+  const durata = inf?.durata ?? '';
+  const periodo = (campo) => h('input', {
+    type: 'date', value: inf?.[campo] ?? '', 'aria-label': `Infortunio ${campo} ${a.numero}`, 'data-focus': `inf-${campo}-${a.id}`,
+    onchange: (e) => salva({ ...inf, durata: 'periodo', [campo]: e.target.value || null })
+  });
+  return h('div.campo-infortunio',
+    select([['', 'Durata…'], ...DURATE_INFORTUNIO.map(([k, t]) => [k, k === 'periodo' ? 'Periodo…' : t.replace(' (1 settimana)', '')])], durata, {
+      'aria-label': `Durata infortunio ${a.numero}`, 'data-focus': `inf-${a.id}`, class: durata ? '' : 'input-giallo',
+      onchange: (e) => salva(e.target.value ? { durata: e.target.value } : null)
+    }),
+    durata === 'periodo' ? h('span.periodo', h('span', 'dal'), periodo('dal'), h('span', 'al'), periodo('al')) : null);
+}
+
 /** Griglia cartacea di riserva per la giornata (nomi visibili o solo numeri). */
 function grigliaStampa(stato, cl, g, alunni, conNomi) {
   const sos = g.codici.map((c) => sottoObiettivo(stato, cl.livello, c)).filter(Boolean);
@@ -129,7 +148,7 @@ function grigliaStampa(stato, cl, g, alunni, conNomi) {
     h('div.barra.no-stampa',
       h('label', h('input', { type: 'checkbox', checked: conNomi, onchange: (e) => conParametri({ nomi: e.target.checked ? '1' : '0' }) }), ' Mostra i nomi'),
       h('button.primario', { onclick: () => window.print() }, icona('stampa'), 'Stampa (A4 orizzontale)')),
-    h('p.tenue', 'Livelli: 10 Ottimo · 9 Distinto · 8 Buono · 7 Discreto · 6 Sufficiente · 5 Non sufficiente · Stato: AS assente · NV non valutabile'),
+    h('p.tenue', 'Livelli: 10 Ottimo · 9 Distinto · 8 Buono · 7 Discreto · 6 Sufficiente · 5 Non sufficiente · Stato: AS assente · NV non valutabile · INF infortunio'),
     h('div.tabella-scorri', h('table',
       h('thead',
         h('tr', h('th', { rowspan: 2 }, 'N°'), conNomi ? h('th', { rowspan: 2 }, 'Alunno') : null, h('th', { rowspan: 2 }, 'Stato'),

@@ -4,6 +4,7 @@ import { vociVoto, riepilogoAlunno } from '../calcolo/riepilogo.js';
 import { votoRegistrazione, daRecuperare, giudizioVoto } from '../calcolo/voti.js';
 import { violazioniRegola } from '../calcolo/regole.js';
 import { alunniDi } from './azioni.js';
+import { descriviInfortunio } from './infortunio.js';
 import { giorniTra } from '../pianificazione/date.js';
 
 const memo = (fn) => {
@@ -125,6 +126,7 @@ export function verificaVoti(stato, codiceClasse) {
       const rg = g.codici.map((c) => regs.find((r) => r.giornataId === g.id && r.sottoObiettivo === c)).filter(Boolean);
       if (rg.some(daRecuperare)) celle[g.id] = 'AS da recuperare';
       else if (rg.some((r) => r.stato === 'NV') && rg.every((r) => votoRegistrazione(r) == null)) celle[g.id] = 'NV';
+      else if (rg.some((r) => r.stato === 'INF')) celle[g.id] = `Infortunio (${descriviInfortunio(rg.find((r) => r.stato === 'INF').infortunio)})`;
       else {
         celle[g.id] = rg.filter((r) => votoRegistrazione(r) != null).map((r) => `${r.sottoObiettivo}: ${votoRegistrazione(r)}`).join(' · ');
       }
@@ -133,7 +135,7 @@ export function verificaVoti(stato, codiceClasse) {
   });
 }
 
-/** Alunni attivi registrati in una giornata (voto in tutti i sotto-obiettivi o uno stato AS/NV/ES). */
+/** Alunni attivi registrati in una giornata (voto in tutti i sotto-obiettivi o uno stato AS/NV/INF/ES). */
 export function avanzamentoGiornata(stato, codiceClasse, giornataId) {
   const cl = classe(stato, codiceClasse);
   const codici = giornata(stato, giornataId)?.sottoObiettivi?.[String(cl.livello)] ?? [];

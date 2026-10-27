@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.9.0 — infortunio, data di recupero, classi in ordine (2026-10-27)
+- Registro (Mac e iPad): nuovo stato «INF» (Infortunio) tra chi è senza voto, con la durata: < 7 giorni
+  (1 settimana), > 7, > 14, > 21, > 28 giorni oppure un periodo personalizzato (dal… al…). Nessun voto per
+  quella prova; l'alunno conta come registrato e non finisce tra i «da recuperare». Compare in Verifica voti
+  e nell'export Excel.
+- Assenti: sull'iPad oltre a «Recupera oggi» si può scegliere il giorno del recupero; sul Mac la colonna si
+  chiama «Recupero / durata» e il campo è etichettato «Recuperata il».
+- Classi sempre in ordine: prima Boncompagni poi Manzoni, prima le quarte poi le quinte.
+- Cambio classe con un tocco: sul Mac un bottone per classe (raggruppati per plesso) al posto dell'elenco a
+  tendina; sull'iPad una striscia di classi in alto che porta alla stessa giornata dell'altra classe.
+
 ## 0.8.2 — settimana a griglia oraria (2026-10-21)
 - Mac, Settimana: le lezioni sono disposte come in un orario scolastico, una riga per fascia oraria
   (orario a sinistra) e una colonna per giorno: le lezioni con lo stesso orario stanno sulla stessa riga.

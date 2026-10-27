@@ -264,6 +264,18 @@ select.sel-stato { min-height: 0; height: 22px; padding: 0 20px 0 7px; font-size
 select.sel-stato[data-v="AS"] { background-color: color-mix(in srgb, var(--l5) var(--tinta), transparent); color: var(--t5); }
 select.sel-stato[data-v="NV"] { background-color: rgba(88, 86, 214, .18); color: #5856d6; }
 select.sel-stato[data-v="ES"] { color: var(--sec); }
+select.sel-stato[data-v="INF"] { background-color: color-mix(in srgb, var(--l7) var(--tinta), transparent); color: var(--t7); }
+td.dettaglio-stato { font-size: 11.5px; width: 132px; }
+.campo-recupero, .campo-infortunio { display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: 3px 0; }
+.campo-infortunio select { min-height: 0; height: 24px; font-size: 11.5px; padding: 0 20px 0 6px; }
+.campo-infortunio .periodo { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 4px; }
+.campo-recupero span, .campo-infortunio .periodo span { color: var(--sec); }
+/* Scelta della classe a un tocco (gestionale) */
+.scelta-classi { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.gruppo-plesso { display: inline-flex; align-items: center; gap: 4px; background: var(--fill); border-radius: 10px; padding: 3px; }
+.gruppo-plesso .plesso { font-size: 11px; font-weight: 600; color: var(--sec); padding: 0 6px; text-transform: uppercase; letter-spacing: .03em; }
+button.chip-classe { min-height: 30px; height: 30px; padding: 0 10px; border-radius: 7px; background: transparent; font-weight: 600; }
+button.chip-classe.scelta { background: var(--accent); color: var(--onaccent); }
 .tab-registro input[type="date"] { min-height: 0; height: 24px; padding: 0 6px; font-size: 11.5px; }
 .op { font: 600 10px var(--font); color: #9a3cc9; background: rgba(175, 82, 222, .14); padding: 1px 5px; border-radius: 4px; margin-left: 6px; }
 
@@ -386,6 +398,15 @@ body[data-modo="campo"] { font-size: 17px; }
 .scheda-alunno.completo { border-color: color-mix(in srgb, var(--l9) 55%, transparent); }
 .scheda-alunno.assente { border-color: color-mix(in srgb, var(--l5) 55%, transparent); }
 .recupero-campo { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 4px 18px 12px; }
+.data-recupero, .infortunio-campo .periodo label { display: inline-flex; align-items: center; gap: 8px; color: var(--sec); }
+.data-recupero input, .infortunio-campo input[type="date"] { min-height: 44px; font-size: 16px; }
+.infortunio-campo { display: flex; flex-direction: column; gap: 10px; padding: 4px 18px 14px; }
+.infortunio-campo .durate, .infortunio-campo .periodo { display: flex; flex-wrap: wrap; gap: 8px; }
+.infortunio-campo .durate button.attivo { background: var(--accent); color: var(--onaccent); }
+/* Cambio classe rapido (iPad) */
+.classi-rapide { display: flex; gap: 6px; overflow-x: auto; padding: 6px 16px; -webkit-overflow-scrolling: touch; }
+.classi-rapide .bottone { flex: none; min-height: 40px; font-weight: 600; }
+.classi-rapide .bottone.attivo { background: var(--accent); color: var(--onaccent); }
 .scheda-alunno h2 { display: flex; align-items: center; gap: 12px; font-size: 22px; margin: 0; padding: 10px 18px; }
 .numero { width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--fill); color: var(--sec); display: inline-flex; align-items: center; justify-content: center; font: 600 16px var(--font); }
 .stati { margin-left: auto; display: inline-flex; background: var(--fill); border-radius: 11px; padding: 3px; gap: 3px; }

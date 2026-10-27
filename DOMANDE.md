@@ -28,3 +28,8 @@ Formato: domanda · ipotesi prudente adottata · dove si cambia. Rispondi pure q
   e prova a tempo si può indicare una riduzione del tempo (FIDAL, es. −30%/−50%), escludere il risultato dalla media
   (casi più complessi) o segnare il circuito adattato (FGI); per ogni prova la classe può ricevere un correttivo di
   classifica (+0,5/+1). Valori e motivi li decidi tu, senza scrivere diagnosi.
+
+## 2026-10-27 · Infortunio e recupero
+L'alunno infortunato (stato INF) recupera poi la prova come un assente? Ipotesi prudente adottata: no,
+INF significa «senza voto» per quella prova (come NV) e non compare tra i «da recuperare». Se rientra in
+tempo per recuperare, basta cambiare il suo stato in AS e indicare la data del recupero.
