@@ -1,9 +1,12 @@
 // Shell dell'applicazione: router a hash, layout delle due modalità, ri-render sullo store.
 import { h } from './dom.js';
 import { icona } from './icone.js';
+import { lezioniDaConfermare } from '../dati/selettori.js';
+import { oggiISO } from '../pianificazione/date.js';
 
 export const VISTE_GESTIONALE = [
   ['oggi', 'Settimana'],
+  ['agenda', 'Agenda'],
   ['calendario', 'Calendario'],
   ['classi', 'Classi e alunni'],
   ['registro', 'Registro'],
@@ -78,12 +81,18 @@ export function avviaApp(radice, ctx, { viste, vistaCampo, home }) {
 
 const VISTE_DENSE = ['registro', 'riepilogo', 'verifica'];
 const GRUPPI = [
-  ['Didattica', ['oggi', 'calendario', 'classi']],
+  ['Didattica', ['oggi', 'agenda', 'calendario', 'classi']],
   ['Valutazione', ['registro', 'riepilogo', 'verifica', 'rubriche']],
   ['Altro', ['giochi']],
   ['', ['scambio', 'impostazioni', 'guida']]
 ];
 const NOMI_VISTE = Object.fromEntries(VISTE_GESTIONALE);
+
+/** Numero di lezioni passate ancora da confermare nell'agenda (nel menu). */
+function contaDaConfermare(stato) {
+  const n = lezioniDaConfermare(stato, oggiISO()).length;
+  return n ? h('span.conta.da-confermare', { title: `${n} lezioni da confermare` }, n) : null;
+}
 const LARGHEZZA_AMPIA = 1560;
 
 /** Barra laterale nascosta: scelta salvata nel browser, altrimenti automatica sulle viste dense in finestre non ampie. */
@@ -118,7 +127,8 @@ function layoutGestionale(ctx, vista, contenuto) {
         titolo ? h('h6', titolo) : h('div.separatore-menu'),
         h('ul', voci.map((id) => h('li', h('a', {
           href: `#/gestionale/${id}`, class: id === vista ? 'attivo' : '', 'aria-current': id === vista ? 'page' : null
-        }, icona(id), h('span', NOMI_VISTE[id]), id === 'classi' ? h('span.conta', stato.classi.length) : null)))))),
+        }, icona(id), h('span', NOMI_VISTE[id]), id === 'classi' ? h('span.conta', stato.classi.length) : null,
+          id === 'agenda' ? contaDaConfermare(stato) : null)))))),
       h('div.gruppo-menu', h('h6', 'iPad'), h('ul', h('li', h('a', { href: '#/campo/home' }, icona('campo'), h('span', 'Modalità campo')))))),
     h('div.area',
       h('header.toolbar',

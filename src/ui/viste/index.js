@@ -1,5 +1,6 @@
 import { vistaOggi } from './oggi.js';
 import { vistaCalendario } from './calendario.js';
+import { vistaAgenda } from './agenda.js';
 import { vistaClassi } from './classi.js';
 import { vistaRegistro } from './registro.js';
 import { vistaRiepilogo } from './riepilogo.js';
@@ -12,6 +13,7 @@ import { vistaGuida } from './guida.js';
 
 export const viste = {
   oggi: vistaOggi,
+  agenda: vistaAgenda,
   calendario: vistaCalendario,
   classi: vistaClassi,
   registro: vistaRegistro,

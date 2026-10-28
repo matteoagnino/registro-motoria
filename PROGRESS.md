@@ -128,5 +128,12 @@ STATO: VERSIONE GREZZA COMPLETATA
   `giochi: true`; `avvisoNonCollocabile` propone l'ultima giornata non dei Giochi del quadrimestre.
 - `allertaGiochi(stato, oggi)` (selettori.js) → pannello in Settimana. Test: 184 unitari, 11 E2E.
 
+## 0.11.0 (2026-10-28) — agenda del docente
+- Schema v4: raccolta `lezioniSvolte` [{classe, data}] (migrate_3_to_4). Eventi con `chi`: docente/classe/entrambi
+  (vecchi eventi senza `chi` = «saltata»). Azioni: ESITI_LEZIONE, esitoLezione, impostaEsitoLezione,
+  confermaLezioni. Selettori: lezioniDaConfermare, lezioniNelPeriodo({ conSaltate }).
+- Vista src/ui/viste/agenda.js (#/gestionale/agenda), contatore rosso nel menu (app.js).
+- Test: 190 unitari (agenda.test.js), 12 E2E («Agenda: segno la mia assenza…»).
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

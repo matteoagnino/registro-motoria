@@ -1,9 +1,9 @@
 // Versionamento dello schema dati e migrazioni (migrate_n_to_n+1).
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 export const FORMATO_ARCHIVIO = 'registro-motoria-archivio';
 
-const RACCOLTE = ['alunni', 'giornate', 'progetti', 'eventi', 'registrazioni', 'rubricheProcesso', 'giudiziDefinitivi'];
+const RACCOLTE = ['alunni', 'giornate', 'progetti', 'eventi', 'registrazioni', 'rubricheProcesso', 'giudiziDefinitivi', 'lezioniSvolte'];
 
 /** v0 → v1: archivi precedenti senza schemaVersion; aggiunge le raccolte mancanti. */
 function migrate_0_to_1(s) {
@@ -53,7 +53,12 @@ function migrate_2_to_3(s) {
   return { ...s, schemaVersion: 3, giochi: s.giochi ? { ...s.giochi, risultati } : s.giochi };
 }
 
-export const MIGRAZIONI = { 0: migrate_0_to_1, 1: migrate_1_to_2, 2: migrate_2_to_3 };
+/** v3 → v4: agenda del docente, lezioni confermate come svolte ({classe, data}). */
+function migrate_3_to_4(s) {
+  return { ...s, schemaVersion: 4, lezioniSvolte: Array.isArray(s.lezioniSvolte) ? s.lezioniSvolte : [] };
+}
+
+export const MIGRAZIONI = { 0: migrate_0_to_1, 1: migrate_1_to_2, 2: migrate_2_to_3, 3: migrate_3_to_4 };
 
 export function migra(stato) {
   let s = { ...stato };

@@ -171,6 +171,51 @@ export function segnaLezioniNonSvolte(stato, lezioni, motivo) {
   return nuove.reduce((s, l) => aggiungiEvento(s, { ...l, motivo }), stato);
 }
 
+// ---------- Agenda del docente ----------
+
+/** Esiti di una lezione nell'agenda: svolta, oppure non svolta per assenza del docente, della classe o di entrambi. */
+export const ESITI_LEZIONE = {
+  svolta: 'Svolta',
+  docente: 'Assente io',
+  classe: 'Classe assente',
+  entrambi: 'Entrambi'
+};
+const MOTIVI_ESITO = { docente: 'Assenza docente', classe: 'Classe impegnata in altra attività', entrambi: 'Assenti docente e classe' };
+
+const stessaLezione = (classe, data) => (x) => x.classe === classe && x.data === data;
+
+/** Esito registrato di una lezione: 'svolta', 'docente', 'classe', 'entrambi', 'saltata' (vecchi eventi senza chi) o null. */
+export function esitoLezione(stato, classe, data) {
+  if ((stato.lezioniSvolte ?? []).some(stessaLezione(classe, data))) return 'svolta';
+  const ev = stato.eventi.find(stessaLezione(classe, data));
+  return ev ? (ev.chi ?? 'saltata') : null;
+}
+
+/**
+ * Imposta l'esito di una lezione (null = da confermare). Un'assenza diventa una lezione non svolta:
+ * la sequenza della classe si ricalcola da sola.
+ */
+export function impostaEsitoLezione(stato, { classe, data, esito, motivo }) {
+  if (!classe || !/^\d{4}-\d{2}-\d{2}$/.test(data || '')) throw new Error('Classe e data sono obbligatorie.');
+  if (esito != null && !ESITI_LEZIONE[esito]) throw new Error('Esito della lezione non valido.');
+  const prima = stato.eventi.find(stessaLezione(classe, data));
+  const pulito = {
+    ...stato,
+    eventi: stato.eventi.filter((e) => !stessaLezione(classe, data)(e)),
+    lezioniSvolte: (stato.lezioniSvolte ?? []).filter((x) => !stessaLezione(classe, data)(x))
+  };
+  if (esito == null) return pulito;
+  if (esito === 'svolta') return { ...pulito, lezioniSvolte: [...pulito.lezioniSvolte, { classe, data }] };
+  const testo = (motivo ?? (prima?.chi === esito ? prima.motivo : null) ?? MOTIVI_ESITO[esito]).trim() || MOTIVI_ESITO[esito];
+  return { ...pulito, eventi: [...pulito.eventi, { id: prima?.id ?? nuovoId(), classe, data, motivo: testo, chi: esito }] };
+}
+
+/** Conferma come svolte le lezioni indicate che non hanno ancora un esito. */
+export function confermaLezioni(stato, lezioni) {
+  const daConfermare = lezioni.filter(({ classe, data }) => esitoLezione(stato, classe, data) == null);
+  return { ...stato, lezioniSvolte: [...(stato.lezioniSvolte ?? []), ...daConfermare.map(({ classe, data }) => ({ classe, data }))] };
+}
+
 export const rimuoviEvento = (stato, id) => ({ ...stato, eventi: stato.eventi.filter((e) => e.id !== id) });
 
 export function salvaGiornata(stato, giornata) {

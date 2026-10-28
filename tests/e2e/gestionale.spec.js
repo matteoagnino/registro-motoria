@@ -209,3 +209,20 @@ test('Settimana: le lezioni con lo stesso orario stanno sulla stessa riga', asyn
   const altezze = await griglia.locator('.cella-fascia[data-fascia="08:30–10:30"]').evaluateAll((celle) => [...new Set(celle.map((c) => Math.round(c.getBoundingClientRect().top)))]);
   expect(altezze).toHaveLength(1);
 });
+
+test('Agenda: segno la mia assenza su una lezione e la programmazione si aggiorna', async ({ page }) => {
+  await apri(page, '#/gestionale/agenda?settimana=2026-11-02');
+  const esiti = page.getByRole('group', { name: 'Esito 4BM 2026-11-02' });
+  await expect(esiti.getByRole('button', { name: 'Svolta' })).toBeDisabled(); // lezione futura
+  await esiti.getByRole('button', { name: 'Assente io' }).click();
+  await expect(esiti.getByRole('button', { name: 'Assente io' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByLabel('Motivo 4BM 2026-11-02')).toHaveValue('Assenza docente');
+  await apri(page, '#/gestionale/calendario?classe=4BM');
+  await expect(page.locator('tr', { hasText: 'lunedì 02/11/2026' })).toContainText('Assenza docente');
+  await expect(page.locator('tr', { hasText: 'Q1-G03' }).first()).toContainText('09/11/2026');
+  // un secondo tocco sullo stesso esito lo toglie
+  await apri(page, '#/gestionale/agenda?settimana=2026-11-02');
+  await page.getByRole('group', { name: 'Esito 4BM 2026-11-02' }).getByRole('button', { name: 'Assente io' }).click();
+  await apri(page, '#/gestionale/calendario?classe=4BM');
+  await expect(page.locator('tr', { hasText: 'Q1-G03' }).first()).toContainText('02/11/2026');
+});

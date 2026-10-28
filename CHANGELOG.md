@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.11.0 — agenda del docente (2026-10-28)
+- Nuova voce di menu «Agenda»: la tua settimana, giorno per giorno, con tutte le lezioni. Per ognuna: «Svolta»,
+  «Assente io», «Classe assente» o «Entrambi» (un secondo tocco toglie la scelta). Le assenze si segnano anche
+  in anticipo; il motivo si può scrivere accanto (es. «Gita al museo»).
+- Un'assenza rende la lezione non svolta e la programmazione si aggiorna da sola (stessa regola: una prova
+  slitta al posto del suo recupero). Per le lezioni con prova si vede prima cosa succederebbe.
+- «Sono assente tutto il giorno» per segnare in un colpo le lezioni di un giorno; «Assenza di più giorni…»
+  per periodi più lunghi.
+- «Conferma le lezioni svolte fino a oggi» per tutta la settimana; il numero rosso nel menu indica le lezioni
+  passate ancora da confermare (con «Conferma tutte come svolte» per le settimane passate).
+
 ## 0.10.1 — giornate dei Giochi della Gioventù (2026-10-28)
 - Calendario → Modifica giornata: spunta «Giochi della Gioventù». La giornata ha l'etichetta «Giochi».
 - Non si sacrifica mai: se i cuscinetti finiscono, l'avviso propone di sacrificare una giornata che non è dei

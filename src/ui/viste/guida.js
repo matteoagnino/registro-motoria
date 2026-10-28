@@ -10,7 +10,8 @@ const PASSI = [
   ]],
   ['Ogni settimana', [
     'Settimana: vedi per ogni classe che tipo di lezione è (prova, recupero, progetto, cuscinetto, libera) e chi deve recuperare.',
-    'Calendario: aggiungi le giornate di prova (max 4 sotto-obiettivi) e «Lezioni non svolte…» (anche da Settimana) per gite o tue assenze, più classi e giorni in una volta: una prova slitta al posto del suo recupero, il resto resta allineato.'
+    'Calendario: aggiungi le giornate di prova (max 4 sotto-obiettivi) e per gite o tue assenze usa l\'Agenda: una prova non svolta slitta al posto del suo recupero, il resto resta allineato.',
+    'Agenda: ogni settimana conferma le lezioni svolte; per ogni lezione «Assente io», «Classe assente» o «Entrambi» (anche in anticipo); «Assenza di più giorni…» per periodi lunghi. La programmazione si aggiorna da sola.'
   ]],
   ['In palestra (iPad)', [
     'Sul Mac: Import/Export → «Pacchetto classe per iPad» → AirDrop all\'iPad.',

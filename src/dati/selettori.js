@@ -3,7 +3,7 @@ import { pianificaTutte, quadrimestriConInizio } from '../pianificazione/planner
 import { vociVoto, riepilogoAlunno } from '../calcolo/riepilogo.js';
 import { votoRegistrazione, daRecuperare, giudizioVoto } from '../calcolo/voti.js';
 import { violazioniRegola } from '../calcolo/regole.js';
-import { alunniDi, ordinaClassi } from './azioni.js';
+import { alunniDi, ordinaClassi, esitoLezione } from './azioni.js';
 import { descriviInfortunio } from './infortunio.js';
 import { giorniTra } from '../pianificazione/date.js';
 
@@ -132,11 +132,16 @@ export function allertaGiochi(stato, oggi) {
   }).filter((a) => a.svolte.length && a.mancanti.length);
 }
 
-/** Lezioni delle classi tra due date (non già saltate), in ordine di data e orario. */
-export function lezioniNelPeriodo(stato, dal, al = dal) {
+/** Lezioni passate (fino a oggi compreso) ancora senza esito nell'agenda. */
+export function lezioniDaConfermare(stato, oggi) {
+  return lezioniNelPeriodo(stato, stato.anno.inizio, oggi).filter((l) => esitoLezione(stato, l.classe, l.data) == null);
+}
+
+/** Lezioni delle classi tra due date, in ordine di data e orario (le già saltate solo con `conSaltate`). */
+export function lezioniNelPeriodo(stato, dal, al = dal, { conSaltate = false } = {}) {
   const p = piano(stato);
   return ordinaClassi(stato.classi)
-    .flatMap((c) => (p[c.codice]?.lezioni ?? []).filter((l) => l.data >= dal && l.data <= al && l.tipo !== 'saltata')
+    .flatMap((c) => (p[c.codice]?.lezioni ?? []).filter((l) => l.data >= dal && l.data <= al && (conSaltate || l.tipo !== 'saltata'))
       .map((l) => ({ ...l, classe: c.codice, plesso: c.plesso })))
     .sort((a, b) => a.data.localeCompare(b.data) || a.inizio.localeCompare(b.inizio));
 }

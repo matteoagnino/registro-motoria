@@ -93,6 +93,10 @@ dell'alunno nel gestionale.
 - Regole: alternanza **prova → recupero → prova…**; **2 lezioni cuscinetto** a fine quadrimestre;
   **lezione libera** (attività scelta dai bambini) nell'ultima lezione prima delle vacanze di Natale e
   nell'ultima dell'anno; lezioni di progetto inserite come blocco che sospende la sequenza.
+- **Agenda del docente** (2026-10-28): per ogni settimana le lezioni di tutte le classi; Matteo conferma quelle
+  svolte (`lezioniSvolte`) e segna «Assente io», «Classe assente» o «Entrambi» (anche in anticipo): diventano
+  lezioni non svolte (`eventi` con `chi`) e la sequenza si ricalcola. Contatore delle lezioni passate da
+  confermare nel menu.
 - **Lezione non svolta** (gita, assenza docente, evento) registrata con motivo, anche per più classi e più
   giorni in una volta («Sono assente io» = tutte le classi di quei giorni). Lezione senza prova: si salta e
   la programmazione prosegue. Lezione con prova: la prova slitta alla lezione successiva della classe (al

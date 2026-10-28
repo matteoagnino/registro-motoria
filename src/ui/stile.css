@@ -557,3 +557,23 @@ body[data-modo="campo"] .banner-aggiorna { bottom: 108px; }
 .badge-giochi { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 5px; font: 600 10.5px var(--font); color: #a05a00; background: rgba(255, 159, 10, .18); vertical-align: 1px; }
 .elenco-non-svolte .effetto.giochi { color: #a05a00; }
 .spunta-giochi { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; }
+
+/* Agenda del docente */
+.barra-agenda { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 14px; }
+.giorno-agenda .intestazione { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.giorno-agenda.oggi { box-shadow: inset 3px 0 0 var(--accent); }
+.badge-oggi { margin-left: 8px; font: 600 11px var(--font); color: var(--onaccent); background: var(--accent); padding: 2px 7px; border-radius: 6px; vertical-align: 3px; }
+.lezioni-agenda { list-style: none; margin: 0; padding: 0; }
+.lezioni-agenda li { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 12px; padding: 10px 4px; border-top: 1px solid var(--sep); }
+.lezioni-agenda .dove { display: flex; align-items: baseline; gap: 8px; }
+.lezioni-agenda .ora { color: var(--sec); font-variant-numeric: tabular-nums; }
+.lezioni-agenda .cosa { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.lezioni-agenda .se-manca { flex-basis: 100%; }
+.lezioni-agenda input.motivo { min-height: 0; height: 26px; font-size: 12.5px; width: 240px; }
+.lezioni-agenda .esiti { display: inline-flex; background: var(--fill); border-radius: 10px; padding: 3px; gap: 3px; }
+.lezioni-agenda .esiti button { min-height: 32px; height: 32px; padding: 0 10px; border-radius: 7px; background: transparent; font-weight: 600; }
+.lezioni-agenda .esiti button.attivo.esito-svolta { background: var(--l9); color: #fff; }
+.lezioni-agenda .esiti button.attivo:not(.esito-svolta) { background: var(--rosso); color: #fff; }
+.lezioni-agenda li:not(.esito-da-confermare):not(.esito-svolta) .cosa { color: var(--sec); }
+.conta.da-confermare { background: var(--rosso); color: #fff; }
+@media (max-width: 900px) { .lezioni-agenda li { grid-template-columns: 1fr; } }

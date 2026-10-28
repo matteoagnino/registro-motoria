@@ -91,6 +91,7 @@ export function creaStatoIniziale(deviceId = 'gestionale') {
     giornate: giornateIniziali(),
     progetti: progettiIniziali(),
     eventi: [],
+    lezioniSvolte: [],
     registrazioni: [],
     rubricheProcesso: [],
     giudiziDefinitivi: [],
