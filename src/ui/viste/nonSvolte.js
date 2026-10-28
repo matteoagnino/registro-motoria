@@ -11,6 +11,7 @@ const MOTIVI = {
 
 /** Cosa succede alla sequenza se la lezione non si svolge. */
 export function effettoSalto(l) {
+  if (l.tipo === 'prova' && l.giochi) return `Giochi della Gioventù ${l.giornataId}: da recuperare per forza, slitta alla lezione successiva (al posto del recupero)`;
   if (l.tipo === 'prova') return `prova ${l.giornataId}: slitta alla lezione successiva (al posto del recupero)`;
   if (l.tipo === 'recupero') return `recupero di ${l.recuperoDi}: si sposta alla prima lezione libera`;
   if (l.tipo === 'progetto') return `progetto${l.giornataId ? ` (${l.giornataId})` : ''}: la sequenza viene ricalcolata`;
@@ -41,7 +42,7 @@ export function apriLezioniNonSvolte(ctx, { dal = oggiISO(), classi = null } = {
           onchange: (e) => (e.target.checked ? scelte.add(chiave(l)) : scelte.delete(chiave(l)))
         }),
         h('span.quando', `${formatta(l.data, true)} · ${l.inizio}`), h('strong', l.classe),
-        h(`span.effetto${l.tipo === 'prova' ? '.prova' : ''}`, effettoSalto(l))))))
+        h(`span.effetto${l.tipo === 'prova' ? '.prova' : ''}${l.giochi ? '.giochi' : ''}`, effettoSalto(l))))))
       : h('p.tenue', 'Nessuna lezione in questo periodo.'));
   };
   const preselezione = () => (l) => (tipo === 'docente' ? true : Boolean(classi?.includes(l.classe)));

@@ -32,7 +32,7 @@ function sequenza(ctx, cl) {
       h('tbody', gc.map((g) => {
         const v = viol.filter((x) => x.giornataId === g.id);
         return h('tr',
-          h('td', h('strong', g.id), g.progetto ? h('div.tenue', `progetto ${g.progetto}`) : null),
+          h('td', h('strong', g.id), g.giochi ? h('span.badge-giochi', 'Giochi') : null, g.progetto ? h('div.tenue', `progetto ${g.progetto}`) : null),
           h('td', g.descrizione),
           h('td', (g.sottoObiettivi['4'] || []).map((c) => chipSotto(stato, 4, c))),
           h('td', (g.sottoObiettivi['5'] || []).map((c) => chipSotto(stato, 5, c))),
@@ -60,6 +60,8 @@ function editorGiornata(ctx, g, nuova) {
     h('div.riga',
       campo('Settimana Manzoni (lunedì)', h('input', { type: 'date', name: 'aM', value: g.ancora?.Manzoni || '' })),
       campo('Settimana Boncompagni (lunedì)', h('input', { type: 'date', name: 'aB', value: g.ancora?.Boncompagni || '' }))),
+    h('label.spunta-giochi', h('input', { type: 'checkbox', name: 'giochi', checked: Boolean(g.giochi) }),
+      h('span', h('b', 'Giochi della Gioventù'), h('small.tenue', ' · tutte le classi devono svolgerla: non si sacrifica mai e, se una classe resta indietro, compare un avviso in Settimana'))),
     campo('Collegata a un progetto', select([['', 'No'], ...[...new Set(stato.progetti.map((p) => p.codice))].map((c) => [c, c])], g.progetto || '', { name: 'progetto' }),
       'Le giornate di progetto cadono nella prima lezione di progetto della settimana indicata (senza settimana: nell\'ultima); le lezioni di progetto successive servono a recuperare gli assenti.'));
   const leggi = () => {
@@ -69,7 +71,8 @@ function editorGiornata(ctx, g, nuova) {
       ...g, id: f.id.value.trim(), descrizione: f.descrizione.value.trim(),
       sottoObiettivi: { 4: lista('s4_'), 5: lista('s5_') },
       ancora: { Manzoni: f.aM.value || null, Boncompagni: f.aB.value || null },
-      progetto: f.progetto.value || null
+      progetto: f.progetto.value || null,
+      giochi: f.giochi.checked
     };
   };
   const azioni = [{ testo: 'Salva giornata', primario: true, azione: () => Boolean(prova(() => ctx.store.aggiorna((s) => A.salvaGiornata(s, leggi())), 'Giornata salvata')) }];
@@ -119,7 +122,7 @@ function lezioniClasse(ctx, cl) {
         h('td', formatta(l.data, true)),
         h('td', `${l.inizio}–${l.fine}${l.scenario !== 'tutte' ? ` · ${l.scenario}` : ''}`),
         h('td', etichettaTipo(l.tipo)),
-        h('td', l.giornataId ? h('strong', l.giornataId) : null, l.recuperoDi ? ` recupero di ${l.recuperoDi}` : '',
+        h('td', l.giornataId ? h('strong', l.giornataId) : null, l.giochi ? h('span.badge-giochi', 'Giochi') : null, l.recuperoDi ? ` recupero di ${l.recuperoDi}` : '',
           l.motivo ? h('div.tenue', l.motivo) : null, l.aula ? h('div.tenue', 'in aula') : null),
         h('td', (l.sottoObiettivi || []).map((c) => chipSotto(stato, cl.livello, c))),
         h('td', l.tipo === 'saltata'

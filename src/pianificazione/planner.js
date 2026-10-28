@@ -87,12 +87,28 @@ function assegnaProva(lezioni, idx, g, codici, riservate) {
   l.tipo = 'prova';
   l.giornataId = g.id;
   l.sottoObiettivi = codici;
+  if (g.giochi) l.giochi = true;
   const j = indiceRecupero(lezioni, idx, riservate);
   if (j >= 0) {
     lezioni[j].tipo = 'recupero';
     lezioni[j].recuperoDi = g.id;
   }
 }
+
+/**
+ * Cuscinetti esauriti: le giornate dei Giochi della Gioventù non si sacrificano mai (tutte le classi devono
+ * avere le stesse rilevazioni); si propone l'ultima giornata già collocata che non è dei Giochi.
+ */
+function avvisoNonCollocabile(g, q, piazzate, giornate) {
+  const giochi = new Set(giornate.filter((x) => x.giochi).map((x) => x.id));
+  const sacrificabile = [...piazzate].reverse().find((p) => !giochi.has(p.giornataId) && quadrimestreGiornata(p.giornataId) === q.id);
+  const proposta = sacrificabile ? `sacrifica ${sacrificabile.giornataId} (non dei Giochi)` : 'nessuna giornata sacrificabile prima di questa';
+  return g.giochi
+    ? `${g.id} (Giochi della Gioventù, da non sacrificare): cuscinetti esauriti nel ${q.id} — ${proposta} per farle posto`
+    : `${g.id}: cuscinetti esauriti nel ${q.id} — valuta di sacrificare questa giornata oppure ${sacrificabile ? sacrificabile.giornataId : 'una precedente'} (non dei Giochi)`;
+}
+
+const quadrimestreGiornata = (id) => id.slice(0, 2);
 
 /**
  * Pianifica una classe.
@@ -136,6 +152,7 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
         for (const r of delProgetto.slice(k + 1)) r.recuperoDi = g.id;
         l.giornataId = g.id;
         l.sottoObiettivi = codici;
+        if (g.giochi) l.giochi = true;
         esito[g.id] = { data: l.data, stato: 'pianificata' };
         piazzate.push({ giornataId: g.id, data: l.data, sottoObiettivi: codici });
         continue;
@@ -158,7 +175,7 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
       }
       if (idx < 0) {
         esito[g.id] = { data: null, stato: 'non collocabile' };
-        avvisi.push(`${g.id}: cuscinetti esauriti nel ${q.id} — valuta di sacrificare questa giornata o una precedente`);
+        avvisi.push(avvisoNonCollocabile(g, q, piazzate, giornate));
         continue;
       }
       // Spostata non per una lezione saltata ma dalla regola dei giorni minimi: da qui la sequenza scala in avanti.

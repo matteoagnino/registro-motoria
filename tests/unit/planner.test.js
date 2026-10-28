@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import { pianificaTutte, quadrimestreDiData } from '../../src/pianificazione/planner.js';
 import * as A from '../../src/dati/azioni.js';
-import { lezioniNelPeriodo } from '../../src/dati/selettori.js';
+import { lezioniNelPeriodo, allertaGiochi } from '../../src/dati/selettori.js';
 import { isChiuso, scenarioSettimana } from '../../src/pianificazione/lezioni.js';
 import { giornoSettimana } from '../../src/pianificazione/date.js';
 
@@ -147,5 +147,30 @@ describe('lezioni non svolte (più classi in una volta)', () => {
     expect(s.eventi.find((e) => e.classe === lezioni[0].classe).motivo).toBe('Gita');
     expect(lezioniNelPeriodo(s, '2026-11-02')).toEqual([]);
     expect(() => A.segnaLezioniNonSvolte(stato, [], 'x')).toThrow();
+  });
+});
+
+describe('giornate dei Giochi della Gioventù', () => {
+  const g = (id, so, giochi = false) => ({ id, quadrimestre: 'Q1', descrizione: '', ancora: {}, progetto: null, giochi, sottoObiettivi: { 4: [so], 5: [so] } });
+  test('cuscinetti esauriti: la giornata dei Giochi non si sacrifica, si propone una giornata normale', () => {
+    const so = ['4.1', '4.2', '4.3', 'CIV.1'];
+    const molte = Array.from({ length: 12 }, (_, i) => g(`Q1-G${String(i + 4).padStart(2, '0')}`, so[i % 4], i === 11));
+    const p = pianificaTutte({ ...stato, giornate: [...stato.giornate, ...molte] })['4BM'];
+    const avviso = p.avvisi.find((a) => a.startsWith('Q1-G15'));
+    expect(avviso).toMatch(/Giochi della Gioventù, da non sacrificare/);
+    expect(avviso).toMatch(/sacrifica Q1-G\d\d \(non dei Giochi\)/);
+  });
+  test('la lezione con la prova dei Giochi è contrassegnata', () => {
+    const p = pianificaTutte({ ...stato, giornate: [...stato.giornate, g('Q1-G04', '4.1', true)] })['4BM'];
+    expect(p.lezioni.find((l) => l.giornataId === 'Q1-G04').giochi).toBe(true);
+  });
+  test('avviso quando una classe resta indietro su una giornata dei Giochi', () => {
+    const s = { ...stato, giornate: [...stato.giornate, g('Q1-G04', '4.1', true)] };
+    const date = Object.fromEntries(s.classi.map((c) => [c.codice, pianificaTutte(s)[c.codice].giornate['Q1-G04'].data]));
+    const prima = Object.values(date).sort()[0];
+    expect(allertaGiochi(s, '2026-09-01')).toEqual([]);
+    const a = allertaGiochi(s, prima)[0];
+    expect(a.svolte.every((c) => date[c] <= prima)).toBe(true);
+    expect(a.mancanti.length).toBeGreaterThan(0);
   });
 });

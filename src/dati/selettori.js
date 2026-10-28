@@ -115,6 +115,23 @@ export function violazioniClasse(stato, codiceClasse) {
   return violazioniRegola(prove, stato.impostazioni.parametri.giorni_minimi_ripetizione);
 }
 
+/**
+ * Giornate dei Giochi della Gioventù in cui qualche classe è rimasta indietro: almeno una classe l'ha già
+ * svolta (data passata) e un'altra no (data futura o non collocata). [{giornata, svolte[], mancanti[{classe, data, stato}]}]
+ */
+export function allertaGiochi(stato, oggi) {
+  const p = piano(stato);
+  return stato.giornate.filter((g) => g.giochi).map((g) => {
+    const classi = ordinaClassi(stato.classi).filter((c) => (g.sottoObiettivi?.[String(c.livello)] ?? []).length || g.progetto);
+    const esiti = classi.map((c) => ({ classe: c.codice, data: p[c.codice]?.giornate[g.id]?.data ?? null, stato: p[c.codice]?.giornate[g.id]?.stato ?? 'da pianificare' }));
+    return {
+      giornata: g,
+      svolte: esiti.filter((e) => e.data && e.data <= oggi).map((e) => e.classe),
+      mancanti: esiti.filter((e) => !e.data || e.data > oggi)
+    };
+  }).filter((a) => a.svolte.length && a.mancanti.length);
+}
+
 /** Lezioni delle classi tra due date (non già saltate), in ordine di data e orario. */
 export function lezioniNelPeriodo(stato, dal, al = dal) {
   const p = piano(stato);

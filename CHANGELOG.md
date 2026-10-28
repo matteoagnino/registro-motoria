@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.10.1 — giornate dei Giochi della Gioventù (2026-10-28)
+- Calendario → Modifica giornata: spunta «Giochi della Gioventù». La giornata ha l'etichetta «Giochi».
+- Non si sacrifica mai: se i cuscinetti finiscono, l'avviso propone di sacrificare una giornata che non è dei
+  Giochi.
+- Lezioni non svolte: le prove dei Giochi sono evidenziate («da recuperare per forza»).
+- Settimana: avviso se una classe è rimasta indietro su una giornata dei Giochi che altre classi hanno già svolto.
+
 ## 0.10.0 — lezioni non svolte (2026-10-28)
 - Settimana e Calendario: «Lezioni non svolte…». Scegli il giorno (o dal… al…) e il motivo: «Sono assente
   io» spunta tutte le classi che hanno lezione, «Gita o attività di alcune classi» le scegli tu. Per ogni

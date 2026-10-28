@@ -1,7 +1,7 @@
 // Settimana condivisa: tutte le classi, giorno per giorno, con cosa si valuta e chi deve recuperare.
 import { h } from '../dom.js';
 import { conParametri } from '../app.js';
-import { piano, daRecuperareClasse, giornata, avanzamentoGiornata, allertaPochiVoti } from '../../dati/selettori.js';
+import { piano, daRecuperareClasse, giornata, avanzamentoGiornata, allertaPochiVoti, allertaGiochi } from '../../dati/selettori.js';
 import { alunniDi } from '../../dati/azioni.js';
 import { lunediDi, aggiungiGiorni, oggiISO, formatta, GIORNI_LUNGHI, toDate } from '../../pianificazione/date.js';
 import { intestazione, etichettaTipo, chipSotto } from './comuni.js';
@@ -31,6 +31,7 @@ export function vistaOggi(ctx, { params }) {
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, 7) }), 'aria-label': 'Settimana successiva' }, 'Successiva ›'),
       h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) }),
       h('button', { onclick: () => apriLezioniNonSvolte(ctx, { dal: giorni.includes(oggi) ? oggi : lun }) }, 'Lezioni non svolte…')),
+    pannelloGiochi(stato, oggi),
     pannelloPochiVoti(stato, oggi),
     pannelloRecuperi(stato),
     griglia(stato, p, giorni, oggi));
@@ -106,6 +107,19 @@ function pannelloRecuperi(stato) {
 }
 
 /** Avviso di fine quadrimestre: chi ha ancora pochi voti e quante lezioni restano per rimediare. */
+/** Giochi della Gioventù: classi rimaste indietro rispetto alle altre su una giornata dei Giochi. */
+function pannelloGiochi(stato, oggi) {
+  const allerte = allertaGiochi(stato, oggi);
+  if (!allerte.length) return null;
+  const quando = (m) => (m.data ? `prevista il ${formatta(m.data)}` : m.stato);
+  return h('details.scheda.attenzione', { open: true },
+    h('summary', h('strong', 'Giochi della Gioventù: '), 'classi rimaste indietro'),
+    h('ul', allerte.map((a) => h('li',
+      h('b', `${a.giornata.id} ${a.giornata.descrizione}`), ` — già svolta da ${a.svolte.join(', ')}; manca a `,
+      a.mancanti.map((m, i) => [i ? ', ' : '', h('a', { href: `#/gestionale/calendario?classe=${m.classe}` }, h('b', m.classe)), ` (${quando(m)})`])))),
+    h('p.tenue', 'Tutte le classi devono avere le stesse rilevazioni e le stesse opportunità per i Giochi: recupera queste giornate prima di altre prove.'));
+}
+
 function pannelloPochiVoti(stato, oggi) {
   const a = allertaPochiVoti(stato, oggi);
   if (!a?.classi.length) return null;

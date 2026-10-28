@@ -123,5 +123,10 @@ STATO: VERSIONE GREZZA COMPLETATA
 - Test: 181 unitari (planner.test.js: riassorbimento, ripiego a cascata, lezione senza prova, più classi),
   11 E2E (M3 aggiornato, «Assenza del docente»).
 
+## 0.10.1 (2026-10-28) — Giochi della Gioventù
+- Giornata `giochi: boolean` (salvaGiornata lo normalizza; nessuna migrazione, assente = false). Planner: lezione
+  `giochi: true`; `avvisoNonCollocabile` propone l'ultima giornata non dei Giochi del quadrimestre.
+- `allertaGiochi(stato, oggi)` (selettori.js) → pannello in Settimana. Test: 184 unitari, 11 E2E.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

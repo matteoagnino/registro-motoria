@@ -180,7 +180,7 @@ export function salvaGiornata(stato, giornata) {
     if (codici.length > 4) throw new Error('Al massimo 4 sotto-obiettivi per giornata.');
     if (new Set(codici).size !== codici.length) throw new Error('Lo stesso sotto-obiettivo non può comparire due volte nella giornata.');
   }
-  const g = { ancora: {}, progetto: null, descrizione: '', ...giornata, quadrimestre: giornata.id.slice(0, 2) };
+  const g = { ancora: {}, progetto: null, descrizione: '', ...giornata, giochi: Boolean(giornata.giochi), quadrimestre: giornata.id.slice(0, 2) };
   const esiste = stato.giornate.some((x) => x.id === g.id);
   const giornate = esiste ? stato.giornate.map((x) => (x.id === g.id ? g : x)) : [...stato.giornate, g];
   return { ...stato, giornate: [...giornate].sort((a, b) => a.id.localeCompare(b.id)) };

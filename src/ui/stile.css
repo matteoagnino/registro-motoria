@@ -554,3 +554,6 @@ body[data-modo="campo"] .banner-aggiorna { bottom: 108px; }
 .elenco-non-svolte strong { min-width: 44px; }
 .elenco-non-svolte .effetto { color: var(--sec); font-size: 13px; }
 .elenco-non-svolte .effetto.prova { color: var(--rosso); font-weight: 600; }
+.badge-giochi { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 5px; font: 600 10.5px var(--font); color: #a05a00; background: rgba(255, 159, 10, .18); vertical-align: 1px; }
+.elenco-non-svolte .effetto.giochi { color: #a05a00; }
+.spunta-giochi { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; }
