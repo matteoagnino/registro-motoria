@@ -99,7 +99,10 @@ dell'alunno nel gestionale.
   posto del recupero, che passa alla prima lezione libera) e le prove seguenti restano al loro posto, così la
   classe resta allineata alle altre (decisione di Matteo, 2026-10-28). Solo se la regola dei giorni minimi lo
   impedisce la sequenza scala in avanti; i cuscinetti assorbono gli slittamenti; se finiscono, il sistema
-  avvisa e propone quale giornata sacrificare.
+  avvisa e propone quale giornata sacrificare. Le classi non devono per forza avere lo stesso numero di
+  valutazioni: se serve, una giornata di prova si può sacrificare. Fanno eccezione le attività dei **Giochi
+  della Gioventù**: tutte le classi devono avere le stesse rilevazioni e le stesse opportunità (indicazione
+  di Matteo, 2026-10-28).
 - Vista **settimanale condivisa** (tutte le classi, giorno per giorno) e vista per classe.
 - Struttura di ogni lezione da 120': 15' accoglienza e trasferimento · 90' attività (ultimi 20' gioco a
   squadre) · 15' cambio, schede di autovalutazione, rientro.
