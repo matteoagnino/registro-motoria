@@ -30,7 +30,7 @@ describe('infortunio', () => {
     expect(descriviInfortunio(null)).toBe('durata da indicare');
   });
 
-  test('stato INF: niente voto, alunno registrato, non da recuperare', () => {
+  test('stato INF: niente voto e prova da recuperare, come per gli assenti', () => {
     let { s, base } = conAlunno();
     s = A.impostaLivello(s, { ...base, sottoObiettivo: '1.1', indice: 0, valore: 8 });
     s = A.impostaStatoGiornata(s, { ...base, valore: 'INF' });
@@ -39,8 +39,19 @@ describe('infortunio', () => {
     expect(regs.every((r) => r.stato === 'INF' && r.infortunio.durata === 'oltre21')).toBe(true);
     expect(regs.every((r) => votoRegistrazione(r) == null)).toBe(true);
     expect(avanzamentoGiornata(s, '4BM', 'Q1-G03').fatti).toBe(1);
+    expect(daRecuperareClasse(s, '4BM').get(base.alunnoId)).toEqual(new Set(['Q1-G03']));
+    expect(verificaVoti(s, '4BM')[0].celle['Q1-G03']).toBe('Infortunio (> 21 giorni) da recuperare');
+  });
+
+  test('con la data del recupero l\'infortunato riceve il voto, pesato alla data del recupero', () => {
+    let { s, base } = conAlunno();
+    s = A.impostaInfortunio(s, { ...base, infortunio: { durata: 'oltre7' } });
+    s = A.impostaRecupero(s, { ...base, data: '2026-11-16' });
+    for (const i of [0, 1, 2, 3]) s = A.impostaLivello(s, { ...base, sottoObiettivo: '1.1', indice: i, valore: 8 });
+    const r = s.registrazioni.find((x) => x.alunnoId === base.alunnoId && x.sottoObiettivo === '1.1');
+    expect(votoRegistrazione(r)).toBe(8);
     expect(daRecuperareClasse(s, '4BM').size).toBe(0);
-    expect(verificaVoti(s, '4BM')[0].celle['Q1-G03']).toBe('Infortunio (> 21 giorni)');
+    expect(verificaVoti(s, '4BM')[0].celle['Q1-G03']).toBe('1.1: 8');
   });
 
   test('cambiando stato la durata dell\'infortunio si toglie', () => {

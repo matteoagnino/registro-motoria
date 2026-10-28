@@ -104,8 +104,8 @@ const MINUTI_DOPO = 15;
 const PROMEMORIA_EXPORT_ORE = 24;
 const minuti = (hhmm) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
 
-/** Registrazione di un assente non ancora recuperata (nessuna data di recupero e nessun voto). */
-const inSospeso = (r) => r.stato === 'AS' && !r.recuperataIl && !(r.livelli || []).some((l) => l != null);
+/** Registrazione di un assente o infortunato non ancora recuperata (nessuna data di recupero e nessun voto). */
+const inSospeso = (r) => ['AS', 'INF'].includes(r.stato) && !r.recuperataIl && !(r.livelli || []).some((l) => l != null);
 
 /** Recuperi in sospeso di una classe: [{alunno, giornataId}] in ordine di numero e giornata. */
 export function recuperiInSospeso(campo, classe) {

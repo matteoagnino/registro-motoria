@@ -7,7 +7,7 @@ import {
   importaPacchetto, campoLivello, campoStato, campoRecupero, campoInfortunio, esportaVoti, nDaEsportare, trovaCampo,
   recuperiInSospeso, lezioniDiOggi, giornataDellaLezione, promemoriaExport
 } from '../../dati/campo.js';
-import { votoRegistrazione, giudizioVoto } from '../../calcolo/voti.js';
+import { votoRegistrazione, giudizioVoto, STATI_CON_RECUPERO } from '../../calcolo/voti.js';
 import { scegliFile, condividiOScarica, marcaTemporale } from '../../dati/archivio.js';
 import { oggiISO, formatta, giornoSettimana, giorniTra } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
@@ -180,7 +180,8 @@ function statoScheda(c, alunno, g) {
   if (alunno.stato === 'ES') return 'es';
   const regs = g.sottoObiettivi.map((so) => trovaCampo(c, alunno.id, g.id, so));
   if (regs.some((r) => r?.stato === 'AS' && votoRegistrazione(r) == null)) return 'assente';
-  if (regs.some((r) => r?.stato)) return 'completo';
+  // infortunato che ha recuperato: conta come un alunno da valutare (voti in tutti i sotto-obiettivi)
+  if (regs.some((r) => r?.stato && !(r.stato === 'INF' && r.recuperataIl))) return 'completo';
   const conVoto = regs.filter((r) => votoRegistrazione(r) != null).length;
   if (conVoto === g.sottoObiettivi.length) return 'completo';
   return conVoto > 0 || regs.some((r) => r?.livelli?.some((l) => l != null)) ? 'incompleto' : 'vuoto';
@@ -292,17 +293,9 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
       h('div.stati', STATI_GIORNATA.map((v) => h(`button${statoGiorno === v ? '.attivo' : ''}`, {
         onclick: () => setStato(v), 'aria-pressed': String(statoGiorno === v), title: c.pacchetto.codiciStato?.[v] ?? ETICHETTE_BOTTONE[v] ?? v
       }, ETICHETTE_BOTTONE[v] ?? v)))),
-    statoGiorno === 'AS' ? h('div.recupero-campo',
-      recuperata
-        ? [h('span', `Prova recuperata il ${formatta(recuperata, true)}`), h('button', { onclick: () => setRecupero(null) }, 'Annulla recupero')]
-        : [h('span.tenue', 'Assente: il voto si registra il giorno in cui recupera la prova.'),
-          h('button.primario.grande', { onclick: () => setRecupero(oggiISO()) }, 'Recupera oggi'),
-          h('label.data-recupero', h('span', 'oppure il giorno'), h('input', {
-            type: 'date', 'aria-label': `Data recupero ${a.numero}`, min: g.data || undefined,
-            onchange: (e) => e.target.value && setRecupero(e.target.value)
-          }))]) : null,
     statoGiorno === 'INF' ? sceltaInfortunio(a, infortunio, setInfortunio) : null,
-    (statoGiorno && statoGiorno !== 'AS') || (statoGiorno === 'AS' && !recuperata) ? null : sos.map((so, k) => {
+    STATI_CON_RECUPERO.includes(statoGiorno) ? recuperoProva(a, g, statoGiorno, recuperata, setRecupero) : null,
+    (statoGiorno && !STATI_CON_RECUPERO.includes(statoGiorno)) || (statoGiorno && !recuperata) ? null : sos.map((so, k) => {
       const r = regs[k];
       const voto = votoRegistrazione(r);
       const parziale = r?.livelli?.some((l) => l != null);
@@ -329,6 +322,20 @@ function schedaAlunno(ctx, cl, g, sos, a, st, attivo) {
     }));
 }
 
+/** Recupero della prova (assente o infortunato): oggi con un tocco, oppure un altro giorno. */
+function recuperoProva(a, g, statoGiorno, recuperata, setRecupero) {
+  const chi = statoGiorno === 'INF' ? 'Infortunato' : 'Assente';
+  return h('div.recupero-campo',
+    recuperata
+      ? [h('span', `Prova recuperata il ${formatta(recuperata, true)}`), h('button', { onclick: () => setRecupero(null) }, 'Annulla recupero')]
+      : [h('span.tenue', `${chi}: il voto si registra il giorno in cui recupera la prova.`),
+        h('button.primario.grande', { onclick: () => setRecupero(oggiISO()) }, 'Recupera oggi'),
+        h('label.data-recupero', h('span', 'oppure il giorno'), h('input', {
+          type: 'date', 'aria-label': `Data recupero ${a.numero}`, min: g.data || undefined,
+          onchange: (e) => e.target.value && setRecupero(e.target.value)
+        }))]);
+}
+
 /** Durata dell'infortunio: un tocco per gli scaglioni, date dal–al per il periodo personalizzato. */
 function sceltaInfortunio(a, inf, salva) {
   const data = (campo) => h('label', h('span', campo), h('input', {
@@ -336,7 +343,7 @@ function sceltaInfortunio(a, inf, salva) {
     onchange: (e) => salva({ ...inf, durata: 'periodo', [campo]: e.target.value || null })
   }));
   return h('div.infortunio-campo',
-    h('span.tenue', 'Infortunio: nessun voto. Durata:'),
+    h('span.tenue', 'Infortunio. Durata:'),
     h('div.durate', DURATE_INFORTUNIO.map(([k, testo]) => h(`button.grande${inf?.durata === k ? '.attivo' : ''}`, {
       'aria-pressed': String(inf?.durata === k),
       onclick: () => salva(k === 'periodo' ? { durata: k, dal: inf?.dal ?? null, al: inf?.al ?? null } : { durata: k })

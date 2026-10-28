@@ -124,9 +124,11 @@ export function verificaVoti(stato, codiceClasse) {
     const celle = {};
     for (const g of giornate) {
       const rg = g.codici.map((c) => regs.find((r) => r.giornataId === g.id && r.sottoObiettivo === c)).filter(Boolean);
-      if (rg.some(daRecuperare)) celle[g.id] = 'AS da recuperare';
+      const inf = rg.find((r) => r.stato === 'INF');
+      const testoInf = inf ? `Infortunio (${descriviInfortunio(inf.infortunio)})` : '';
+      if (rg.some(daRecuperare)) celle[g.id] = inf ? `${testoInf} da recuperare` : 'AS da recuperare';
       else if (rg.some((r) => r.stato === 'NV') && rg.every((r) => votoRegistrazione(r) == null)) celle[g.id] = 'NV';
-      else if (rg.some((r) => r.stato === 'INF')) celle[g.id] = `Infortunio (${descriviInfortunio(rg.find((r) => r.stato === 'INF').infortunio)})`;
+      else if (inf && rg.every((r) => votoRegistrazione(r) == null)) celle[g.id] = testoInf;
       else {
         celle[g.id] = rg.filter((r) => votoRegistrazione(r) != null).map((r) => `${r.sottoObiettivo}: ${votoRegistrazione(r)}`).join(' · ');
       }
@@ -148,7 +150,7 @@ export function avanzamentoGiornata(stato, codiceClasse, giornataId) {
   return { fatti, totale: attivi.length };
 }
 
-/** Alunni con prove AS non recuperate, per classe. */
+/** Alunni con prove AS o INF non recuperate, per classe. */
 export function daRecuperareClasse(stato, codiceClasse) {
   const ids = new Set(alunniDi(stato, codiceClasse).map((a) => a.id));
   const out = new Map();

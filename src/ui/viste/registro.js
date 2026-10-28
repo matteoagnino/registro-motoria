@@ -3,7 +3,7 @@ import { h, select, modale, prova } from '../dom.js';
 import { conParametri } from '../app.js';
 import * as A from '../../dati/azioni.js';
 import { giornateClasse, sottoObiettivo, giudizioDiVoto, avanzamentoGiornata } from '../../dati/selettori.js';
-import { votoRegistrazione, pesoProva, daRecuperare } from '../../calcolo/voti.js';
+import { votoRegistrazione, pesoProva, daRecuperare, STATI_CON_RECUPERO } from '../../calcolo/voti.js';
 import { spiegaVoto } from '../../calcolo/riepilogo.js';
 import { formatta } from '../../pianificazione/date.js';
 import { icona } from '../icone.js';
@@ -82,8 +82,8 @@ function rigaAlunno(ctx, cl, g, sos, a) {
   const base = { classe: cl.codice, alunnoId: a.id, giornataId: g.id };
   const agg = (fn) => prova(() => ctx.store.aggiorna(fn));
   const escluso = a.stato === 'Ritirato' || a.stato === 'ES';
-  // Assente: niente voto finché non si indica il giorno in cui ha recuperato la prova.
-  const attesaRecupero = statoGiorno === 'AS' && !recuperata;
+  // Assente o infortunato: niente voto finché non si indica il giorno in cui ha recuperato la prova.
+  const attesaRecupero = STATI_CON_RECUPERO.includes(statoGiorno) && !recuperata;
   return h(`tr${a.stato === 'Ritirato' ? '.ritirato' : a.stato === 'ES' ? '.es' : ''}`,
     h('td.num', a.numero),
     h('td.nome', a.cognomeNome, a.op ? h('span.op', 'OP') : null, a.stato !== 'Attivo' ? h('span.op', a.stato) : null),
@@ -92,13 +92,15 @@ function rigaAlunno(ctx, cl, g, sos, a) {
       title: LEGENDA_STATI,
       onchange: (e) => agg((s) => A.impostaStatoGiornata(s, { ...base, sottoObiettivi: g.codici, valore: e.target.value || null }))
     })),
-    h('td.dettaglio-stato', statoGiorno === 'AS' ? h('label.campo-recupero', h('span', 'Recuperata il'), h('input', {
-      type: 'date', value: recuperata, 'aria-label': `Recuperata il ${a.numero}`, min: g.data || undefined, 'data-focus': `rec-${a.id}`,
-      title: 'Giorno in cui ha sostenuto la prova: sblocca i livelli e determina il peso',
-      class: regs.some(daRecuperare) ? 'input-giallo' : '',
-      onchange: (e) => agg((s) => A.impostaRecupero(s, { ...base, sottoObiettivi: g.codici, data: e.target.value }))
-    })) : statoGiorno === 'INF' ? campiInfortunio(regs.find((r) => r?.infortunio)?.infortunio, a,
-      (infortunio) => agg((s) => A.impostaInfortunio(s, { ...base, sottoObiettivi: g.codici, infortunio }))) : ''),
+    h('td.dettaglio-stato',
+      statoGiorno === 'INF' ? campiInfortunio(regs.find((r) => r?.infortunio)?.infortunio, a,
+        (infortunio) => agg((s) => A.impostaInfortunio(s, { ...base, sottoObiettivi: g.codici, infortunio }))) : null,
+      STATI_CON_RECUPERO.includes(statoGiorno) ? h('label.campo-recupero', h('span', 'Recuperata il'), h('input', {
+        type: 'date', value: recuperata, 'aria-label': `Recuperata il ${a.numero}`, min: g.data || undefined, 'data-focus': `rec-${a.id}`,
+        title: 'Giorno in cui ha sostenuto la prova: sblocca i livelli e determina il peso',
+        class: regs.some(daRecuperare) ? 'input-giallo' : '',
+        onchange: (e) => agg((s) => A.impostaRecupero(s, { ...base, sottoObiettivi: g.codici, data: e.target.value }))
+      })) : null),
     sos.map((so, k) => {
       const r = regs[k];
       const voto = votoRegistrazione(r);
@@ -108,7 +110,7 @@ function rigaAlunno(ctx, cl, g, sos, a) {
           return h('td.lv', select([['', '·'], ...LIVELLI.map((l) => [l, l])], v, {
             class: 'sel-livello', 'data-l': v === '' ? null : v, disabled: escluso || attesaRecupero,
             'aria-label': `${a.numero} ${so.codice} I${i + 1}`, 'data-focus': `l-${a.id}-${so.codice}-${i}`,
-            title: attesaRecupero ? 'Assente: indica prima la data del recupero' : `${so.codice} I${i + 1} ${ind.nome}`,
+            title: attesaRecupero ? 'Indica prima la data del recupero' : `${so.codice} I${i + 1} ${ind.nome}`,
             onchange: (e) => {
               const val = e.target.value === '' ? null : Number(e.target.value);
               const giud = val == null ? null : GIUDIZI[LIVELLI.indexOf(val)];

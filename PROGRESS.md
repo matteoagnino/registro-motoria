@@ -107,5 +107,11 @@ STATO: VERSIONE GREZZA COMPLETATA
   di Playwright anche prima di queste modifiche: da verificare su Chrome del Mac.
 - Test: 176 unitari (tests/unit/infortunio.test.js), 10 E2E verdi.
 
+## 0.9.1 (2026-10-28)
+- Decisione di Matteo: anche l'infortunato recupera la prova (supera l'ipotesi di DOMANDE.md del 27/10).
+  `STATI_CON_RECUPERO = ['AS', 'INF']` in calcolo/voti.js: votoRegistrazione (INF senza recupero → null),
+  daRecuperare, inSospeso (campo.js), verificaVoti («Infortunio (…) da recuperare»), registro Mac e scheda
+  iPad (`recuperoProva`). Test: 177 unitari, 10 E2E verdi.
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

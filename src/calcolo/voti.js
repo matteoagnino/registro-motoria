@@ -56,13 +56,16 @@ export function valoreFinale(media, rubrica, parametri) {
   return arrotonda(parametri.quota_prove * media + parametri.quota_processo * rubrica, 2);
 }
 
-/** Restituisce il voto di una registrazione, o null (AS non recuperato, NV, infortunio, vuota). */
+/** Stati la cui prova si recupera in un altro giorno: assente e infortunato. */
+export const STATI_CON_RECUPERO = ['AS', 'INF'];
+
+/** Restituisce il voto di una registrazione, o null (AS non recuperato, NV, infortunio non recuperato, vuota). */
 export function votoRegistrazione(reg) {
-  if (!reg || reg.stato === 'NV' || reg.stato === 'INF') return null;
+  if (!reg || reg.stato === 'NV' || (reg.stato === 'INF' && !reg.recuperataIl)) return null;
   return votoProva(reg.livelli);
 }
 
-/** Registrazione assente ancora da recuperare. */
+/** Registrazione assente o infortunata ancora da recuperare. */
 export function daRecuperare(reg) {
-  return reg?.stato === 'AS' && !reg.recuperataIl && votoProva(reg.livelli) == null;
+  return STATI_CON_RECUPERO.includes(reg?.stato) && !reg.recuperataIl && votoRegistrazione(reg) == null;
 }

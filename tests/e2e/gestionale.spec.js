@@ -88,6 +88,11 @@ test('M4: i dati del modello Excel classe 4 danno gli stessi voti, medie e giudi
   await expect(page.getByLabel('Infortunio dal 2')).toHaveValue('2026-11-02');
   await page.getByLabel('Durata infortunio 2').selectOption('oltre14');
   await expect(page.getByLabel('Infortunio dal 2')).toHaveCount(0);
+  // infortunato: come l'assente, livelli bloccati finché non c'è la data del recupero
+  await expect(page.getByLabel('2 1.1 I1', { exact: true })).toBeDisabled();
+  await page.getByLabel('Recuperata il 2').fill('2026-11-16');
+  await expect(page.getByLabel('2 1.1 I1', { exact: true })).toBeEnabled();
+  await page.getByLabel('Recuperata il 2').fill('');
   await page.getByLabel('Stato 2').selectOption('AS');
   // cambio classe con un tocco, classi in ordine Boncompagni → Manzoni, 4ª → 5ª
   const classi = page.getByRole('group', { name: 'Classe' }).getByRole('button');

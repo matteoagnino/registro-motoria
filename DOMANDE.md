@@ -33,3 +33,4 @@ Formato: domanda · ipotesi prudente adottata · dove si cambia. Rispondi pure q
 L'alunno infortunato (stato INF) recupera poi la prova come un assente? Ipotesi prudente adottata: no,
 INF significa «senza voto» per quella prova (come NV) e non compare tra i «da recuperare». Se rientra in
 tempo per recuperare, basta cambiare il suo stato in AS e indicare la data del recupero.
+**Risposta di Matteo (2026-10-28):** anche l'infortunato recupera la prova come l'assente (fatto nella 0.9.1).

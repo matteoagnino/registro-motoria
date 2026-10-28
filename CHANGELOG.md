@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.9.1 — recupero anche per gli infortunati (2026-10-28)
+- Registro (Mac e iPad): per l'alunno infortunato (INF), come per l'assente, si segna il giorno in cui ha
+  recuperato la prova («Recuperata il» sul Mac; «Recupera oggi» o un altro giorno sull'iPad). Fino ad allora
+  i livelli sono bloccati e la prova è «da recuperare»; poi si registrano i livelli e il voto pesa alla data
+  del recupero.
+
 ## 0.9.0 — infortunio, data di recupero, classi in ordine (2026-10-27)
 - Registro (Mac e iPad): nuovo stato «INF» (Infortunio) tra chi è senza voto, con la durata: < 7 giorni
   (1 settimana), > 7, > 14, > 21, > 28 giorni oppure un periodo personalizzato (dal… al…). Nessun voto per
