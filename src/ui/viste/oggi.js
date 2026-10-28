@@ -5,6 +5,7 @@ import { piano, daRecuperareClasse, giornata, avanzamentoGiornata, allertaPochiV
 import { alunniDi } from '../../dati/azioni.js';
 import { lunediDi, aggiungiGiorni, oggiISO, formatta, GIORNI_LUNGHI, toDate } from '../../pianificazione/date.js';
 import { intestazione, etichettaTipo, chipSotto } from './comuni.js';
+import { apriLezioniNonSvolte } from './nonSvolte.js';
 
 export function settimanaIniziale(stato, oggi = oggiISO()) {
   const d = oggi < stato.anno.inizio ? stato.anno.inizio : oggi > stato.anno.fine ? stato.anno.fine : oggi;
@@ -28,7 +29,8 @@ export function vistaOggi(ctx, { params }) {
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, -7) }), 'aria-label': 'Settimana precedente' }, '‹ Precedente'),
       h('button', { onclick: () => conParametri({ settimana: settimanaIniziale(stato) }) }, 'Questa settimana'),
       h('button', { onclick: () => conParametri({ settimana: aggiungiGiorni(lun, 7) }), 'aria-label': 'Settimana successiva' }, 'Successiva ›'),
-      h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) })),
+      h('input', { type: 'date', value: lun, 'aria-label': 'Vai alla settimana', onchange: (e) => e.target.value && conParametri({ settimana: e.target.value }) }),
+      h('button', { onclick: () => apriLezioniNonSvolte(ctx, { dal: giorni.includes(oggi) ? oggi : lun }) }, 'Lezioni non svolte…')),
     pannelloPochiVoti(stato, oggi),
     pannelloRecuperi(stato),
     griglia(stato, p, giorni, oggi));

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.10.0 — lezioni non svolte (2026-10-28)
+- Settimana e Calendario: «Lezioni non svolte…». Scegli il giorno (o dal… al…) e il motivo: «Sono assente
+  io» spunta tutte le classi che hanno lezione, «Gita o attività di alcune classi» le scegli tu. Per ogni
+  lezione si vede subito cosa succede.
+- Nuova regola di slittamento: una lezione senza prova si salta e la programmazione prosegue; una prova
+  slitta alla lezione successiva della classe, al posto del recupero (che passa alla prima lezione libera),
+  e le prove seguenti restano dove erano: la classe resta allineata alle altre. Se la regola dei giorni
+  minimi tra prove non lo permette, la sequenza scala in avanti come prima.
+- Calendario di una classe: il bottone di ogni riga si chiama «Non svolta…» e apre la stessa finestra;
+  «Ripristina» annulla.
+
 ## 0.9.1 — recupero anche per gli infortunati (2026-10-28)
 - Registro (Mac e iPad): per l'alunno infortunato (INF), come per l'assente, si segna il giorno in cui ha
   recuperato la prova («Recuperata il» sul Mac; «Recupera oggi» o un altro giorno sull'iPad). Fino ad allora

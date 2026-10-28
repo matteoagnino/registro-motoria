@@ -543,3 +543,14 @@ body[data-modo="campo"] .banner-aggiorna { bottom: 108px; }
   .senza-sidebar .menu { display: none; }
   .scelte { grid-template-columns: 1fr; }
 }
+
+/* Lezioni non svolte */
+.non-svolte .scelta-motivo { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.non-svolte .scelta-motivo label { display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; border-radius: 10px; background: var(--fill); cursor: pointer; }
+.non-svolte .scelta-motivo span { display: flex; flex-direction: column; }
+.elenco-non-svolte ul { list-style: none; margin: 8px 0; padding: 0; max-height: 300px; overflow-y: auto; }
+.elenco-non-svolte li label { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border-bottom: 1px solid var(--sep); }
+.elenco-non-svolte .quando { color: var(--sec); min-width: 170px; }
+.elenco-non-svolte strong { min-width: 44px; }
+.elenco-non-svolte .effetto { color: var(--sec); font-size: 13px; }
+.elenco-non-svolte .effetto.prova { color: var(--rosso); font-weight: 600; }

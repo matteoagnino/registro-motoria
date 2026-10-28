@@ -151,12 +151,33 @@ test('M4: i dati del modello Excel classe 4 danno gli stessi voti, medie e giudi
 test('M3: una lezione saltata fa slittare la sequenza della sola classe', async ({ page }) => {
   await apri(page, '#/gestionale/calendario?classe=4BM');
   const riga = page.locator('tr', { hasText: 'lunedì 02/11/2026' });
-  await riga.getByRole('button', { name: 'Lezione saltata…' }).click();
-  await page.getByRole('button', { name: 'Segna come saltata' }).click();
+  await riga.getByRole('button', { name: 'Non svolta…' }).click();
+  const finestra = page.getByRole('dialog', { name: 'Lezioni non svolte' });
+  // solo la classe scelta è spuntata; le altre del giorno si possono aggiungere
+  await expect(finestra.getByLabel('4BM 2026-11-02')).toBeChecked();
+  await expect(finestra.getByLabel('4CM 2026-11-02')).not.toBeChecked();
+  await expect(finestra.locator('li', { hasText: '4BM' })).toContainText('slitta alla lezione successiva');
+  await finestra.getByRole('button', { name: 'Segna come non svolte' }).click();
   await expect(page.locator('tr', { hasText: 'Q1-G03' }).first()).toContainText('09/11/2026');
   await expect(page.locator('tr', { hasText: 'lunedì 02/11/2026' })).toContainText('Uscita didattica');
   await apri(page, '#/gestionale/calendario?classe=4CM');
   await expect(page.locator('tr', { hasText: 'Q1-G03' }).first()).toContainText('02/11/2026');
+});
+
+test('Assenza del docente: in un colpo tutte le classi del giorno', async ({ page }) => {
+  await apri(page, '#/gestionale/oggi?settimana=2026-11-02');
+  await page.getByRole('button', { name: 'Lezioni non svolte…' }).click();
+  const finestra = page.getByRole('dialog', { name: 'Lezioni non svolte' });
+  await finestra.getByLabel('Dal giorno').fill('2026-11-02');
+  await finestra.getByLabel('Dal giorno').dispatchEvent('change');
+  const caselle = finestra.getByRole('checkbox');
+  const n = await caselle.count();
+  expect(n).toBeGreaterThan(1);
+  for (let i = 0; i < n; i++) await expect(caselle.nth(i)).toBeChecked();
+  await finestra.getByRole('button', { name: 'Segna come non svolte' }).click();
+  await expect(page.getByText(`${n} lezioni segnate come non svolte`)).toBeVisible();
+  await apri(page, '#/gestionale/calendario?classe=4BM');
+  await expect(page.locator('tr', { hasText: 'lunedì 02/11/2026' })).toContainText('Assenza docente');
 });
 
 test('M7: griglia di stampa e accessibilità di base', async ({ page }) => {

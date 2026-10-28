@@ -113,5 +113,15 @@ STATO: VERSIONE GREZZA COMPLETATA
   daRecuperare, inSospeso (campo.js), verificaVoti («Infortunio (…) da recuperare»), registro Mac e scheda
   iPad (`recuperoProva`). Test: 177 unitari, 10 E2E verdi.
 
+## 0.10.0 (2026-10-28) — lezioni non svolte
+- planner.js: `pianificaClasse({ riferimento })` = date del piano senza eventi; una prova non va prima della
+  sua data di riferimento e le date di riferimento restano riservate alle prove (`riservate`); il recupero
+  salta le date riservate (`indiceRecupero`). Se una prova è spostata dalla regola dei giorni minimi (non da
+  una lezione saltata) le riservate si azzerano → cascata come prima. Senza eventi il piano è identico.
+- `segnaLezioniNonSvolte` (azioni.js), `lezioniNelPeriodo` (selettori.js), finestra src/ui/viste/nonSvolte.js
+  aperta da Settimana, Calendario (testata) e dalle righe del Calendario («Non svolta…»).
+- Test: 181 unitari (planner.test.js: riassorbimento, ripiego a cascata, lezione senza prova, più classi),
+  11 E2E (M3 aggiornato, «Assenza del docente»).
+
 ## Prossimo passo
 Fase F: Matteo prova l'app con dati finti e scrive in FEEDBACK.md. App su iPad: aprire https://matteoagnino.github.io/registro-motoria/ in Safari → Aggiungi a Home.

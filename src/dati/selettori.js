@@ -3,7 +3,7 @@ import { pianificaTutte, quadrimestriConInizio } from '../pianificazione/planner
 import { vociVoto, riepilogoAlunno } from '../calcolo/riepilogo.js';
 import { votoRegistrazione, daRecuperare, giudizioVoto } from '../calcolo/voti.js';
 import { violazioniRegola } from '../calcolo/regole.js';
-import { alunniDi } from './azioni.js';
+import { alunniDi, ordinaClassi } from './azioni.js';
 import { descriviInfortunio } from './infortunio.js';
 import { giorniTra } from '../pianificazione/date.js';
 
@@ -113,6 +113,15 @@ export function giornateClasse(stato, codiceClasse) {
 export function violazioniClasse(stato, codiceClasse) {
   const prove = giornateClasse(stato, codiceClasse).map((g) => ({ giornataId: g.id, data: g.data, sottoObiettivi: g.codici }));
   return violazioniRegola(prove, stato.impostazioni.parametri.giorni_minimi_ripetizione);
+}
+
+/** Lezioni delle classi tra due date (non già saltate), in ordine di data e orario. */
+export function lezioniNelPeriodo(stato, dal, al = dal) {
+  const p = piano(stato);
+  return ordinaClassi(stato.classi)
+    .flatMap((c) => (p[c.codice]?.lezioni ?? []).filter((l) => l.data >= dal && l.data <= al && l.tipo !== 'saltata')
+      .map((l) => ({ ...l, classe: c.codice, plesso: c.plesso })))
+    .sort((a, b) => a.data.localeCompare(b.data) || a.inizio.localeCompare(b.inizio));
 }
 
 /** Verifica voti stile Argo: per alunno e giornata, "1.1: 8 · 1.2: 7" o "AS da recuperare". */

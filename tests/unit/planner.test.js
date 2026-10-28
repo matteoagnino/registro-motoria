@@ -1,6 +1,8 @@
 import { describe, test, expect } from 'vitest';
 import { creaStatoIniziale } from '../../src/dati/seed.js';
 import { pianificaTutte, quadrimestreDiData } from '../../src/pianificazione/planner.js';
+import * as A from '../../src/dati/azioni.js';
+import { lezioniNelPeriodo } from '../../src/dati/selettori.js';
 import { isChiuso, scenarioSettimana } from '../../src/pianificazione/lezioni.js';
 import { giornoSettimana } from '../../src/pianificazione/date.js';
 
@@ -63,7 +65,7 @@ describe('pianificazione 2026/27', () => {
       expect(p2[c.codice].giornate).toEqual(piano[c.codice].giornate);
     }
   });
-  test('saltare una lezione con prova anticipata fa scalare tutta la sequenza', () => {
+  test('saltare una lezione con prova: la prova prende il posto del recupero, le successive restano al loro posto', () => {
     const extra = [
       { id: 'Q1-G04', quadrimestre: 'Q1', descrizione: 'Prova 4', sottoObiettivi: { 4: ['4.1'], 5: ['4.1'] }, ancora: {}, progetto: null },
       { id: 'Q1-G05', quadrimestre: 'Q1', descrizione: 'Prova 5', sottoObiettivi: { 4: ['4.2'], 5: ['4.2'] }, ancora: {}, progetto: null }
@@ -72,8 +74,27 @@ describe('pianificazione 2026/27', () => {
     const a = pianificaTutte(s)['4BM'].giornate;
     const b = pianificaTutte({ ...s, eventi: [{ id: 'x', classe: '4BM', data: '2026-11-16', motivo: 'Assenza docente' }] })['4BM'].giornate;
     expect(a['Q1-G04'].data).toBe('2026-11-16');
-    expect(b['Q1-G04'].data).toBe('2026-11-23');
-    expect(b['Q1-G05'].data > a['Q1-G05'].data).toBe(true);
+    expect(b['Q1-G04']).toMatchObject({ data: '2026-11-23', stato: 'slittata' });
+    expect(b['Q1-G05']).toEqual(a['Q1-G05']);
+    const lezioni = pianificaTutte({ ...s, eventi: [{ id: 'x', classe: '4BM', data: '2026-11-16', motivo: 'Assenza docente' }] })['4BM'].lezioni;
+    const recG04 = lezioni.find((l) => l.recuperoDi === 'Q1-G04');
+    expect(recG04.data > b['Q1-G04'].data && recG04.data !== b['Q1-G05'].data).toBe(true);
+  });
+  test('se la prova recuperata viola i giorni minimi con la successiva, la sequenza scala in avanti', () => {
+    const extra = [
+      { id: 'Q1-G04', quadrimestre: 'Q1', descrizione: 'Prova 4', sottoObiettivi: { 4: ['4.1'], 5: ['4.1'] }, ancora: {}, progetto: null },
+      { id: 'Q1-G05', quadrimestre: 'Q1', descrizione: 'Prova 5', sottoObiettivi: { 4: ['4.1'], 5: ['4.1'] }, ancora: {}, progetto: null }
+    ];
+    const s = { ...stato, giornate: [...stato.giornate, ...extra] };
+    const a = pianificaTutte(s)['4BM'];
+    const b = pianificaTutte({ ...s, eventi: [{ id: 'x', classe: '4BM', data: a.giornate['Q1-G04'].data, motivo: 'Gita' }] })['4BM'];
+    expect(b.giornate['Q1-G05'].data > a.giornate['Q1-G05'].data).toBe(true);
+    expect(b.violazioni).toEqual([]);
+  });
+  test('saltare una lezione senza prova non sposta nulla', () => {
+    const libera = piano['4BM'].lezioni.find((l) => l.tipo === 'normale');
+    const p = pianificaTutte({ ...stato, eventi: [{ id: 'x', classe: '4BM', data: libera.data, motivo: 'Gita' }] })['4BM'];
+    expect(p.giornate).toEqual(piano['4BM'].giornate);
   });
   test('cuscinetti esauriti → avviso con proposta di sacrificio', () => {
     const molte = Array.from({ length: 12 }, (_, i) => ({
@@ -111,5 +132,20 @@ describe('pianificazione 2026/27', () => {
     expect(new Set(l.map((x) => x.scenario))).toEqual(new Set(['Venerdì 1', 'Venerdì 2']));
     expect(scenarioSettimana('2026-09-18', '2026-09-14', ['Venerdì 1', 'Venerdì 2'])).toBe('Venerdì 1');
     expect(scenarioSettimana('2026-09-25', '2026-09-14', ['Venerdì 1', 'Venerdì 2'])).toBe('Venerdì 2');
+  });
+});
+
+describe('lezioni non svolte (più classi in una volta)', () => {
+  test('un giorno di assenza del docente: tutte le lezioni del giorno, già segnate ignorate', () => {
+    const delGiorno = lezioniNelPeriodo(stato, '2026-11-02');
+    expect(delGiorno.length).toBeGreaterThan(1);
+    expect(delGiorno.every((l) => l.data === '2026-11-02')).toBe(true);
+    const lezioni = delGiorno.map(({ classe, data }) => ({ classe, data }));
+    let s = A.aggiungiEvento(stato, { ...lezioni[0], motivo: 'Gita' });
+    s = A.segnaLezioniNonSvolte(s, lezioni, 'Assenza docente');
+    expect(s.eventi).toHaveLength(lezioni.length);
+    expect(s.eventi.find((e) => e.classe === lezioni[0].classe).motivo).toBe('Gita');
+    expect(lezioniNelPeriodo(s, '2026-11-02')).toEqual([]);
+    expect(() => A.segnaLezioniNonSvolte(stato, [], 'x')).toThrow();
   });
 });

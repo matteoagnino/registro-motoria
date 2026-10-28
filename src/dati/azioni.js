@@ -161,6 +161,16 @@ export function aggiungiEvento(stato, { classe, data, motivo }) {
   return { ...stato, eventi: [...stato.eventi, { id: nuovoId(), classe, data, motivo: (motivo || 'Lezione saltata').trim() }] };
 }
 
+/**
+ * Lezioni non svolte di più classi in una volta (gita, assenza del docente…): [{classe, data}].
+ * Quelle già segnate restano come sono.
+ */
+export function segnaLezioniNonSvolte(stato, lezioni, motivo) {
+  if (!lezioni.length) throw new Error('Scegli almeno una lezione.');
+  const nuove = lezioni.filter(({ classe, data }) => !stato.eventi.some((e) => e.classe === classe && e.data === data));
+  return nuove.reduce((s, l) => aggiungiEvento(s, { ...l, motivo }), stato);
+}
+
 export const rimuoviEvento = (stato, id) => ({ ...stato, eventi: stato.eventi.filter((e) => e.id !== id) });
 
 export function salvaGiornata(stato, giornata) {

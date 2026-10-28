@@ -1,16 +1,18 @@
 // Calendario: sequenza condivisa delle giornate, lezioni reali per classe, slittamenti, progetti.
-import { h, select, campo, modale, prova, conferma, avviso } from '../dom.js';
+import { h, select, campo, modale, prova, conferma } from '../dom.js';
 import * as A from '../../dati/azioni.js';
 import { piano, giornateClasse, violazioniClasse, sottoObiettiviDi } from '../../dati/selettori.js';
 import { descriviViolazione } from '../../calcolo/regole.js';
 import { formatta } from '../../pianificazione/date.js';
 import { intestazione, selettoreClasse, classeScelta, etichettaTipo, chipSotto } from './comuni.js';
+import { apriLezioniNonSvolte } from './nonSvolte.js';
 
 export function vistaCalendario(ctx, { params }) {
   const stato = ctx.store.get();
   const cl = classeScelta(stato, params);
   return h('div',
-    intestazione('Calendario', selettoreClasse(stato, cl.codice)),
+    intestazione('Calendario', selettoreClasse(stato, cl.codice),
+      h('button', { onclick: () => apriLezioniNonSvolte(ctx) }, 'Lezioni non svolte…')),
     sequenza(ctx, cl),
     progetti(ctx),
     lezioniClasse(ctx, cl));
@@ -122,21 +124,6 @@ function lezioniClasse(ctx, cl) {
         h('td', (l.sottoObiettivi || []).map((c) => chipSotto(stato, cl.livello, c))),
         h('td', l.tipo === 'saltata'
           ? h('button', { onclick: () => ctx.store.aggiorna((s) => A.rimuoviEvento(s, l.eventoId)) }, 'Ripristina')
-          : h('button', { onclick: () => segnaSaltata(ctx, cl.codice, l.data) }, 'Lezione saltata…'))))))));
+          : h('button', { onclick: () => apriLezioniNonSvolte(ctx, { dal: l.data, classi: [cl.codice] }) }, 'Non svolta…'))))))));
 }
 
-function segnaSaltata(ctx, classe, data) {
-  const motivo = h('input', { value: 'Uscita didattica', size: 40, 'aria-label': 'Motivo' });
-  modale(`Lezione saltata · ${classe} · ${formatta(data, true)}`, h('div',
-    campo('Motivo (gita, assenza docente, evento…)', motivo),
-    h('p.tenue', 'La sequenza di questa classe slitta alla lezione successiva; i cuscinetti assorbono lo slittamento.')), {
-    azioni: [{
-      testo: 'Segna come saltata', primario: true,
-      azione: () => {
-        const ok = prova(() => ctx.store.aggiorna((s) => A.aggiungiEvento(s, { classe, data, motivo: motivo.value })));
-        if (ok) avviso('Lezione segnata come saltata: sequenza ricalcolata');
-        return Boolean(ok);
-      }
-    }]
-  });
-}

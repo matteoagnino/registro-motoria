@@ -93,9 +93,13 @@ dell'alunno nel gestionale.
 - Regole: alternanza **prova → recupero → prova…**; **2 lezioni cuscinetto** a fine quadrimestre;
   **lezione libera** (attività scelta dai bambini) nell'ultima lezione prima delle vacanze di Natale e
   nell'ultima dell'anno; lezioni di progetto inserite come blocco che sospende la sequenza.
-- **Lezione saltata** (gita, assenza docente, evento) registrata con motivo → la sequenza di quella
-  classe slitta automaticamente alla lezione successiva; i cuscinetti assorbono gli slittamenti; se
-  finiscono, il sistema avvisa e propone quale giornata sacrificare.
+- **Lezione non svolta** (gita, assenza docente, evento) registrata con motivo, anche per più classi e più
+  giorni in una volta («Sono assente io» = tutte le classi di quei giorni). Lezione senza prova: si salta e
+  la programmazione prosegue. Lezione con prova: la prova slitta alla lezione successiva della classe (al
+  posto del recupero, che passa alla prima lezione libera) e le prove seguenti restano al loro posto, così la
+  classe resta allineata alle altre (decisione di Matteo, 2026-10-28). Solo se la regola dei giorni minimi lo
+  impedisce la sequenza scala in avanti; i cuscinetti assorbono gli slittamenti; se finiscono, il sistema
+  avvisa e propone quale giornata sacrificare.
 - Vista **settimanale condivisa** (tutte le classi, giorno per giorno) e vista per classe.
 - Struttura di ogni lezione da 120': 15' accoglienza e trasferimento · 90' attività (ultimi 20' gioco a
   squadre) · 15' cambio, schede di autovalutazione, rientro.

@@ -69,14 +69,26 @@ function successiva(lezioni, i) {
   return -1;
 }
 
-function assegnaProva(lezioni, idx, g, codici, conRecupero) {
+const disponibile = (l) => libera(l) || l.tipo === 'cuscinetto';
+
+/**
+ * Lezione di recupero: la successiva alla prova. Se quella è riservata a una prova successiva
+ * (giornata rimasta al suo posto dopo uno slittamento), la prima lezione disponibile dopo.
+ */
+function indiceRecupero(lezioni, idx, riservate) {
+  let j = successiva(lezioni, idx);
+  if (j < 0 || !riservate.has(lezioni[j].data)) return j >= 0 && disponibile(lezioni[j]) ? j : -1;
+  while (j >= 0 && (riservate.has(lezioni[j].data) || !disponibile(lezioni[j]))) j = successiva(lezioni, j);
+  return j;
+}
+
+function assegnaProva(lezioni, idx, g, codici, riservate) {
   const l = lezioni[idx];
   l.tipo = 'prova';
   l.giornataId = g.id;
   l.sottoObiettivi = codici;
-  if (!conRecupero) return;
-  const j = successiva(lezioni, idx);
-  if (j >= 0 && (libera(lezioni[j]) || lezioni[j].tipo === 'cuscinetto')) {
+  const j = indiceRecupero(lezioni, idx, riservate);
+  if (j >= 0) {
     lezioni[j].tipo = 'recupero';
     lezioni[j].recuperoDi = g.id;
   }
@@ -84,9 +96,13 @@ function assegnaProva(lezioni, idx, g, codici, conRecupero) {
 
 /**
  * Pianifica una classe.
+ * `riferimento` (giornataId → data del piano senza lezioni saltate): una prova non va mai prima della sua data
+ * di riferimento e le date di riferimento restano riservate alle prove. Così una prova saltata prende il posto
+ * del suo recupero e le giornate successive restano dove erano (la classe resta allineata alle altre);
+ * solo se la regola dei giorni minimi lo impedisce la sequenza scala in avanti.
  * @returns {lezioni, giornate: {id: {data, stato, motivo?}}, avvisi: string[]}
  */
-export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi = [], impostazioni = {} }) {
+export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi = [], impostazioni = {}, riferimento = {} }) {
   const minGiorni = impostazioni.giorniMinimi ?? 9;
   const nCuscinetti = impostazioni.cuscinetti ?? 2;
   const quadrimestri = quadrimestriConInizio(anno);
@@ -99,6 +115,8 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
   const avvisi = [];
   const piazzate = [];
   const livello = String(classe.livello);
+  const saltate = new Set(lezioni.filter((l) => l.tipo === 'saltata').map((l) => l.data));
+  let riservate = new Set(Object.values(riferimento).filter((d) => d && !saltate.has(d)));
 
   for (const q of quadrimestri) {
     let cursore = 0;
@@ -123,11 +141,14 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
         continue;
       }
       const ancora = g.ancora?.[classe.plesso] ? lunediDi(g.ancora[classe.plesso]) : null;
+      const rif = riferimento[g.id];
       const candidata = (usaCuscinetti) => lezioni.findIndex((l, i) =>
         i >= cursore &&
         (libera(l) || (usaCuscinetti && l.tipo === 'cuscinetto')) &&
         inIntervallo(l.data, q.inizio, q.fine) &&
         (!ancora || l.data >= ancora) &&
+        (!rif || l.data >= rif) &&
+        (l.data === rif || !riservate.has(l.data)) &&
         violazioniRegola([...piazzate, { giornataId: g.id, data: l.data, sottoObiettivi: codici }], minGiorni).length === 0
       );
       let idx = candidata(false);
@@ -140,7 +161,9 @@ export function pianificaClasse({ classe, anno, giornate, progetti = [], eventi 
         avvisi.push(`${g.id}: cuscinetti esauriti nel ${q.id} — valuta di sacrificare questa giornata o una precedente`);
         continue;
       }
-      assegnaProva(lezioni, idx, g, codici, true);
+      // Spostata non per una lezione saltata ma dalla regola dei giorni minimi: da qui la sequenza scala in avanti.
+      if (rif && lezioni[idx].data !== rif && !saltate.has(rif)) riservate = new Set();
+      assegnaProva(lezioni, idx, g, codici, riservate);
       esito[g.id] = { data: lezioni[idx].data, stato: 'pianificata' };
       piazzate.push({ giornataId: g.id, data: lezioni[idx].data, sottoObiettivi: codici });
       cursore = idx + 1;
@@ -164,12 +187,15 @@ export function pianificaTutte(stato) {
   };
   for (const classe of stato.classi) {
     const eventi = stato.eventi.filter((e) => e.classe === classe.codice);
-    const piano = pianificaClasse({ ...base, classe, eventi });
-    if (eventi.length) {
-      const senza = pianificaClasse({ ...base, classe, eventi: [] });
-      for (const [id, g] of Object.entries(piano.giornate)) {
-        if (g.data && senza.giornate[id]?.data && g.data !== senza.giornate[id].data) g.stato = 'slittata';
-      }
+    if (!eventi.length) {
+      out[classe.codice] = pianificaClasse({ ...base, classe });
+      continue;
+    }
+    const senza = pianificaClasse({ ...base, classe, eventi: [] });
+    const riferimento = Object.fromEntries(Object.entries(senza.giornate).map(([id, g]) => [id, g.data]));
+    const piano = pianificaClasse({ ...base, classe, eventi, riferimento });
+    for (const [id, g] of Object.entries(piano.giornate)) {
+      if (g.data && senza.giornate[id]?.data && g.data !== senza.giornate[id].data) g.stato = 'slittata';
     }
     out[classe.codice] = piano;
   }
